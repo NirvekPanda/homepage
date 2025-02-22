@@ -11,6 +11,12 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --container-background: #171717;
+    --button-background: #171717;
+    --button-foreground: #ededed;
+    --button-hover: #2d2d2d;
+
+    --accent: #00868b;
   }
 }
 
