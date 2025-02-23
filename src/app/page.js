@@ -26,7 +26,7 @@ export default function Home() {
         >
           <Image
             aria-hidden
-            src="/file.svg"
+            src="/globe.svg"
             alt="File icon"
             width={16}
             height={16}
@@ -47,6 +47,23 @@ export default function Home() {
             height={16}
           />
           GitHub
+        </a>
+
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="/Nirvek_Pandey_Resume.pdf"
+          download
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/file.svg"
+            alt="Resume icon"
+            width={16}
+            height={16}
+          />
+          Resume
         </a>
 
       </footer>
