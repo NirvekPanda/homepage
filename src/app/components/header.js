@@ -50,13 +50,13 @@ export default function Header() {
                     </h1>
 
                     {/* Right: Title */}
-                    <p className={`${geistSans.variable} text-4xl text-[#FFFAEC] ml-8 sm:ml-12`}>
+                    <p className={`${geistSans.variable} text-4xl text-[#FFFAEC] ml-8 sm:ml-12 cursor-pointer`} onClick={() => window.location.href = '/secret'}>
                         Software & ML Engineer
                     </p>
                 </div>
             </header>
 
-            <div className="bg-light-gray text-transparent text-center py-1">
+            <div className="bg-light-gray text-transparent text-center py-1" >
                 (secret)
             </div>
             <Nav />
