@@ -9,14 +9,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --container-background: #171717;
+    --background: #3D3D3D;
+    --foreground: #FFFAEC;
+    --container-background: #F5ECD5;
     --button-background: #171717;
     --button-foreground: #ededed;
-    --button-hover: #2d2d2d;
+    --button-hover: #2e2e2e;
 
-    --accent: #00868b;
+    --accent: #578E7E;
   }
 }
 
