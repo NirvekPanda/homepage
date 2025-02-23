@@ -1,6 +1,11 @@
-function ContactMe() {
+import ContactForm from "../components/contact";
 
-    return <h1>Contact Page</h1>;
-  }
+function ContactMe() {
+  return (
+    <div className="p-6 sm:p-12 md:p-16 lg:p-20">
+      <ContactForm />
+    </div>
+  );
+}
 
 export default ContactMe;
