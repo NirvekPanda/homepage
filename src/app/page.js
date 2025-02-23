@@ -11,16 +11,16 @@ export default function Home() {
           image="/profile.jpg"
           title="Nirvek Pandey"
           paragraph="I am passionate about exploring new technologies and continuously improving my skills.
-          I enjoy working on innovative projects and staying up-to-date with the latest trends in the industry.."
+          I enjoy working on innovative projects and staying up-to-date with the latest trends in the industry."
         />
 
-        
+
 
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="https://www.linkedin.com/in/nirvekpandey/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -31,11 +31,11 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Learn
+          Linkedin
         </a>
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="https://github.com/NirvekPanda"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -46,23 +46,9 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Examples
+          GitHub
         </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
       </footer>
     </div>
   );

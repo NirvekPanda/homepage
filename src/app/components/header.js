@@ -1,10 +1,8 @@
-
 export default function Header() {
     return (
-        <div style={{ textAlign: 'center' } }>
-            <h1 style={{ fontSize: '3rem' }}>Nirvek Pandey</h1>
-            <p style={{ fontSize: '1.5rem' }}>ML Engineer</p>
+        <div className="text-center py-6 font-sans text-slate-300">
+            <h1 className="text-5xl">Nirvek Pandey</h1>
+            <p className="text-2xl">ML Engineer</p>
         </div>
     );
-
 }
