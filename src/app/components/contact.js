@@ -105,9 +105,24 @@ export default function ContactForm() {
                             className="w-full bg-gray-600 border border-gray-500 text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg"
                             placeholder="(123) 456-7890"
                             value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            onChange={(e) => {
+                                let input = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+                                if (input.length > 10) input = input.slice(0, 10); // Limit to 10 digits
+
+                                let formatted = input;
+                                if (input.length > 6) {
+                                    formatted = `(${input.slice(0, 3)}) ${input.slice(3, 6)} - ${input.slice(6)}`;
+                                } else if (input.length > 3) {
+                                    formatted = `(${input.slice(0, 3)}) ${input.slice(3)}`;
+                                } else if (input.length > 0) {
+                                    formatted = `(${input}`;
+                                }
+
+                                setPhone(formatted);
+                            }}
                         />
                     </div>
+
 
                     {/* Message Field */}
                     <div>
