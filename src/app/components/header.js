@@ -43,21 +43,23 @@ export default function Header() {
                 className={`bg-zinc-800 py-6 px-10 transition-all duration-700 ease-in-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
                     }`}
             >
-                <div className="max-w-5xl mx-auto bg-neutral-600 rounded-3xl px-8 py-6 flex flex-row items-center justify-between">
-                    {/* Left: Name */}
-                    <h1 className={`${geistMono.variable} text-6xl text-[#F5ECD5] font-bold`}>
+                <div className="max-w-5xl mx-auto bg-neutral-600 rounded-3xl px-8 py-6 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left">
+
+                    <h1 className={`${geistMono.variable} text-5xl sm:text-6xl text-[#F5ECD5] font-bold`}>
                         Nirvek Pandey
                     </h1>
 
-                    {/* Right: Title */}
-                    <p className={`${geistSans.variable} text-4xl text-[#FFFAEC] ml-8 sm:ml-12 cursor-pointer`} onClick={() => window.location.href = '/secret'}>
+                    <p
+                        className={`${geistSans.variable} text-2xl sm:text-4xl text-[#FFFAEC] mt-3 sm:mt-0 cursor-pointer`}
+                        onClick={() => window.location.href = '/secret'}
+                    >
                         Software & ML Engineer
                     </p>
                 </div>
             </header>
 
-            <div className="bg-light-gray text-transparent text-center py-1" >
-                (secret)
+            <div className="bg-light-gray text-transparent text-center py-1">
+                secret
             </div>
             <Nav />
         </>
