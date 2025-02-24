@@ -1,23 +1,24 @@
-"use client"
+"use client";
 
 import React, { useState } from 'react';
 import { db } from "@/app/firebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
-
+import { ref, push, set } from "firebase/database";
 import MessageSent from './messageSent';
 
-async function addData(username, email, phone, message) {
+async function addData(name, email, phone, message) {
     try {
-        const docRef = await addDoc(collection(db, "contact"), {
-            username: username,
-            email: email,
-            phone: phone,
-            message: message
+        const newMessageRef = push(ref(db, "contact"));
+        await set(newMessageRef, {
+            name,
+            email,
+            phone,
+            message,
+            timestamp: Date.now()
         });
-        console.log("Document written with ID: ", docRef.id);
+        console.log("Message sent successfully");
         return true;
     } catch (e) {
-        console.error("Error adding document: ", e);
+        console.error("Error adding message: ", e);
         return false;
     }
 }
@@ -46,7 +47,7 @@ export default function ContactForm() {
             // Show success message
             setIsSubmitted(true);
 
-            // Auto-hide the message after 3 seconds
+            // Auto-hide the message after 10 seconds
             setTimeout(() => setIsSubmitted(false), 10000);
         } else {
             alert("Failed to send message. Please try again.");
@@ -62,7 +63,6 @@ export default function ContactForm() {
                     <MessageSent />
                 </div>
             ) : (
-
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                     {/* Name Field */}
                     <div>
@@ -122,7 +122,6 @@ export default function ContactForm() {
                             }}
                         />
                     </div>
-
 
                     {/* Message Field */}
                     <div>

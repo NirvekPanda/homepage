@@ -1,16 +1,14 @@
-// Import the functions you need from the SDKs you need
+// Import the necessary functions from the Firebase SDK
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database"; // Import Realtime Database
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Your Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAltRmD4bRKGzPEqANo0kVWdM-Wma3RvVc",
     authDomain: "portfolio-420-69.firebaseapp.com",
+    databaseURL: "https://portfolio-420-69-default-rtdb.firebaseio.com", // Add Realtime Database URL
     projectId: "portfolio-420-69",
-    storageBucket: "portfolio-420-69.firebasestorage.app",
+    storageBucket: "portfolio-420-69.appspot.com", // Fixed typo in storageBucket
     messagingSenderId: "189526192204",
     appId: "1:189526192204:web:c9e488fe63fc70034604e9",
     measurementId: "G-94ZWGSBCF4"
@@ -18,6 +16,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = getDatabase(app); // Initialize Realtime Database
 
 export { db };
