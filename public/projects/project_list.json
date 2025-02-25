@@ -1,0 +1,16 @@
+[
+    {
+        "name": "Test Project",
+        "description": "This page is currently a work in progress, for now my projects are available on GitHub.",
+        "languages": "Python, JavaScript",
+        "image": "https://www.computersciencedegreehub.com/wp-content/uploads/2023/02/shutterstock_535124956-1024x756.jpg",
+        "link": "https://github.com/NirvekPanda"
+    },
+    {
+        "name": "Test Project 2",
+        "description": "Click the link above to view my projects.",
+        "languages": "Java",
+        "image": "https://assets.nintendo.com/image/upload/ar_16:9,c_lpad,w_1240/b_white/f_auto/q_auto/ncom/software/switch/70010000000964/a28a81253e919298beab2295e39a56b7a5140ef15abdb56135655e5c221b2a3a",
+        "link": "https://github.com/NirvekPanda"
+    }
+]
