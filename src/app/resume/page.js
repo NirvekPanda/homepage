@@ -6,7 +6,7 @@ function Resume() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true); 
+    setMounted(true);
   }, []);
 
   return (
@@ -15,7 +15,7 @@ function Resume() {
       <a
         href="/Nirvek_Pandey_Resume.pdf"
         download
-        className="pb-2 bg-stone-900 rounded p-2 text-white hover:bg-stone-800 hover:text-aqua-500 hover:underline font-gisel-nano mb-6"
+        className="pb-2 bg-stone-900 rounded p-2 text-white hover:bg-stone-800 hover:text-aqua-500 hover:underline font-gisel-nano mb-10"
       >
         Download Resume
       </a>
