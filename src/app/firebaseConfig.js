@@ -1,6 +1,7 @@
 // Import the necessary functions from the Firebase SDK
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get } from "firebase/database"; // Import Realtime Database
+import { getFirestore, getDocs, addDoc, collection } from "firebase/firestore"; // Import Firestore
 import "dotenv/config";
 
 // Your Firebase configuration
@@ -18,5 +19,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app); // Initialize Realtime Database
+const firestore = getFirestore(app); // Initialize Firestore
 
-export { db, ref, get };
+export { db, ref, get, firestore, collection, addDoc, getDocs };

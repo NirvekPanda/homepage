@@ -27,9 +27,8 @@ export default function CardModal({ isOpen, onClose, name, description, image })
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative bg-zinc-900 rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out ${
-          animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
-        }`}
+        className={`relative bg-zinc-900 rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
+          }`}
         style={{
           width: "80vw",
           height: "80vh",
@@ -51,8 +50,8 @@ export default function CardModal({ isOpen, onClose, name, description, image })
         {/* Scrollable Content Section with MarkdownBox */}
         <div className="flex-1 overflow-y-auto p-6">
           <h2 className="text-3xl font-bold mb-4 text-center">{name}</h2>
-          <MarkdownBox content={description} />
-          {/* <LatexBox content={description} /> */}
+          {/* <MarkdownBox content={description} /> */}
+          <LatexBox content={description} />
 
         </div>
 
