@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import MarkdownBox from "./mdBox.js";
+import LatexBox from "./latexBox.js";
 
 export default function CardModal({ isOpen, onClose, name, description, image }) {
   const [animateModal, setAnimateModal] = useState(false);
@@ -51,6 +52,8 @@ export default function CardModal({ isOpen, onClose, name, description, image })
         <div className="flex-1 overflow-y-auto p-6">
           <h2 className="text-3xl font-bold mb-4 text-center">{name}</h2>
           <MarkdownBox content={description} />
+          {/* <LatexBox content={description} /> */}
+
         </div>
 
         {/* Close Button */}
