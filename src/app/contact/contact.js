@@ -54,6 +54,8 @@ export default function ContactForm() {
         }
     };
 
+    var textArea = "w-full bg-gray-600 border border-gray-500 text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg";
+
     return (
         <div className="max-w-2xl mx-auto bg-gray-700 p-6 rounded-3xl shadow-lg text-white">
             <h2 className="text-3xl font-bold text-center mb-6 underline">Reach Out Below!</h2>
@@ -72,7 +74,7 @@ export default function ContactForm() {
                         <input
                             type="text"
                             id="name"
-                            className="w-full bg-gray-600 border border-gray-500 text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg"
+                            className={textArea}
                             placeholder="Your Name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
@@ -87,7 +89,7 @@ export default function ContactForm() {
                         <input
                             type="email"
                             id="email"
-                            className="w-full bg-gray-600 border border-gray-500 text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg"
+                            className={textArea}
                             placeholder="name@example.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -102,7 +104,7 @@ export default function ContactForm() {
                         <input
                             type="tel"
                             id="phone"
-                            className="w-full bg-gray-600 border border-gray-500 text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg"
+                            className={textArea}
                             placeholder="(123) 456-7890"
                             value={phone}
                             onChange={(e) => {
@@ -131,7 +133,7 @@ export default function ContactForm() {
                         <textarea
                             id="message"
                             rows="4"
-                            className="w-full bg-gray-600 border border-gray-500 text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg"
+                            className={textArea}
                             placeholder="Write your message here..."
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}

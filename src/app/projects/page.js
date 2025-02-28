@@ -45,7 +45,9 @@ function ProjectList() {
       </div>
 
       {loading ? (
-        <div className="text-center text-gray-500 mt-4">Loading projects...</div>
+        <div className="text-center text-gray-500 mt-4 text-xl">
+          Loading Projects...
+        </div>
       ) : (
         <div className="flex flex-wrap justify-center">
           {projects.length > 0 ? (

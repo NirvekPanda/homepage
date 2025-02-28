@@ -1,7 +1,4 @@
-
-
-
-import ContactForm from "../components/contact";
+import ContactForm from "./contact";
 
 function ContactMe() {
   return (
