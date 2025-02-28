@@ -1,5 +1,5 @@
 import { collection, addDoc } from "firebase/firestore";
-import { firestore } from "../firebaseConfig"; // Use the correct Firestore instance
+import { firestore } from "../firebaseConfig"; 
 
 async function uploadProjects() {
     try {
