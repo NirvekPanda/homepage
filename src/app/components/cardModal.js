@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import MarkdownBox from "./mdBox.js";
+// import MarkdownBox from "./mdBox.js";
 import LatexBox from "./latexBox.js";
 
 export default function CardModal({ isOpen, onClose, name, description, image }) {
