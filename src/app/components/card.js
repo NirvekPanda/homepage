@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import LinkButton from "./button.js";
+
 
 export default function Card({ name, description, languages, image, link }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,6 +39,12 @@ export default function Card({ name, description, languages, image, link }) {
           <h6 className="mb-2 text-white text-xl font-semibold text-center">
             {name}
           </h6>
+
+          <div className="flex justify-center">
+            <LinkButton text="View Project" link={link} className="p-2" />
+          </div>
+
+
           <p className="text-gray-300 leading-normal font-light">
             {description}
           </p>
