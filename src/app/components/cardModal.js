@@ -38,7 +38,7 @@ export default function CardModal({ isOpen, onClose, name, description, image })
         }}
       >
         {/* Top Image Section */}
-        <div className="relative w-full h-1/2">
+        <div className="relative w-full h-2/5">
           <img
             src={image}
             alt="card-image"
