@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { parseContent } from "../utils/formatText.js";
+import LanguageTile from "./langTile.js";
 
-export default function CardModal({ isOpen, onClose, name, description, image }) {
+export default function CardModal({ isOpen, onClose, name, description, image, languages }) {
   const [animateModal, setAnimateModal] = useState(false);
 
   useEffect(() => {
@@ -26,12 +27,12 @@ export default function CardModal({ isOpen, onClose, name, description, image })
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative bg-zinc-900 rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        className={`relative bg-zinc-900 rounded-lg overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
         style={{
           width: "80vw",
           height: "80vh",
-          maxWidth: "900vw",
+          maxWidth: "800px",
           maxHeight: "90vh",
           display: "flex",
           flexDirection: "column",
@@ -47,21 +48,29 @@ export default function CardModal({ isOpen, onClose, name, description, image })
         </div>
 
         {/* Scrollable Content Section */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 p-6">
           <h2 className="text-3xl font-bold mb-4 text-center">{name}</h2>
           <div className="bg-zinc-800 p-5 rounded-lg shadow-md text-white text-lg leading-relaxed">
             <ul>{parseContent(description)}</ul>
           </div>
 
+
+          {/* Languages Section */}
+          <div className="flex flex-wrap justify-center gap-2 mt-4">
+            {languages?.map((lang, index) => (
+              <LanguageTile key={index} language={lang} />
+            ))}
+          </div>
         </div>
 
         {/* Close Button */}
         <button
           className="absolute top-3 right-3 bg-gray-800 text-white px-3 py-1 rounded-full hover:bg-gray-700 transition"
-          onClick={onClose}
-        >
+          onClick={onClose}>
           ✕
         </button>
+
+
       </div>
     </div>
   );
