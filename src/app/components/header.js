@@ -54,9 +54,10 @@ export default function Header() {
                         onClick={() => window.location.href = '/secret'}
                     >
                         Software & ML Engineer
+
                     </p>
                 </div>
-            </header>
+            </header >
 
             <div className="bg-light-gray text-transparent text-center py-1">
                 secret

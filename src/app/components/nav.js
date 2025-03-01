@@ -14,7 +14,7 @@ export default function Nav() {
     ];
 
     return (
-        <nav className="w-5/6 sm:w-3/4 max-w-screen-lg mx-auto flex justify-center items-center p-6 bg-gray-600 text-white border border-gray-500 rounded-xl">
+        <nav className="w-full max-w-[420px] mx-auto flex justify-center items-center p-6 bg-gray-600 text-white border border-gray-500 rounded-xl">
             <ul className="flex flex-nowrap gap-x-3">
                 {navItems.map((item, index) => (
                     <li key={index} className="whitespace-nowrap">
