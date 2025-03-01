@@ -49,17 +49,19 @@ function ProjectList() {
           Loading Projects...
         </div>
       ) : (
-        <div className="flex flex-wrap justify-center">
+        <div className="px-4 flex flex-wrap justify-center">
           {projects.length > 0 ? (
             projects.map((project, index) => (
-              <div key={index} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2 box-border">
-                <Card
-                  name={project.name}
-                  description={project.description}
-                  languages={project.languages}
-                  image={project.image}
-                  link={project.link}
-                />
+              <div key={index} className="p-2 w-full flex justify-center sm:w-1/2 md:w-1/3 lg:w-1/4">
+                <div className="w-full max-w-sm">
+                  <Card
+                    name={project.name}
+                    description={project.description}
+                    languages={project.languages}
+                    image={project.image}
+                    link={project.link}
+                  />
+                </div>
               </div>
             ))
           ) : (
