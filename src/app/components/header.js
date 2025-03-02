@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Nav from "./nav";
-
 import { Geist, Geist_Mono } from "next/font/google";
 
 const geistSans = Geist({
@@ -16,21 +15,21 @@ const geistMono = Geist_Mono({
 
 export default function Header() {
     const [isVisible, setIsVisible] = useState(true);
-    let lastScrollY = 0;
+    const lastScrollY = useRef(0);
 
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
 
             if (currentScrollY === 0) {
-                setIsVisible(true); // Show header when at the top
-            } else if (currentScrollY > lastScrollY) {
-                setIsVisible(false); // Hide header when scrolling down
+                setIsVisible(true);
+            } else if (currentScrollY > lastScrollY.current) {
+                setIsVisible(false);
             } else {
-                setIsVisible(true); // Show header when scrolling up
+                setIsVisible(true);
             }
 
-            lastScrollY = currentScrollY;
+            lastScrollY.current = currentScrollY;
         };
 
         window.addEventListener("scroll", handleScroll);
@@ -40,28 +39,23 @@ export default function Header() {
     return (
         <>
             <header
-                className={`bg-zinc-800 py-6 px-10 transition-all duration-700 ease-in-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
+                className={`bg-zinc-800 py-3 px-10 transition-all duration-500 ease-in-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
                     }`}
             >
-                <div className="max-w-5xl mx-auto bg-neutral-600 rounded-3xl px-8 py-6 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left">
-
-                    <h1 className={`${geistMono.variable} text-5xl sm:text-6xl text-[#F5ECD5] font-bold`}>
+                <div className="max-w-3xl mx-auto bg-neutral-600 rounded-3xl px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left">
+                    <h1 className={`${geistMono.variable} text-4xl sm:text-5xl text-[#F5ECD5] font-bold`}>
                         Nirvek Pandey
                     </h1>
-
                     <p
-                        className={`${geistSans.variable} text-2xl sm:text-4xl text-[#FFFAEC] mt-3 sm:mt-0 cursor-pointer`}
-                        onClick={() => window.location.href = '/secret'}
+                        className={`${geistSans.variable} text-xl sm:text-2xl text-[#FFFAEC] mt-2 sm:mt-1 cursor-pointer`}
+                        onClick={() => (window.location.href = "/secret")}
                     >
                         Software & ML Engineer
-
                     </p>
                 </div>
-            </header >
+            </header>
 
-            <div className="bg-light-gray text-transparent text-center py-1">
-                secret
-            </div>
+            <div className="bg-light-gray text-transparent text-center py-1">secret</div>
             <Nav />
         </>
     );

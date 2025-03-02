@@ -36,7 +36,7 @@ export default function Card({ name, description, languages, image, link, date, 
             {name}
           </h6>
           {/* Button Row */}
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-4 mt-4">
             {hasDemo && (
               <div onClick={(e) => e.stopPropagation()}>
                 <LinkButton text="Demo" link={link} className="p-2" />
