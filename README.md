@@ -7,14 +7,14 @@ This website serves as a glimpse into who I am professionally. It highlights the
 ## Technologies Used
 
 ### Frontend
-- **Next.js** – A powerful React framework for server-side rendering and static site generation.
-- **Tailwind CSS** – A utility-first CSS framework for rapid UI development.
+- **Next.js**
+- **Tailwind CSS**
 
 ### Backend
-- **Flask** – A lightweight Python web framework to handle backend logic and API endpoints.
+- **Flask**
 
 ### Database
-- **Firebase** – A flexible, scalable database solution that powers the data management of the website.
+- **Firebase**
 
 ## Page Structure
 
@@ -25,7 +25,7 @@ The landing page provides an overview of the website and introduces visitors to 
 A dedicated section where you can learn more about my background, skills, academic and professional experiences. 
 
 ### [Projects]((https://www.nirvekpandey.com/projects))
-A showcase of various projects that I have worked on. Below is a list of all my projects (names only):
+A showcase of various projects that I have worked on. Below is a list of my projects:
 - [Development Journal](https://cse110-sp24-group11.github.io/cse110-sp24-group11/assets/src/front-page/index.html)
 - [2048 Calculator](https://nirvekpandey.com/projects/demos/2048)
 - [Blackjack Optimizer](https://nirvekpandey.com/projects/demos/Blackjack)
