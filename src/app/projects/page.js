@@ -49,7 +49,7 @@ function ProjectList() {
           Loading Projects...
         </div>
       ) : (
-        <div className="px-4 flex flex-wrap justify-center" >
+        <div className="px-4 flex flex-wrap justify-center items-center max-w-[80vw] mx-auto">
           {projects.length > 0 ? (
             projects.map((project, index) => (
               <div key={index} className="p-2 w-full flex justify-center sm:w-1/2 md:w-1/3 lg:w-1/3">
@@ -71,9 +71,8 @@ function ProjectList() {
           ) : (
             <div className="text-center text-gray-500 mt-4">No projects found.</div>
           )}
-        </div >
-      )
-      }
+        </div>
+      )}
     </>
   );
 }
