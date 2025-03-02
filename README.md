@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Portfolio Website
+Welcome to my portfolio website! This website was developed to showcase my journey and skills as a Software and Machine Learning Engineer. Here you will find details about my academic projects, personal endeavors, and professional experiences.
 
-## Getting Started
+## Overview
+This website serves as a glimpse into who I am professionally. It highlights the projects I've worked on throughout my academic career and in my personal time. The site is built with modern web technologies to ensure a smooth and engaging user experience.
 
-First, run the development server:
+## Technologies Used
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Frontend
+- **Next.js** – A powerful React framework for server-side rendering and static site generation.
+- **Tailwind CSS** – A utility-first CSS framework for rapid UI development.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend
+- **Flask** – A lightweight Python web framework to handle backend logic and API endpoints.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Database
+- **Firebase** – A flexible, scalable database solution that powers the data management of the website.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Page Structure
 
-## Learn More
+### [Home](https://www.nirvekpandey.com/)
+The landing page provides an overview of the website and introduces visitors to my work and professional background.
 
-To learn more about Next.js, take a look at the following resources:
+### [Resume]((https://www.nirvekpandey.com/resume))
+A dedicated section where you can learn more about my background, skills, academic and professional experiences. 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### [Projects]((https://www.nirvekpandey.com/projects))
+A showcase of various projects that I have worked on. Below is a list of all my projects (names only):
+- [Development Journal](https://cse110-sp24-group11.github.io/cse110-sp24-group11/assets/src/front-page/index.html)
+- [2048 Calculator](https://nirvekpandey.com/projects/demos/2048)
+- [Blackjack Optimizer](https://nirvekpandey.com/projects/demos/Blackjack)
+- [Sudoku Solver](https://nirvekpandey.com/projects/demos/Sudoku)
+- [Poverty Predictor Model](https://docs.google.com/document/d/140T-F3hy8HARVfjZIojAdDXH6NzFwpvGdeRPAN3UmHk/edit?tab=t.0#heading=h.rx0aees35i1p)
+- [RedShift LLM Jailbreak](https://github.com/NirvekPanda/RedShift)
+- [Neurolens | Eye Ray Tracking Model](https://www.neurolens.com/)
+- [eLoN Early Warning System (EEWS)](https://www.darischen.com/projects/stock-analysis-and-prediction)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### [Contact](https://www.nirvekpandey.com/contact)
+A page that provides contact information and a form for visitors to reach out for professional inquiries, collaborations, or networking opportunities.
