@@ -60,6 +60,10 @@ function ProjectList() {
                     languages={project.languages}
                     image={project.image}
                     link={project.link}
+                    date={project.date}
+                    hasCode={project.code}
+                    github={project.github}
+                    hasDemo={project.demo}
                   />
                 </div>
               </div>

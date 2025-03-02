@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { parseContent } from "../utils/formatText.js";
 import LanguageTile from "./langTile.js";
+import LinkButton from "./button.js";
 
-export default function CardModal({ isOpen, onClose, name, description, image, languages }) {
+export default function CardModal({ isOpen, onClose, name, description, image, link, date, hasCode, hasDemo, github, languages }) {
   const [animateModal, setAnimateModal] = useState(false);
 
   useEffect(() => {
@@ -45,16 +46,29 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
             alt="card-image"
             className="object-cover w-full h-full rounded-t-lg"
           />
+          {/* Buttons overlay: centered horizontally and overlapping the bottom of the image */}
+          <div className="absolute bottom-[-20px] left-0 right-0 flex justify-center gap-4">
+            {hasDemo && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <LinkButton text="Example" link={link} className="p-2" />
+              </div>
+            )}
+            {hasCode && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <LinkButton text="GitHub" link={github} className="p-2" />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Scrollable Content Section */}
-        <div className="flex-1 p-6">
-          <h2 className="text-3xl font-bold mb-4 text-center">{name}</h2>
+        <div className="flex-1 p-6 pt-10">
+          {/* Extra top padding to account for the overlapping buttons */}
+          <h2 className="text-3xl font-bold mb-1 text-center">{name}</h2>
+          <p className="text-center text-gray-400 mb-4">{date}</p>
           <div className="bg-zinc-800 p-5 rounded-lg shadow-md text-white text-lg leading-relaxed">
             <ul>{parseContent(description)}</ul>
           </div>
-
-
           {/* Languages Section */}
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             {languages?.map((lang, index) => (
@@ -66,11 +80,10 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
         {/* Close Button */}
         <button
           className="absolute top-3 right-3 bg-gray-800 text-white px-3 py-1 rounded-full hover:bg-gray-700 transition"
-          onClick={onClose}>
+          onClick={onClose}
+        >
           ✕
         </button>
-
-
       </div>
     </div>
   );

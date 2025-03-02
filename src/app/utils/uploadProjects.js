@@ -1,6 +1,9 @@
 import { collection, addDoc } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 
+
+
+
 async function uploadProjects() {
     try {
 

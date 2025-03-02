@@ -5,8 +5,13 @@ import LinkButton from "./button.js";
 import CardModal from "./cardModal.js";
 import LanguageTile from "./langTile.js";
 
+// hasDemo={project.demo}
+// hasCode={project.code}
+// github={project.github}
+// date={project.date}
 
-export default function Card({ name, description, languages, image, link }) {
+export default function Card({ name, description, languages, image, link, date, hasCode, github, hasDemo }) {
+  // State to manage the modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
   const languageList = languages.split(",").map((lang) => lang.trim());
 
@@ -26,21 +31,24 @@ export default function Card({ name, description, languages, image, link }) {
           />
         </div>
         {/* Project Name */}
-
         <div className="p-4">
           <h6 className="mb-2 text-white text-xl font-semibold text-center">
             {name}
           </h6>
-
-          {/* View Project Button */}
-          <div className="flex justify-center">
-            {/* Prevents the modal from opening when clicking the button */}
-            <div onClick={(e) => e.stopPropagation()}>
-              <LinkButton text="View Project" link={link} className="p-2" />
-            </div>
+          {/* Button Row */}
+          <div className="flex justify-center gap-4">
+            {hasDemo && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <LinkButton text="Demo" link={link} className="p-2" />
+              </div>
+            )}
+            {hasCode && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <LinkButton text="Code" link={github} className="p-2" />
+              </div>
+            )}
           </div>
         </div>
-
         {/* Language List */}
         <div className="px-4 pb-4 pt-0 mt-2 flex flex-wrap justify-center gap-2">
           {languageList.map((lang, index) => (
@@ -56,6 +64,11 @@ export default function Card({ name, description, languages, image, link }) {
         name={name}
         description={description}
         image={image}
+        date={date}
+        hasDemo={hasDemo}
+        link={link}
+        hasCode={hasCode}
+        github={github}
         languages={languageList}
       />
     </>
