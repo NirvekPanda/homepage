@@ -21,7 +21,7 @@ This website serves as a glimpse into who I am professionally. It highlights the
 ### [Home](https://www.nirvekpandey.com/)
 The landing page provides an overview of the website and introduces visitors to my work and professional background.
 
-### [Resume]((https://www.nirvekpandey.com/resume))
+### [Resume](https://www.nirvekpandey.com/resume)
 A dedicated section where you can learn more about my background, skills, academic and professional experiences. 
 
 ### [Projects]((https://www.nirvekpandey.com/projects))
