@@ -1,13 +1,27 @@
 import React from 'react';
 
+import { useState, useEffect } from 'react';
 
 // Set up pygame demo for 2048 game play
 
-const twentyFourtyEight = () => {
+const TwentyFourtyEight = () => {
+    const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        fetch('/api/2048')
+            .then(res => res.json())
+            .then(data => {
+                setMessage(data.message);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
+
     return (
         <>
             <h1 className="text-4xl text-center text-white font-bold mt-10">
-                This page is still under construction. Please check back later!
+                {message} is still under construction. Please check back later!
             </h1>
             <div className="flex justify-center items-center min-h-screen">
 
@@ -25,4 +39,4 @@ const twentyFourtyEight = () => {
     );
 };
 
-export default twentyFourtyEight;
+export default TwentyFourtyEight;
