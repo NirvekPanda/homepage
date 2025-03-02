@@ -49,10 +49,10 @@ function ProjectList() {
           Loading Projects...
         </div>
       ) : (
-        <div className="px-4 flex flex-wrap justify-center items-center max-w-[80vw] mx-auto">
+        <div className="px-4 flex flex-wrap justify-center items-center w-[80%] max-w-[1200px] mx-auto">
           {projects.length > 0 ? (
             projects.map((project, index) => (
-              <div key={index} className="p-2 w-full flex justify-center sm:w-1/2 md:w-1/3 lg:w-1/3">
+              <div key={index} className="p-2 w-full flex justify-center sm:w-1/2 md:w-1/2 lg:w-1/3">
                 <div className="w-full max-w-sm">
                   <Card
                     name={project.name}
