@@ -20,7 +20,7 @@ export default function Card({ name, description, languages, image, link, date, 
       {/* Card element */}
       <div
         onClick={() => setIsModalOpen(true)}
-        className="cursor-pointer relative flex flex-col my-6 bg-zinc-800 shadow-md border border-zinc-700 rounded-lg w-full max-w-sm"
+        className="cursor-pointer relative flex flex-col my-6 bg-slate-800 shadow-md border border-zinc-700 rounded-lg w-full max-w-sm"
       >
         {/* Image Section */}
         <div className="relative h-56 m-2.5 overflow-hidden text-white rounded-md">
