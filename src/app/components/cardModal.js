@@ -28,7 +28,7 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative bg-zinc-900 rounded-lg overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        className={`relative bg-slate-800 rounded-lg overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
         style={{
           width: "80vw",
