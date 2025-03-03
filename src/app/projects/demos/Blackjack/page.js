@@ -17,7 +17,7 @@ function Blackjack() {
     }
 
     // Helper to construct the URL for card images.
-    const getCardImageUrl = (card) => `/resources/cards/${card}.png`;
+    const getCardImageUrl = (card) => `/projects/data/Blackjack/resources/cards/${card}.png`;
 
     // Fetch the current game state from the backend.
     const fetchGameState = async () => {
@@ -103,21 +103,46 @@ function Blackjack() {
     return (
         <div className="min-h-screen flex flex-col items-center p-4">
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[100vw]">
-                <h1 className="text-4xl font-bold text-center mb-4 text-black">Blackjack</h1>
+                <h1 className="text-4xl font-bold text-center mb-4 text-slate-800">Blackjack is Under Construction!</h1>
                 {/* If there's an error, show the full deck instead of an error message */}
                 {error ? (
                     <div>
-                        <h2 className="text-xl font-semibold text-center mb-2 text-black">Full Deck</h2>
-                        <div
-                            style={{ gridTemplateColumns: 'repeat(13, 1fr)' }}
-                            className="grid gap-2"
-                        >
-                            {deck.map((card) => (
-                                <img key={card} src={getCardImageUrl(card)} alt={card} className="w-16 text-black" />
-                            ))}
+                        <h2 className="text-xl font-semibold text-center mb-2 text-slate-600">Place Holder Deck</h2>
+                        <div className="overflow-x-auto">
+                            {/* Mobile view: group cards by suit in vertical columns */}
+                            <div className="flex md:hidden justify-center">
+                                {suits.map(suit => (
+                                    <div key={suit} className="flex flex-col gap-2 mr-4">
+                                        {ranks.map(rank => {
+                                            const card = `${rank}_${suit}`;
+                                            return (
+                                                <img
+                                                    key={card}
+                                                    src={getCardImageUrl(card)}
+                                                    alt={card}
+                                                    className="w-24"
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                ))}
+                            </div>
+                            {/* Medium and large screens: keep horizontal grid layout */}
+                            <div
+                                className="hidden md:grid gap-2"
+                                style={{ gridTemplateColumns: 'repeat(13, 1fr)' }}
+                            >
+                                {deck.map(card => (
+                                    <img
+                                        key={card}
+                                        src={getCardImageUrl(card)}
+                                        alt={card}
+                                        className="w-18"
+                                    />
+                                ))}
+                            </div>
                         </div>
                     </div>
-
                 ) : (
                     // Otherwise, show the game state UI.
                     gameState ? (
@@ -155,12 +180,6 @@ function Blackjack() {
                                         <strong>State:</strong> {gameState.state}
                                     </p>
                                     <p>
-                                        <strong>MC:</strong> Value {gameState.MC?.value.toFixed(2)} (Samples: {gameState.MC?.samples})
-                                    </p>
-                                    <p>
-                                        <strong>TD:</strong> Value {gameState.TD?.value.toFixed(2)} (Samples: {gameState.TD?.samples})
-                                    </p>
-                                    <p>
                                         <strong>QL:</strong> Values [{gameState.QL?.values[0].toFixed(2)},{' '}
                                         {gameState.QL?.values[1].toFixed(2)}] (Samples: [{gameState.QL?.samples[0]},{' '}
                                         {gameState.QL?.samples[1]}])
@@ -194,24 +213,7 @@ function Blackjack() {
                                     >
                                         Stand
                                     </button>
-                                    <button
-                                        onClick={() => toggleMode('MC')}
-                                        className={`font-bold py-2 px-4 rounded ${gameState.toggles.autoMC
-                                            ? 'bg-green-500 hover:bg-green-700 text-white'
-                                            : 'bg-gray-300 text-black'
-                                            }`}
-                                    >
-                                        MC {gameState.toggles.autoMC ? 'On' : 'Off'}
-                                    </button>
-                                    <button
-                                        onClick={() => toggleMode('TD')}
-                                        className={`font-bold py-2 px-4 rounded ${gameState.toggles.autoTD
-                                            ? 'bg-green-500 hover:bg-green-700 text-white'
-                                            : 'bg-gray-300 text-black'
-                                            }`}
-                                    >
-                                        TD {gameState.toggles.autoTD ? 'On' : 'Off'}
-                                    </button>
+
                                     <button
                                         onClick={() => toggleMode('QL')}
                                         className={`font-bold py-2 px-4 rounded ${gameState.toggles.autoQL
