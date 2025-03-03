@@ -6,7 +6,7 @@ export default function LinkButton({ text, link, isActive, className }) {
     const box_color = "bg-gray-900";
     const selected_box = "bg-gray-700";
     const text_color = "text-white";
-    const hover_color = "hover:bg-gray-700 hover:text-aqua-500 hover:underline";
+    const hover_color = "hover:bg-gray-700 hover:text-aqua-500 hover:underline hover:border-2 hover:border-slate-900 duration-200";
 
     return (
         <Link
