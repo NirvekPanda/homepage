@@ -42,7 +42,7 @@ const languageMap = [
     { name: "Pybag", color: "bg-teal-600", title: "Game Development Package", description: "a set of Python modules designed for writing video games." },
 
     // DevOps, CI/CD, and Testing 
-    { name: "Git", color: "bg-slate-700", title: "Version Control System", description: "a distributed version control system used for tracking changes in source code." },
+    { name: "Git", color: "bg-slate-500", title: "Version Control System", description: "a distributed version control system used for tracking changes in source code." },
     { name: "GitHub Actions", color: "bg-slate-600", title: "CI/CD Tool", description: "a tool used for automating workflows in the software development process." },
 
     // Testing 

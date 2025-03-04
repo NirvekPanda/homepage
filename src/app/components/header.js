@@ -39,10 +39,10 @@ export default function Header() {
     return (
         <>
             <header
-                className={`bg-zinc-800 py-3 px-10 transition-all duration-500 ease-in-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
+                className={`bg-gradient-to-b from-zinc-800 to-stone-900 py-5 px-10 transition-all duration-500 ease-in-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
                     }`}
             >
-                <div className="max-w-3xl mx-auto bg-neutral-600 rounded-3xl px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left">
+                <div className="max-w-3xl mx-auto bg-gradient-to-b from-stone-700 to-zinc-700 rounded-3xl px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left">
                     <h1 className={`${geistMono.variable} text-4xl sm:text-5xl text-[#F5ECD5] font-bold`}>
                         Nirvek Pandey
                     </h1>

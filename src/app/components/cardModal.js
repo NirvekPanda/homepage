@@ -28,7 +28,7 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative bg-slate-700 rounded-lg overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        className={`relative bg-gradient-to-b from-stone-700 to-zinc-900 rounded-lg overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
         style={{
           width: "80vw",
@@ -46,7 +46,7 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
             alt="card-image"
             className="object-cover w-full h-full rounded-t-lg"
           />
-          {/* Buttons overlay: centered horizontally and overlapping the bottom of the image */}
+          {/* Buttons overlay */}
           <div className="absolute bottom-[-20px] left-0 right-0 flex justify-center gap-4">
             {hasDemo && (
               <div onClick={(e) => e.stopPropagation()}>
@@ -66,7 +66,7 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
           {/* Extra top padding to account for the overlapping buttons */}
           <h2 className="text-3xl font-bold mb-1 text-center">{name}</h2>
           <p className="text-center text-gray-400 mb-4">{date}</p>
-          <div className="bg-slate-700 p-5 rounded-lg shadow-md text-white text-lg leading-relaxed">
+          <div className="bg-gradient-to-b from-slate-700 to-gray-700 p-5 rounded-lg shadow-lg text-white text-lg leading-relaxed">
             <ul>{parseContent(description)}</ul>
           </div>
           {/* Languages Section */}
