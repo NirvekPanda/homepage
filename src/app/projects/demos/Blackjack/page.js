@@ -1,27 +1,20 @@
 import React from 'react';
 
-
-// Set up pygame demo for black jack game play
-
 const Blackjack = () => {
     return (
-        <>
-            <h1 className="text-4xl text-center text-white font-bold mt-10">
-                This page is still under construction. Please check back later!
-            </h1>
-            <div className="flex justify-center items-center min-h-screen">
-
-
+        <div className="flex items-center justify-center h-screen p-4">
+            <div className="w-4/5 h-4/5 flex flex-col items-center justify-center">
+                <h1 className="text-2xl sm:text-4xl text-center text-white font-bold mb-4">
+                    This page is still under construction. Please check back later!
+                </h1>
                 <iframe
-                    className="w-3/4 max-w-4xl aspect-video border border-gray-800 rounded-xl shadow-lg"
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1"
-                    title="YouTube video player"
+                    className="w-full h-full border border-gray-800 rounded-xl shadow-lg"
+                    src="https://blackjack-nda.vercel.app/"
+                    title="Demo BlackJack Game"
                     frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
                 ></iframe>
             </div>
-        </>
+        </div>
     );
 };
 
