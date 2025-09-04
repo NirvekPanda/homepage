@@ -45,7 +45,12 @@ function BlogList() {
             <div className="flex flex-col items-center">
                 <div className="text-center mb-6 mt-8">
                     <div className="mb-6">
-                    <LinkButton text="Upload" link="/upload" isActive={path === "/upload"} />
+                        <a
+                            href="/upload"
+                            className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8]"
+                        >
+                            Upload
+                        </a>
                     </div>
 
                     <p className="text-xl text-[#FFFAEC]">

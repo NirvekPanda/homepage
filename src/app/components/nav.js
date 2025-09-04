@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import LinkButton from "./button";
+import Link from "next/link";
 
 export default function Nav() {
     const path = usePathname();
@@ -15,18 +15,22 @@ export default function Nav() {
     ];
 
     return (
-        <nav className="w-full max-w-[520px] mx-auto flex justify-center items-center p-6 bg-gray-600 text-white border border-gray-500 rounded-xl">
-            <ul className="flex flex-nowrap gap-x-3">
-                {navItems.map((item, index) => (
-                    <li key={index} className="whitespace-nowrap">
-                        <LinkButton
-                            text={item.name}
-                            link={item.link}
-                            isActive={path === item.link}
-                        />
-                    </li>
+        <nav className="w-full max-w-[580px] mx-auto flex justify-center mb-6">
+            <div className="bg-slate-800 rounded-lg p-1 flex space-x-1 overflow-x-auto scrollbar-hide">
+                {navItems.map((item) => (
+                    <Link
+                        key={item.link}
+                        href={item.link}
+                        className={`px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
+                            path === item.link
+                                ? "bg-[#F5ECD5] text-gray-900 shadow-lg"
+                                : "text-[#FFFAEC] hover:bg-slate-700"
+                        }`}
+                    >
+                        {item.name}
+                    </Link>
                 ))}
-            </ul>
+            </div>
         </nav>
     );
 }

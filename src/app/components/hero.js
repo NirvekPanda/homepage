@@ -18,7 +18,7 @@ const profileImages = [
 
 const Hero = ({ title, paragraph }) => {
     return (
-        <section className="w-5/6 max-w-4xl mx-auto flex flex-col md:flex-row bg-white rounded-3xl shadow-lg min-h-[60vh] overflow-hidden border border-gray-400">
+        <section className="w-5/6 max-w-6xl mx-auto flex flex-col md:flex-row bg-white rounded-3xl shadow-lg min-h-[60vh] overflow-hidden border border-gray-400">
 
             <div className="md:w-1/2 relative h-64 md:h-auto">
                 <ImageCarousel 

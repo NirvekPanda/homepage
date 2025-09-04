@@ -3,15 +3,14 @@
 import Link from "next/link";
 
 export default function LinkButton({ text, link, isActive, className }) {
-    const box_color = "bg-gray-900";
-    const selected_box = "bg-gray-700";
-    const text_color = "text-white";
-    const hover_color = "hover:bg-gray-700 hover:text-aqua-500 hover:underline hover:border-2 hover:border-slate-900 duration-200";
-
     return (
         <Link
             href={link}
-            className={`${isActive ? selected_box : box_color} rounded px-3 py-2 ${hover_color} ${text_color} font-gisel-nano ${className}`}
+            className={`px-4 py-2 rounded-md font-medium transition-all duration-200 bg-slate-900 ${
+                isActive
+                    ? "bg-[#F5ECD5] text-gray-900 shadow-lg"
+                    : "bg-slate-700/50 text-gray-300 hover:bg-slate-600 hover:text-white"
+            } ${className || ""}`}
         >
             {text}
         </Link>

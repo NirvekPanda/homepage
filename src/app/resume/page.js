@@ -9,10 +9,6 @@ function Resume() {
     setMounted(true);
   }, []);
 
-  const box_color = "bg-gray-900";
-  const hover_color = "hover:bg-gray-700 hover:text-aqua-500 hover:underline";
-  const text_color = "text-white";
-
   return (
     <>
       {/* Header container for the download button */}
@@ -20,7 +16,7 @@ function Resume() {
         <a
           href="/Nirvek_Pandey_Resume.pdf"
           download
-          className={`${box_color} rounded px-4 py-2 ${hover_color} ${text_color} font-gisel-nano mt-6`}
+          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] mt-6"
         >
           Download Resume
         </a>
