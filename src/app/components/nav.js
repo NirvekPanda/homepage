@@ -9,12 +9,13 @@ export default function Nav() {
     const navItems = [
         { name: "Home", link: "/" },
         { name: "Projects", link: "/projects" },
+        { name: "Blog", link: "/blog" },
         { name: "Resume", link: "/resume" },
         { name: "Contact Me", link: "/contact" },
     ];
 
     return (
-        <nav className="w-full max-w-[420px] mx-auto flex justify-center items-center p-6 bg-gray-600 text-white border border-gray-500 rounded-xl">
+        <nav className="w-full max-w-[520px] mx-auto flex justify-center items-center p-6 bg-gray-600 text-white border border-gray-500 rounded-xl">
             <ul className="flex flex-nowrap gap-x-3">
                 {navItems.map((item, index) => (
                     <li key={index} className="whitespace-nowrap">

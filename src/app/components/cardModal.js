@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { parseContent } from "../utils/formatText.js";
 import LanguageTile from "./langTile.js";
 import LinkButton from "./button.js";
+import { getProjectImageSrc } from "../utils/imageUtils.js";
 
 export default function CardModal({ isOpen, onClose, name, description, image, link, date, hasCode, hasDemo, github, languages }) {
   const [animateModal, setAnimateModal] = useState(false);
@@ -42,9 +43,12 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
         {/* Top Image Section */}
         <div className="relative w-full h-2/5">
           <img
-            src={image}
-            alt="card-image"
+            src={getProjectImageSrc(image, name)}
+            alt={name}
             className="object-cover w-full h-full rounded-t-lg"
+            onError={(e) => {
+              e.target.src = '/project-images/default.jpg';
+            }}
           />
           {/* Buttons overlay */}
           <div className="absolute bottom-[-20px] left-0 right-0 flex justify-center gap-4">

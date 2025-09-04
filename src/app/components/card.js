@@ -4,11 +4,7 @@ import { useState } from "react";
 import LinkButton from "./button.js";
 import CardModal from "./cardModal.js";
 import LanguageTile from "./langTile.js";
-
-// hasDemo={project.demo}
-// hasCode={project.code}
-// github={project.github}
-// date={project.date}
+import { getProjectImageSrc } from "../utils/imageUtils.js";
 
 export default function Card({ name, description, languages, image, link, date, hasCode, github, hasDemo }) {
   // State to manage the modal visibility
@@ -26,9 +22,12 @@ export default function Card({ name, description, languages, image, link, date, 
         {/* Image Section */}
         <div className="relative h-56 m-2.5 overflow-hidden text-white rounded-md">
           <img
-            src={image}
-            alt="card-image"
+            src={getProjectImageSrc(image, name)}
+            alt={name}
             className="object-cover w-full h-full"
+            onError={(e) => {
+              e.target.src = '/project-images/default.jpg';
+            }}
           />
         </div>
         {/* Project Name */}
