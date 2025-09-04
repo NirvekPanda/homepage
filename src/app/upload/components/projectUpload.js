@@ -12,9 +12,9 @@ export default function ProjectUpload() {
     image: "",
     link: "",
     date: "",
-    hasCode: false,
+    code: false,
     github: "",
-    hasDemo: false,
+    demo: false,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -89,9 +89,9 @@ export default function ProjectUpload() {
         image: "",
         link: "",
         date: "",
-        hasCode: false,
+        code: false,
         github: "",
-        hasDemo: false,
+        demo: false,
       });
       setSelectedFile(null);
       setImagePreview(null);
@@ -270,22 +270,22 @@ export default function ProjectUpload() {
           <label className="flex items-center">
             <input
               type="checkbox"
-              name="hasDemo"
-              checked={formData.hasDemo}
+              name="demo"
+              checked={formData.demo}
               onChange={handleInputChange}
               className="mr-2 text-[#F5ECD5] focus:ring-[#F5ECD5]"
             />
-            <span className="text-white">Has Demo</span>
+            <span className="text-white">Demo</span>
           </label>
           <label className="flex items-center">
             <input
               type="checkbox"
-              name="hasCode"
-              checked={formData.hasCode}
+              name="code"
+              checked={formData.code}
               onChange={handleInputChange}
               className="mr-2 text-[#F5ECD5] focus:ring-[#F5ECD5]"
             />
-            <span className="text-white">Has Code</span>
+            <span className="text-white">Code</span>
           </label>
         </div>
 

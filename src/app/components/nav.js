@@ -15,7 +15,7 @@ export default function Nav() {
     ];
 
     return (
-        <nav className="w-full max-w-[580px] mx-auto flex justify-center mb-6">
+        <nav className="w-full max-w-[580px] mx-auto flex justify-center mt-2">
             <div className="bg-slate-800 rounded-lg p-1 flex space-x-1 overflow-x-auto scrollbar-hide">
                 {navItems.map((item) => (
                     <Link

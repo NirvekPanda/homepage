@@ -1,7 +1,7 @@
 // AI agent for 2048 game
 // Based on Python reference implementation
 
-const MOVES = {0: 'up', 1: 'left', 2: 'down', 3: 'right'};
+const MOVES = {0: 'left', 1: 'up', 2: 'right', 3: 'down'};
 const MAX_PLAYER = 0;
 const CHANCE_PLAYER = 1;
 
@@ -125,6 +125,7 @@ class AI {
                 
                 node.children.push([null, child]);
                 this.buildTree(child, depth - 1);
+                this.simulator.setupState(ogMatrix, ogScore);
             }
         }
     }
@@ -220,7 +221,7 @@ class AI {
                 return null;
             }
             
-            const [direction, _] = this.expectimax(this.root);
+            const [direction, value] = this.expectimax(this.root);
             return direction;
         } catch (error) {
             console.error('AI computation error:', error);

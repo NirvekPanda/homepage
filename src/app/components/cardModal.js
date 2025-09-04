@@ -6,7 +6,7 @@ import LanguageTile from "./langTile.js";
 import LinkButton from "./button.js";
 import { getProjectImageSrc } from "../utils/imageUtils.js";
 
-export default function CardModal({ isOpen, onClose, name, description, image, link, date, hasCode, hasDemo, github, languages }) {
+export default function CardModal({ isOpen, onClose, name, description, image, link, date, code, demo, github, languages }) {
   const [animateModal, setAnimateModal] = useState(false);
 
   useEffect(() => {
@@ -52,12 +52,12 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
           />
           {/* Buttons overlay */}
           <div className="absolute bottom-[-20px] left-0 right-0 flex justify-center gap-4">
-            {hasDemo && (
+            {demo && (
               <div onClick={(e) => e.stopPropagation()}>
                 <LinkButton text="Example" link={link} className="p-2" />
               </div>
             )}
-            {hasCode && (
+            {code && (
               <div onClick={(e) => e.stopPropagation()}>
                 <LinkButton text="GitHub" link={github} className="p-2" />
               </div>

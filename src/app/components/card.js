@@ -6,7 +6,7 @@ import CardModal from "./cardModal.js";
 import LanguageTile from "./langTile.js";
 import { getProjectImageSrc } from "../utils/imageUtils.js";
 
-export default function Card({ name, description, languages, image, link, date, hasCode, github, hasDemo }) {
+export default function Card({ name, description, languages, image, link, date, code, github, demo }) {
   // State to manage the modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
   const languageList = languages.split(",").map((lang) => lang.trim());
@@ -37,12 +37,12 @@ export default function Card({ name, description, languages, image, link, date, 
           </h6>
           {/* Button Row */}
           <div className="flex justify-center gap-4 mt-4">
-            {hasDemo && (
+            {demo && (
               <div onClick={(e) => e.stopPropagation()}>
                 <LinkButton text="Demo" link={link} className="p-2" />
               </div>
             )}
-            {hasCode && (
+            {code && (
               <div onClick={(e) => e.stopPropagation()}>
                 <LinkButton text="Code" link={github} className="p-2" />
               </div>
@@ -65,9 +65,9 @@ export default function Card({ name, description, languages, image, link, date, 
         description={description}
         image={image}
         date={date}
-        hasDemo={hasDemo}
+        demo={demo}
         link={link}
-        hasCode={hasCode}
+        code={code}
         github={github}
         languages={languageList}
       />

@@ -40,7 +40,7 @@ function ProjectList() {
           href="https://github.com/NirvekPanda"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] mt-4"
+          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] mt-6"
         >
           GitHub
         </a>
@@ -63,9 +63,9 @@ function ProjectList() {
                     image={project.image}
                     link={project.link}
                     date={project.date}
-                    hasCode={project.code}
+                    code={project.code}
                     github={project.github}
-                    hasDemo={project.demo}
+                    demo={project.demo}
                   />
                 </div>
               </div>

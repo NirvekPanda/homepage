@@ -171,6 +171,7 @@ const TwentyFortyEight = () => {
       
       // Compute AI decision
       const direction = ai.computeDecision();
+      console.log('AI decided on direction:', direction);
       
       if (direction !== null && direction !== undefined) {
         makeMove(direction);
@@ -220,15 +221,15 @@ const TwentyFortyEight = () => {
       return () => clearTimeout(timer);
     };
 
-    // Add event listeners for user input
-    window.addEventListener('keydown', handleUserInput);
-    window.addEventListener('click', handleUserInput);
-    window.addEventListener('touchstart', handleUserInput);
+    // Only listen for arrow key presses and game board interactions
+    window.addEventListener('keydown', (event) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        handleUserInput();
+      }
+    });
 
     return () => {
       window.removeEventListener('keydown', handleUserInput);
-      window.removeEventListener('click', handleUserInput);
-      window.removeEventListener('touchstart', handleUserInput);
     };
   }, []);
 
@@ -263,6 +264,8 @@ const TwentyFortyEight = () => {
     if (absDeltaX > absDeltaY) {
       // Horizontal swipe
       if (absDeltaX > minSwipeDistance) {
+        // Disable AI when user swipes
+        setAiEnabled(false);
         if (deltaX > 0) {
           makeMove(0); // Left swipe
         } else {
@@ -272,6 +275,8 @@ const TwentyFortyEight = () => {
     } else {
       // Vertical swipe
       if (absDeltaY > minSwipeDistance) {
+        // Disable AI when user swipes
+        setAiEnabled(false);
         if (deltaY > 0) {
           makeMove(1); // Up swipe
         } else {
@@ -381,7 +386,10 @@ const TwentyFortyEight = () => {
               
               {/* Up Arrow */}
               <button
-                onClick={() => makeMove(1)}
+                onClick={() => {
+                  setAiEnabled(false);
+                  makeMove(1);
+                }}
                 disabled={gameOver}
                 className="w-16 h-16 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-lg"
               >
@@ -410,7 +418,10 @@ const TwentyFortyEight = () => {
             <div className="flex gap-3 items-center">
               {/* Left Arrow */}
               <button
-                onClick={() => makeMove(0)}
+                onClick={() => {
+                  setAiEnabled(false);
+                  makeMove(0);
+                }}
                 disabled={gameOver}
                 className="w-16 h-16 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-lg"
               >
@@ -419,7 +430,10 @@ const TwentyFortyEight = () => {
               
               {/* Down Arrow */}
               <button
-                onClick={() => makeMove(3)}
+                onClick={() => {
+                  setAiEnabled(false);
+                  makeMove(3);
+                }}
                 disabled={gameOver}
                 className="w-16 h-16 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-lg"
               >
@@ -428,7 +442,10 @@ const TwentyFortyEight = () => {
               
               {/* Right Arrow */}
               <button
-                onClick={() => makeMove(2)}
+                onClick={() => {
+                  setAiEnabled(false);
+                  makeMove(2);
+                }}
                 disabled={gameOver}
                 className="w-16 h-16 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-lg"
               >

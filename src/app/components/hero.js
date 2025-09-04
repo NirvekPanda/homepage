@@ -3,6 +3,7 @@
 import React from "react";
 import { parseContent } from "../utils/formatText.js";
 import ImageCarousel from "./imageCarousel.js";
+import Footer from "./footer.js";
 
 
 const profileImages = [
@@ -31,10 +32,15 @@ const Hero = ({ title, paragraph }) => {
 
             <div className="md:w-1/2 p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center text-center bg-gray-600 rounded-b-3xl md:rounded-r-3xl md:rounded-bl-none">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-white">{title}</h1>
-                <div className="text-gray-200 space-y-3 sm:space-y-4 w-full max-w-md text-justify leading-relaxed text-xs sm:text-sm md:text-base px-2">
+                <div className="text-gray-200 space-y-3 sm:space-y-4 w-full max-w-md text-justify leading-relaxed text-xs sm:text-sm md:text-base px-2 mb-4">
                     {parseContent(paragraph)}
                 </div>
+            
+            <Footer />            
+            
             </div>
+
+            
         </section>
     );
 };
