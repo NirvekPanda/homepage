@@ -306,7 +306,7 @@ const TwentyFortyEight = () => {
   }, [handleKeyPress]);
 
     return (
-    <div className="min-h-screen flex flex-col items-center justify-start pt-4 pb-4 px-4">
+    <div className="flex flex-col items-center justify-start pt-4 pb-4 px-4">
       {/* Header */}
       <div className="text-center mb-6">
         <h1 className="text-4xl font-bold text-[#FFFAEC] mb-2 mt-2">
