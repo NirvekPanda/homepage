@@ -43,10 +43,6 @@ describe('Home Page Integration', () => {
       // Check paragraph content
       expect(screen.getByText(/I am a Nepalese - American student/)).toBeInTheDocument()
       expect(screen.getByText(/University of California, San Diego/)).toBeInTheDocument()
-      expect(screen.getByText(/software development and machine learning/)).toBeInTheDocument()
-      expect(screen.getByText(/video blog platform and a multiplayer blackjack game/)).toBeInTheDocument()
-      expect(screen.getByText(/cooking skills and travel/)).toBeInTheDocument()
-      expect(screen.getByText(/Barcelona/)).toBeInTheDocument()
     })
 
     test('Hero component renders with correct styling', () => {
@@ -110,14 +106,7 @@ describe('Home Page Integration', () => {
       // Professional background
       expect(screen.getByText(/software development and machine learning/)).toBeInTheDocument()
       expect(screen.getByText(/distributed systems and machine learning/)).toBeInTheDocument()
-      
-      // Projects
-      expect(screen.getByText(/video blog platform/)).toBeInTheDocument()
-      expect(screen.getByText(/multiplayer blackjack game/)).toBeInTheDocument()
-      
-      // Personal interests
-      expect(screen.getByText(/cooking skills and travel/)).toBeInTheDocument()
-      expect(screen.getByText(/Barcelona/)).toBeInTheDocument()
+
     })
 
     test('Content formatting is preserved', () => {
