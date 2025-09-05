@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { parseContent } from "../utils/formatText.js";
 import LanguageTile from "./langTile.js";
 import LinkButton from "./button.js";
+import { PopoverProvider } from "../contexts/PopoverContext.js";
 import { getProjectImageSrc } from "../utils/imageUtils.js";
 
 export default function CardModal({ isOpen, onClose, name, description, image, link, date, code, demo, github, languages }) {
@@ -23,11 +24,13 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out bg-black bg-opacity-50"
-      onClick={onClose}
-    >
+    <PopoverProvider>
       <div
+        className="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out bg-black bg-opacity-50"
+        onClick={onClose}
+      >
+      <div
+        data-testid="card-modal"
         onClick={(e) => e.stopPropagation()}
         className={`relative bg-gradient-to-b from-stone-700 to-zinc-900 rounded-lg overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
@@ -90,5 +93,6 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
         </button>
       </div>
     </div>
+    </PopoverProvider>
   );
 }

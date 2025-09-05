@@ -230,9 +230,14 @@ class GameRunner {
         for (let i = 0; i < 4; i++) {
             this.rotateMatrixClockwise();
             if (this.canMove()) {
+                // Restore original orientation before returning
+                for (let j = 0; j < (4 - i - 1) % 4; j++) {
+                    this.rotateMatrixClockwise();
+                }
                 return false;
             }
         }
+        // Matrix is already in original orientation after 4 rotations
         return true;
     }
 

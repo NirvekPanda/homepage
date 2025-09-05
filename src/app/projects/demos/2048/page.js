@@ -296,7 +296,7 @@ const TwentyFortyEight = () => {
     <div className="min-h-screen flex flex-col items-center justify-start pt-4 pb-4 px-4">
       {/* Header */}
       <div className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-[#FFFAEC] mb-2">2048 Game + AI Demo</h1>
+        <h1 className="text-4xl font-bold text-[#FFFAEC] mb-2 mt-2">2048 Game + AI Demo</h1>
         {gameOver && (
           <p className="text-red-400 text-lg mt-2">Game Over! Press Reset to play again.</p>
         )}
@@ -456,26 +456,9 @@ const TwentyFortyEight = () => {
         </div>
       </div>
 
-      {/* Debug Test Button */}
-      {/* <div className="mt-4">
-        <button
-          onClick={() => {
-            console.log('Current game state:', game);
-            console.log('Current board:', board);
-            console.log('Current score:', score);
-            if (game) {
-              console.log('Game board from instance:', game.getBoard());
-              console.log('Game score from instance:', game.score);
-            }
-          }}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm"
-        >
-          Debug Info
-        </button>
-      </div> */}
 
       {/* Instructions */}
-      <div className="mt-8 text-center text-sm text-[#FFFAEC]/60 max-w-[500px]">
+      <div className="mt-2 text-center text-sm text-[#FFFAEC]/60 max-w-[500px]">
         <p className="mb-2">Use arrow keys, swipe on the game board, or click buttons to move tiles</p>
         <p>Combine tiles with the same number to reach 2048!</p>
       </div>

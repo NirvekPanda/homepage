@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { usePopover } from "../contexts/PopoverContext";
 
 // Complete language data with colors and descriptions
 const languageMap = {
@@ -59,7 +60,8 @@ const languageMap = {
 };
 
 export default function LanguageTile({ language }) {
-    const [showPopover, setShowPopover] = useState(false);
+    const { showPopover, hidePopover, isPopoverActive } = usePopover();
+    const popoverId = `popover-${language}`;
 
     // Find the language in the map, or set to default gray if not found
     const langData = languageMap[language] ? {
@@ -75,8 +77,15 @@ export default function LanguageTile({ language }) {
     return (
         <div
             className="relative flex items-center justify-center"
-            onMouseEnter={() => setShowPopover(true)}
-            onMouseLeave={() => setShowPopover(false)}
+            onMouseEnter={(e) => {
+                e.stopPropagation();
+                showPopover(popoverId);
+            }}
+            onMouseLeave={(e) => {
+                e.stopPropagation();
+                hidePopover();
+            }}
+            onClick={(e) => e.stopPropagation()}
         >
             {/* Language Tile */}
             <div className={`px-3 py-1 text-white text-sm rounded-md ${langData.color} cursor-pointer`}>
@@ -84,7 +93,7 @@ export default function LanguageTile({ language }) {
             </div>
 
             {/* Popover */}
-            {showPopover && (
+            {isPopoverActive(popoverId) && (
                 <div
                     className="absolute z-10 bottom-14 left-1/2 transform -translate-x-1/2 w-48 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-lg dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800 opacity-100 transition-opacity duration-300"
                 >

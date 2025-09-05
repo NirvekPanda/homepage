@@ -4,6 +4,7 @@ import { useState } from "react";
 import LinkButton from "./button.js";
 import CardModal from "./cardModal.js";
 import LanguageTile from "./langTile.js";
+import { PopoverProvider } from "../contexts/PopoverContext.js";
 import { getProjectImageSrc } from "../utils/imageUtils.js";
 
 export default function Card({ name, description, languages, image, link, date, code, github, demo }) {
@@ -12,7 +13,7 @@ export default function Card({ name, description, languages, image, link, date, 
   const languageList = languages.split(",").map((lang) => lang.trim());
 
   return (
-    <>
+    <PopoverProvider>
       {/* Card element */}
       <div
         onClick={() => setIsModalOpen(true)}
@@ -71,6 +72,6 @@ export default function Card({ name, description, languages, image, link, date, 
         github={github}
         languages={languageList}
       />
-    </>
+    </PopoverProvider>
   );
 }
