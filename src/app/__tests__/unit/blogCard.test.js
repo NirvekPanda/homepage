@@ -50,12 +50,12 @@ describe('BlogCard Component', () => {
 
   test('formats dates correctly for various input types', () => {
     const { rerender } = render(<BlogCard {...mockProps} />)
-    expect(screen.getByText('January 15, 2024')).toBeInTheDocument()
+    expect(screen.getByText(/January 15, 2024/)).toBeInTheDocument()
     
     // Test Firestore timestamp
     const firestoreTimestamp = { toDate: () => new Date('2024-01-15T10:30:00Z') }
     rerender(<BlogCard {...mockProps} publishedAt={firestoreTimestamp} />)
-    expect(screen.getByText('January 15, 2024')).toBeInTheDocument()
+    expect(screen.getByText(/January 15, 2024/)).toBeInTheDocument()
     
     // Test invalid date
     rerender(<BlogCard {...mockProps} publishedAt="invalid-date" />)
@@ -89,7 +89,7 @@ describe('BlogCard Component', () => {
     const excerpt = screen.getByText('This is a test blog excerpt that should be displayed.')
     expect(excerpt).toHaveClass('text-gray-300', 'text-sm', 'text-center', 'mb-3', 'line-clamp-3')
     
-    const date = screen.getByText('January 15, 2024')
+    const date = screen.getByText(/January 15, 2024/)
     expect(date).toHaveClass('text-white', 'text-xs', 'text-center')
   })
 

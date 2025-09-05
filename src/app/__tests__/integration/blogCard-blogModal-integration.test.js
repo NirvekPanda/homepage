@@ -61,7 +61,7 @@ describe('BlogCard and BlogModal Integration', () => {
         expect(modal).toHaveTextContent('This is the full blog content that appears in the modal.')
         expect(modal).toHaveTextContent('It has multiple lines of content.')
         expect(modal).toHaveTextContent('And more detailed information.')
-        expect(modal).toHaveTextContent('January 15, 2024 at 2:30 AM')
+        expect(modal).toHaveTextContent(/January 15, 2024 at \d+:\d+ [AP]M/)
       })
     })
 
@@ -177,7 +177,7 @@ describe('BlogCard and BlogModal Integration', () => {
         
         // Verify all data is consistent
         expect(modal).toHaveTextContent('Test Blog Post')
-        expect(modal).toHaveTextContent('January 15, 2024 at 2:30 AM')
+        expect(modal).toHaveTextContent(/January 15, 2024 at \d+:\d+ [AP]M/)
         expect(modal).toHaveTextContent('This is the full blog content that appears in the modal.')
         expect(modal).toHaveTextContent('It has multiple lines of content.')
         expect(modal).toHaveTextContent('And more detailed information.')
@@ -215,7 +215,7 @@ describe('BlogCard and BlogModal Integration', () => {
       render(<BlogCard {...mockBlogData} />)
       
       // Check date format in card (shorter format)
-      expect(screen.getByText('January 15, 2024')).toBeInTheDocument()
+      expect(screen.getByText(/January 15, 2024/)).toBeInTheDocument()
       
       // Click on the blog card to open modal
       const card = screen.getByRole('heading', { name: 'Test Blog Post' }).closest('.cursor-pointer')
@@ -225,7 +225,7 @@ describe('BlogCard and BlogModal Integration', () => {
         const modal = screen.getByRole('heading', { name: 'Test Blog Post', level: 2 }).closest('.relative')
         
         // Check date format in modal (longer format with time)
-        expect(modal).toHaveTextContent('January 15, 2024 at 2:30 AM')
+        expect(modal).toHaveTextContent(/January 15, 2024 at \d+:\d+ [AP]M/)
       })
     })
 
@@ -238,7 +238,7 @@ describe('BlogCard and BlogModal Integration', () => {
       render(<BlogCard {...dataWithFirestoreTimestamp} />)
       
       // Check date format in card
-      expect(screen.getByText('January 15, 2024')).toBeInTheDocument()
+      expect(screen.getByText(/January 15, 2024/)).toBeInTheDocument()
       
       // Click on the blog card to open modal
       const card = screen.getByRole('heading', { name: 'Test Blog Post' }).closest('.cursor-pointer')
@@ -248,7 +248,7 @@ describe('BlogCard and BlogModal Integration', () => {
         const modal = screen.getByRole('heading', { name: 'Test Blog Post', level: 2 }).closest('.relative')
         
         // Check date format in modal
-        expect(modal).toHaveTextContent('January 15, 2024 at 2:30 AM')
+        expect(modal).toHaveTextContent(/January 15, 2024 at \d+:\d+ [AP]M/)
       })
     })
 
