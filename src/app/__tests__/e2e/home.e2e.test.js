@@ -89,14 +89,14 @@ describe('Home Page E2E Tests', () => {
     const heroTitle = await page.$eval('h1', el => el.textContent);
     expect(heroTitle).toBe('Nirvek Pandey');
 
-    // Check for paragraph content
-    const paragraph = await page.$eval('p', el => el.textContent);
-    expect(paragraph).toContain('Nepalese - American student');
-    expect(paragraph).toContain('Computer Science and Engineering');
-    expect(paragraph).toContain('University of California, San Diego');
+    // Check for paragraph content - look in the hero section div instead of p tag
+    const heroContent = await page.$eval('.text-gray-200', el => el.textContent);
+    expect(heroContent).toContain('Nepalese - American student');
+    expect(heroContent).toContain('Computer Science and Engineering');
+    expect(heroContent).toContain('University of California, San Diego');
 
     // Check for decorative stars
-    const stars = await page.$$eval('p', elements => 
+    const stars = await page.$$eval('.text-gray-200', elements => 
       elements.some(el => el.textContent.includes('★━━━━━━━━━━━★'))
     );
     expect(stars).toBe(true);
@@ -150,7 +150,7 @@ describe('Home Page E2E Tests', () => {
     });
 
     // Wait a bit for any scroll-triggered animations
-    await page.waitForTimeout(500);
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     // Verify page is still functional after scrolling
     const heroTitle = await page.$eval('h1', el => el.textContent);
