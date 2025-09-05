@@ -1,5 +1,5 @@
 // AI agent for 2048 game
-// Based on Python reference implementation
+// Based on Python reference implementation with JavaScript direction mapping
 
 const MOVES = {0: 'left', 1: 'up', 2: 'right', 3: 'down'};
 const MAX_PLAYER = 0;
@@ -86,7 +86,7 @@ class AI {
             node = this.root;
         }
 
-        // Safety check: prevent infinite recursion
+        // Safety check: prevent infinite recursion and limit depth
         if (depth <= 0 || depth > 10) {
             return;
         }
@@ -96,12 +96,11 @@ class AI {
         const ogScore = this.simulator.score;
 
         if (node.playerType === MAX_PLAYER) {
-            // Try all possible moves
-            for (const direction in MOVES) {
-                const dir = parseInt(direction);
-                if (this.simulator.move(dir)) {
+            // Try all possible moves (0=left, 1=up, 2=right, 3=down)
+            for (let direction = 0; direction < 4; direction++) {
+                if (this.simulator.move(direction)) {
                     const child = new Node(this.simulator.currentState(), CHANCE_PLAYER);
-                    node.children.push([dir, child]);
+                    node.children.push([direction, child]);
 
                     this.buildTree(child, depth - 1);
                     this.simulator.setupState(ogMatrix, ogScore);
@@ -184,7 +183,7 @@ class AI {
             const validScore = (typeof score === 'number' && isFinite(score)) ? score : 0;
             const validSnake = (typeof snakeValue === 'number' && isFinite(snakeValue)) ? snakeValue : 0;
             
-            return [null, validScore + 4 * validSnake];
+            return [null, validScore + 6 * validSnake];
         }
 
         if (node.playerType === CHANCE_PLAYER) {
@@ -211,7 +210,7 @@ class AI {
         }
     }
 
-    // Compute decision using expectimax
+    // Compute decision using extramax with snake heuristic (enhanced version)
     computeDecision() {
         try {
             this.buildTree(this.root, this.searchDepth);
@@ -221,7 +220,7 @@ class AI {
                 return null;
             }
             
-            const [direction, value] = this.expectimax(this.root);
+            const [direction, _] = this.extramax(this.root);
             return direction;
         } catch (error) {
             console.error('AI computation error:', error);
@@ -241,6 +240,12 @@ class AI {
     computeDecisionEC() {
         try {
             this.buildTree(this.root, 3);
+            
+            // Check if no valid moves were found
+            if (this.root.children.length === 0) {
+                return null;
+            }
+            
             const [direction, _] = this.extramax(this.root);
             return direction;
         } catch (error) {

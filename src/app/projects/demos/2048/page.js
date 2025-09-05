@@ -37,7 +37,11 @@ const getTileColor = (value) => {
     512: 'bg-indigo-500',
     1024: 'bg-purple-500',
     2048: 'bg-black',
-    4096: 'bg-white text-black'
+    4096: 'bg-white text-black',
+    8192: 'bg-white text-gray-500',
+    16384: 'bg-white text-gray-400',
+    32768: 'bg-white text-gray-300',
+    65536: 'bg-white text-gray-200',
   };
   return colorMap[value] || 'bg-gray-800';
 };
@@ -54,6 +58,7 @@ const TwentyFortyEight = () => {
   const [board, setBoard] = useState([[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [hasWon, setHasWon] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
   const [ai, setAi] = useState(null);
   const [aiThinking, setAiThinking] = useState(false);
@@ -102,13 +107,20 @@ const TwentyFortyEight = () => {
       setBoard(newBoard);
       setScore(newScore);
       
+      // Check if player has won (reached 2048 tile)
+      const hasWonGame = newBoard.some(row => row.some(tile => tile === 2048));
+      if (hasWonGame && !hasWon) {
+        console.log('You won! Reached 2048!');
+        setHasWon(true);
+      }
+      
       if (game.gameOver()) {
         console.log('Game over!');
         setGameOver(true);
         setAiEnabled(false); // Disable AI when game is over
       }
     }
-  }, [game, aiThinking]);
+  }, [game, aiThinking, hasWon]);
 
   // Handle keyboard input
   const handleKeyPress = useCallback((event) => {
@@ -144,6 +156,7 @@ const TwentyFortyEight = () => {
     setBoard(game.getBoard());
     setScore(game.score);
     setGameOver(false);
+    setHasWon(false);
     setAiEnabled(false);
     setAiThinking(false);
   }, [game]);
@@ -296,9 +309,14 @@ const TwentyFortyEight = () => {
     <div className="min-h-screen flex flex-col items-center justify-start pt-4 pb-4 px-4">
       {/* Header */}
       <div className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-[#FFFAEC] mb-2 mt-2">2048 Game + AI Demo</h1>
+        <h1 className="text-4xl font-bold text-[#FFFAEC] mb-2 mt-2">
+          {hasWon ? "You Won!" : "2048 Game + AI Demo"}
+        </h1>
         {gameOver && (
           <p className="text-red-400 text-lg mt-2">Game Over! Press Reset to play again.</p>
+        )}
+        {hasWon && !gameOver && (
+          <p className="text-green-400 text-lg mt-2">Congratulations! You reached 2048!</p>
         )}
       </div>
 
