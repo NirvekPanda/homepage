@@ -2,7 +2,7 @@ import React from 'react';
 
 const TwentyFourtyEight = () => {
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6">
+        <div className="flex flex-col items-center justify-center p-6">
             <header className="mb-4 text-center">
                 <h1 className="text-4xl text-white font-bold">Elon Early Warning System</h1>
                 <p className="mt-2 text-lg text-gray-300">

@@ -20,7 +20,7 @@ export default function UploadPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center mt-16">
         <div className="bg-gradient-to-b from-gray-800 to-zinc-950 rounded-3xl p-8 shadow-lg border border-gray-700 max-w-md w-full mx-4">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-[#F5ECD5] mb-6">Upload Content Here</h1>
@@ -39,7 +39,7 @@ export default function UploadPage() {
 
   if (user.email !== "nirvekpandey@gmail.com") {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center mt-16">
         <div className="bg-gradient-to-b from-gray-800 to-zinc-950 rounded-3xl p-8 shadow-lg border border-gray-700 max-w-md w-full mx-4">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-red-500 mb-6">Unauthorized User</h1>
@@ -68,7 +68,7 @@ export default function UploadPage() {
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component;
 
   return (
-    <div className="min-h-screen">
+    <div>
       <div className="container mx-auto px-4 py-4">
         {/* Header */}
         <div className="text-center mb-6 mt-4">

@@ -9,7 +9,7 @@ const Sudoku = () => {
             <h1 className="text-4xl text-center text-white font-bold mt-10">
                 This page is still under construction. Please check back later!
             </h1>
-            <div className="flex justify-center items-center min-h-screen">
+            <div className="flex justify-center items-center">
 
                 {/* 
                 <iframe

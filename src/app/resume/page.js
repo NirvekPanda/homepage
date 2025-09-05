@@ -23,7 +23,7 @@ function Resume() {
       </div>
 
       {/* Main content container for the PDF viewer */}
-      <div className="flex flex-col items-center justify-center min-h-screen text-white p-4 -mt-12">
+      <div className="flex flex-col items-center justify-center text-white p-4 mb-2 mt-4">
         {mounted ? (
           <iframe
             src="/Nirvek_Pandey_Resume.pdf"

@@ -41,10 +41,9 @@ function BlogList() {
     }, []);
 
     return (
-        <div className="min-h-screen">
+        <div>
             <div className="flex flex-col items-center">
-                <div className="text-center mb-6 mt-8">
-                    <div className="mb-6">
+                <div className="text-center mt-9 mb-6">
                         <a
                             href="/upload"
                             className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8]"
@@ -53,10 +52,9 @@ function BlogList() {
                         </a>
                     </div>
 
-                    <p className="text-xl text-[#FFFAEC]">
+                    <p className="text-xl text-[#FFFAEC] mt-2">
                         updates on my life, projects, school work, and whatever else comes to mind:
                     </p>
-                </div>
             </div>
 
             {loading ? (
