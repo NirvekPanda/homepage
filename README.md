@@ -11,10 +11,10 @@ This website serves as a glimpse into who I am professionally. It highlights the
 - **Tailwind CSS**
 
 ### Backend
-- **Flask**
+- **In Progress**
 
 ### Database
-- **Firebase**
+- **Firebase - Firestore**
 
 ## Page Structure
 
