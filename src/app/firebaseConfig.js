@@ -21,13 +21,34 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const firestore = getFirestore(app);
 const auth = getAuth(app);
-// Configure Google Provider with explicit scopes
+
+// Configure Google Provider with explicit scopes and better error handling
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
-    prompt: 'select_account'
+    prompt: 'select_account',
+    access_type: 'offline'
 });
 googleProvider.addScope('https://www.googleapis.com/auth/userinfo.profile');
 googleProvider.addScope('https://www.googleapis.com/auth/userinfo.email');
 
+// Simple IndexedDB clearing function
+const clearIndexedDB = async () => {
+  try {
+    if (typeof window !== 'undefined' && 'indexedDB' in window) {
+      const databases = await indexedDB.databases();
+      for (const db of databases) {
+        if (db.name) {
+          const deleteReq = indexedDB.deleteDatabase(db.name);
+          await new Promise((resolve, reject) => {
+            deleteReq.onsuccess = () => resolve();
+            deleteReq.onerror = () => reject(deleteReq.error);
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Could not clear IndexedDB:', error);
+  }
+};
 
-export { db, ref, get, firestore, collection, addDoc, getDocs, auth, googleProvider };
+export { db, ref, get, firestore, collection, addDoc, getDocs, auth, googleProvider, clearIndexedDB };
