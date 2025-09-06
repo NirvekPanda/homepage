@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 
 const LocationCarousel = ({ locations, className = "" }) => {
     const [currentLocation, setCurrentLocation] = useState(0);
-    const [isHovered, setIsHovered] = useState(false);
     const [isBlurred, setIsBlurred] = useState(false);
     const intervalRef = useRef(null);
     const touchStartX = useRef(null);
@@ -36,10 +35,6 @@ const LocationCarousel = ({ locations, className = "" }) => {
         }, 6000);
     };
 
-    const goToLocation = (index) => {
-        setCurrentLocation(index);
-        resetTimer();
-    };
 
     const goToPrevious = () => {
         setCurrentLocation((prev) => (prev - 1 + locations.length) % locations.length);
@@ -139,8 +134,6 @@ const LocationCarousel = ({ locations, className = "" }) => {
     return (
         <div 
             className={`relative w-full h-full ${className}`} 
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}

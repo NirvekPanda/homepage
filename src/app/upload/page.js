@@ -6,6 +6,7 @@ import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import ProjectUpload from "./components/projectUpload";
 import BlogUpload from "./components/blogUpload";
 import VlogUpload from "./components/vlogUpload";
+import BackgroundUpload from "./components/backgroundUpload";
 
 export default function UploadPage() {
   const [activeTab, setActiveTab] = useState("projects");
@@ -63,6 +64,7 @@ export default function UploadPage() {
     { id: "projects", name: "Projects", component: ProjectUpload },
     { id: "blogs", name: "Blogs", component: BlogUpload },
     { id: "vlogs", name: "Vlogs", component: VlogUpload },
+    { id: "backgrounds", name: "Backgrounds", component: BackgroundUpload },
   ];
 
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component;
