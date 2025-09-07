@@ -1,3 +1,7 @@
+// Background Image Upload Component
+// Handles file upload with clean naming system aligned with database cleanup patterns
+// Removes unnecessary metadata, dates, and generates clean titles
+
 "use client";
 
 import { useState } from "react";
@@ -16,7 +20,7 @@ const BackgroundUpload = () => {
   const [locationName, setLocationName] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
 
-  // Helper function to check if file is HEIC format
+  // Check if file is HEIC format
   const isHeicFile = (file) => {
     const heicExtensions = ['.heic', '.heif'];
     const fileName = file.name.toLowerCase();
@@ -25,12 +29,11 @@ const BackgroundUpload = () => {
            file.type === 'image/heif';
   };
 
-  // Helper function to convert HEIC to JPEG
+  // Convert HEIC to JPEG
   const convertHeicToJpeg = async (file) => {
     try {
       console.log('Converting HEIC file to JPEG...');
       
-      // Dynamically import heic2any to avoid SSR issues
       const heic2any = (await import('heic2any')).default;
       
       const convertedBlob = await heic2any({
@@ -39,10 +42,8 @@ const BackgroundUpload = () => {
         quality: 0.8
       });
       
-      // heic2any returns an array, get the first element
       const jpegBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
       
-      // Create a new File object with the converted blob
       const convertedFile = new File([jpegBlob], file.name.replace(/\.(heic|heif)$/i, '.jpg'), {
         type: 'image/jpeg',
         lastModified: file.lastModified
@@ -53,13 +54,99 @@ const BackgroundUpload = () => {
     } catch (error) {
       console.error('Error converting HEIC file:', error);
       
-      // Check if it's a format not supported error
       if (error.code === 2 || error.message?.includes('format not supported')) {
         throw new Error('This HEIC file format is not supported. Please try a different HEIC file or convert it manually to JPEG.');
       }
       
       throw new Error(`Failed to convert HEIC file to JPEG: ${error.message || 'Unknown error'}`);
     }
+  };
+
+  // Clean filename following database cleanup patterns
+  const cleanFilename = (filename) => {
+    // Remove file extension temporarily
+    const ext = getFileExtension(filename);
+    let name = filename.substring(0, filename.lastIndexOf('.'));
+
+    // Remove common patterns (same as cleanup-database.go)
+    const patterns = [
+      /_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/g, // _2025-09-07_23-03-36
+      /_\d{10,}/g,                             // _1757223630234541862
+      /_IMG\s+\d+/g,                           // _IMG 8179
+      /_CI/g,                                  // _CI
+      /_Unknown_Location/g,                    // _Unknown_Location
+      /_\d{4}-\d{2}-\d{2}/g,                   // _2025-09-07
+      /_\d{2}-\d{2}-\d{2}/g,                   // _23-03-36
+    ];
+
+    patterns.forEach(pattern => {
+      name = name.replace(pattern, '');
+    });
+
+    // Remove multiple underscores and replace with single underscore
+    name = name.replace(/_+/g, '_');
+
+    // Remove leading/trailing underscores
+    name = name.replace(/^_+|_+$/g, '');
+
+    // If name is empty or too short, use a generic name
+    if (name.length < 3) {
+      name = 'image';
+    }
+
+    // Add back extension
+    return name + ext;
+  };
+
+  // Clean title from filename (same logic as cleanup-database.go)
+  const cleanTitle = (filename) => {
+    // Remove file extension
+    const name = filename.substring(0, filename.lastIndexOf('.'));
+
+    // Replace underscores and dashes with spaces
+    let cleanName = name.replace(/_/g, ' ').replace(/-/g, ' ');
+
+    // Remove extra spaces
+    cleanName = cleanName.replace(/\s+/g, ' ').trim();
+
+    // Capitalize first letter of each word
+    const words = cleanName.split(' ').filter(word => word.length > 0);
+    const capitalizedWords = words.map(word => {
+      if (word.length > 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }
+      return word;
+    });
+
+    const result = capitalizedWords.join(' ');
+    return result || 'Image';
+  };
+
+  // Clean description following database patterns
+  const cleanDescription = (originalDescription, filename) => {
+    if (!originalDescription || originalDescription.trim() === '') {
+      return `Travel photo - ${cleanFilename(filename)}`;
+    }
+
+    // Remove "Migrated from Google Drive - " prefix if present
+    if (originalDescription.startsWith('Migrated from Google Drive - ')) {
+      const filename = originalDescription.replace('Migrated from Google Drive - ', '');
+      const cleanName = cleanFilename(filename);
+      return `Travel photo - ${cleanName}`;
+    }
+
+    // If it contains "Unknown_Location", make it more meaningful
+    if (originalDescription.includes('Unknown_Location')) {
+      return 'Travel photo';
+    }
+
+    return originalDescription;
+  };
+
+  // Get file extension
+  const getFileExtension = (filename) => {
+    const lastDot = filename.lastIndexOf('.');
+    return lastDot === -1 ? '' : filename.substring(lastDot);
   };
 
   const handleFileChange = async (file) => {
@@ -97,24 +184,25 @@ const BackgroundUpload = () => {
           try {
             setUploadStatus("Converting HEIC file to JPEG...");
             fileToProcess = await convertHeicToJpeg(file);
-            setSelectedFile(fileToProcess); // Update selected file to converted version
+            setSelectedFile(fileToProcess);
           } catch (conversionError) {
             console.warn('HEIC conversion failed, proceeding with original file:', conversionError);
-            setUploadStatus("⚠️ HEIC conversion failed, using original file. Some features may not work.");
-            // Continue with original file - user can still upload it
+            setUploadStatus("HEIC conversion failed, using original file. Some features may not work.");
             fileToProcess = file;
           }
         }
         
         const metadata = await pullPhotoMetadata(fileToProcess);
         
-        // Populate form fields with extracted metadata
-        if (metadata.title) {
-          setTitle(metadata.title);
-        }
-        if (metadata.description) {
-          setDescription(metadata.description);
-        }
+        // Generate clean filename and title
+        const cleanFile = cleanFilename(fileToProcess.name);
+        const cleanTitleText = cleanTitle(cleanFile);
+        const cleanDesc = cleanDescription(metadata.description, cleanFile);
+        
+        // Populate form fields with cleaned data
+        setTitle(cleanTitleText);
+        setDescription(cleanDesc);
+        
         if (metadata.latitude) {
           setLatitude(metadata.latitude);
         }
@@ -139,13 +227,13 @@ const BackgroundUpload = () => {
         }
         
         if (extractedInfo.length > 0) {
-          setUploadStatus(`✅ ${extractedInfo.join(' | ')}`);
+          setUploadStatus(`Success: ${extractedInfo.join(' | ')}`);
         } else {
-          setUploadStatus("✅ Image loaded (no EXIF data found)");
+          setUploadStatus("Success: Image loaded (no EXIF data found)");
         }
       } catch (error) {
         console.warn('Error extracting metadata:', error);
-        setUploadStatus("⚠️ Image loaded (metadata extraction failed)");
+        setUploadStatus("Warning: Image loaded (metadata extraction failed)");
       } finally {
         setIsExtractingMetadata(false);
       }
@@ -196,8 +284,8 @@ const BackgroundUpload = () => {
       if (longitude.trim()) formData.append('longitude', longitude.trim());
       if (locationName.trim()) formData.append('location_name', locationName.trim());
 
-      console.log('Sending upload request...'); // Debug log
-      console.log('FormData contents:', Array.from(formData.entries())); // Debug form data
+      console.log('Sending upload request...');
+      console.log('FormData contents:', Array.from(formData.entries()));
       
       const response = await fetch('https://travel-image-api-189526192204.us-central1.run.app/api/v1/images/upload', {
         method: 'POST',
@@ -206,13 +294,12 @@ const BackgroundUpload = () => {
         body: formData,
       });
 
-      console.log('Response status:', response.status); // Debug log
-      console.log('Response headers:', response.headers); // Debug response headers
+      console.log('Response status:', response.status);
 
       if (response.ok) {
         try {
           const result = await response.json();
-          console.log('Upload response:', result); // Debug log
+          console.log('Upload response:', result);
           
           // Safely extract ID with multiple fallbacks
           let imageId = 'Unknown';
@@ -228,7 +315,7 @@ const BackgroundUpload = () => {
             }
           }
           
-          setUploadStatus(`✅ Image uploaded successfully! ID: ${imageId}`);
+          setUploadStatus(`Success: Image uploaded successfully! ID: ${imageId}`);
           setSelectedFile(null);
           setPreview(null);
           setTitle("");
@@ -237,8 +324,8 @@ const BackgroundUpload = () => {
           setLongitude("");
           setLocationName("");
         } catch (parseError) {
-          console.log('JSON parse error:', parseError); // Debug log
-          setUploadStatus(`✅ Image uploaded successfully! (Response received)`);
+          console.log('JSON parse error:', parseError);
+          setUploadStatus(`Success: Image uploaded successfully! (Response received)`);
           setSelectedFile(null);
           setPreview(null);
           setTitle("");
@@ -249,54 +336,27 @@ const BackgroundUpload = () => {
         }
       } else {
         console.log('Upload failed with status:', response.status);
-        console.log('Response status text:', response.statusText);
         
         try {
           const errorText = await response.text();
           console.log('Error response body:', errorText);
           
-          // Try to parse as JSON
           try {
             const error = JSON.parse(errorText);
-            setUploadStatus(`❌ Upload failed: ${error.message || error.error || 'Unknown error'}`);
+            setUploadStatus(`Error: Upload failed: ${error.message || error.error || 'Unknown error'}`);
           } catch (jsonError) {
-            setUploadStatus(`❌ Upload failed: HTTP ${response.status} - ${response.statusText}. Response: ${errorText}`);
+            setUploadStatus(`Error: Upload failed: HTTP ${response.status} - ${response.statusText}. Response: ${errorText}`);
           }
         } catch (parseError) {
           console.log('Failed to read response body:', parseError);
-          setUploadStatus(`❌ Upload failed: HTTP ${response.status} - ${response.statusText}`);
+          setUploadStatus(`Error: Upload failed: HTTP ${response.status} - ${response.statusText}`);
         }
       }
     } catch (error) {
-      console.log('Upload error:', error); // Debug log
-      setUploadStatus(`❌ Upload failed: ${error.message}`);
+      console.log('Upload error:', error);
+      setUploadStatus(`Error: Upload failed: ${error.message}`);
     } finally {
       setIsUploading(false);
-    }
-  };
-
-  const handleDelete = async (imageId) => {
-    if (!confirm('Are you sure you want to delete this image?')) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`https://travel-image-api-189526192204.us-central1.run.app/api/v1/images/${imageId}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        setUploadStatus("✅ Image deleted successfully!");
-      } else {
-        try {
-          const error = await response.json();
-          setUploadStatus(`❌ Delete failed: ${error.message || 'Unknown error'}`);
-        } catch (parseError) {
-          setUploadStatus(`❌ Delete failed: HTTP ${response.status} - ${response.statusText}`);
-        }
-      }
-    } catch (error) {
-      setUploadStatus(`❌ Delete failed: ${error.message}`);
     }
   };
 
@@ -480,63 +540,23 @@ const BackgroundUpload = () => {
           >
             {isUploading ? "Uploading..." : isExtractingMetadata ? "Extracting..." : "Upload Image"}
           </button>
-          
         </div>
 
         {/* Status Message */}
         {uploadStatus && (
           <div className={`p-4 rounded-lg text-center font-medium ${
-            uploadStatus.includes("✅") 
+            uploadStatus.includes("Success") 
               ? "bg-green-900/30 text-green-300 border border-green-700"
-              : uploadStatus.includes("❌")
+              : uploadStatus.includes("Error")
               ? "bg-red-900/30 text-red-300 border border-red-700"
               : "bg-blue-900/30 text-blue-300 border border-blue-700"
           }`}>
             {uploadStatus}
           </div>
         )}
-
-        {/* API Information */}
-        <div className="hidden mt-8 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-          <h3 className="text-[#F5ECD5] font-semibold mb-2">API Endpoints</h3>
-          <div className="space-y-2 text-sm text-slate-300">
-            <div className="mb-3 p-2 bg-slate-700/50 rounded text-xs">
-              <span className="text-[#F5ECD5] font-medium">Base URL:</span> https://travel-image-api-189526192204.us-central1.run.app
-            </div>
-            <div>
-              <span className="font-mono bg-slate-700 px-2 py-1 rounded">POST /api/v1/images/upload</span>
-              <span className="ml-2">Upload new image with metadata</span>
-            </div>
-            <div>
-              <span className="font-mono bg-slate-700 px-2 py-1 rounded">GET /api/v1/images/current</span>
-              <span className="ml-2">Get current image</span>
-            </div>
-            <div>
-              <span className="font-mono bg-slate-700 px-2 py-1 rounded">GET /api/v1/images/count</span>
-              <span className="ml-2">Get image count</span>
-            </div>
-            <div>
-              <span className="font-mono bg-slate-700 px-2 py-1 rounded">GET /api/v1/images/{"{id}"}</span>
-              <span className="ml-2">Get image by ID</span>
-            </div>
-            <div>
-              <span className="font-mono bg-slate-700 px-2 py-1 rounded">DELETE /api/v1/images/{"{id}"}</span>
-              <span className="ml-2">Delete image</span>
-            </div>
-            <div className="mt-3 pt-3 border-t border-slate-600">
-              <span className="font-mono bg-slate-700 px-2 py-1 rounded">GET /api/v1/location/coords</span>
-              <span className="ml-2">Get location from coordinates</span>
-            </div>
-            <div>
-              <span className="font-mono bg-slate-700 px-2 py-1 rounded">GET /api/v1/location/name</span>
-              <span className="ml-2">Get location from name</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
 
 export default BackgroundUpload;
-
