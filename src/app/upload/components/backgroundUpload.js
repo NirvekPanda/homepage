@@ -199,7 +199,7 @@ const BackgroundUpload = () => {
       console.log('Sending upload request...'); // Debug log
       console.log('FormData contents:', Array.from(formData.entries())); // Debug form data
       
-      const response = await fetch('https://background-image-drive-api-189526192204.us-west1.run.app/api/v1/images/upload', {
+      const response = await fetch('https://travel-image-api-189526192204.us-central1.run.app/api/v1/images/upload', {
         method: 'POST',
         mode: 'cors',
         credentials: 'omit',
@@ -281,7 +281,7 @@ const BackgroundUpload = () => {
     }
 
     try {
-      const response = await fetch(`https://background-image-drive-api-189526192204.us-west1.run.app/api/v1/images/${imageId}`, {
+      const response = await fetch(`https://travel-image-api-189526192204.us-central1.run.app/api/v1/images/${imageId}`, {
         method: 'DELETE',
       });
 
@@ -481,29 +481,6 @@ const BackgroundUpload = () => {
             {isUploading ? "Uploading..." : isExtractingMetadata ? "Extracting..." : "Upload Image"}
           </button>
           
-          {/* Debug Test Button */}
-          <button
-            onClick={async () => {
-              console.log('Testing backend connection...');
-              try {
-                const testResponse = await fetch('https://background-image-drive-api-189526192204.us-west1.run.app/api/v1/images/count', {
-                  method: 'GET',
-                  mode: 'cors',
-                  credentials: 'omit',
-                });
-                console.log('Test response status:', testResponse.status);
-                const testText = await testResponse.text();
-                console.log('Test response body:', testText);
-                setUploadStatus(`Test: Status ${testResponse.status} - ${testText}`);
-              } catch (testError) {
-                console.log('Test error:', testError);
-                setUploadStatus(`Test failed: ${testError.message}`);
-              }
-            }}
-            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Test Backend
-          </button>
         </div>
 
         {/* Status Message */}
@@ -520,11 +497,11 @@ const BackgroundUpload = () => {
         )}
 
         {/* API Information */}
-        <div className="mt-8 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+        <div className="hidden mt-8 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
           <h3 className="text-[#F5ECD5] font-semibold mb-2">API Endpoints</h3>
           <div className="space-y-2 text-sm text-slate-300">
             <div className="mb-3 p-2 bg-slate-700/50 rounded text-xs">
-              <span className="text-[#F5ECD5] font-medium">Base URL:</span> https://background-image-drive-api-189526192204.us-west1.run.app
+              <span className="text-[#F5ECD5] font-medium">Base URL:</span> https://travel-image-api-189526192204.us-central1.run.app
             </div>
             <div>
               <span className="font-mono bg-slate-700 px-2 py-1 rounded">POST /api/v1/images/upload</span>
