@@ -10,6 +10,12 @@ export default function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
+            // Only apply scroll behavior on non-mobile devices (screen width >= 640px)
+            if (window.innerWidth < 640) {
+                setIsVisible(true);
+                return;
+            }
+
             const currentScrollY = window.scrollY;
 
             if (currentScrollY === 0) {
@@ -23,8 +29,19 @@ export default function Header() {
             lastScrollY.current = currentScrollY;
         };
 
+        // Also handle resize to update behavior when switching between mobile/desktop
+        const handleResize = () => {
+            if (window.innerWidth < 640) {
+                setIsVisible(true);
+            }
+        };
+
         window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("resize", handleResize);
+        };
     }, []);
 
     return (
