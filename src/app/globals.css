@@ -23,6 +23,12 @@
 body {
   color: var(--foreground);
   font-family: var(--font-montserrat), sans-serif;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 /* Hide scrollbar for horizontal scrolling */
@@ -32,4 +38,27 @@ body {
 }
 .scrollbar-hide::-webkit-scrollbar { 
   display: none;  /* Safari and Chrome */
+}
+
+/* Background iframe styling */
+.background-iframe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.background-iframe iframe {
+  width: 100vw;
+  height: 100vh;
+  border: none;
+  transform: scale(2.5);
+  transform-origin: center;
+  min-width: 100vw;
+  min-height: 100vh;
+  image-rendering: high-quality;
+  image-rendering: -webkit-optimize-contrast;
 }

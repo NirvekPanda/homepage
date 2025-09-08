@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Nav from "./nav";
+import LocationTile from "./locationTile";
 
 export default function Header() {
     const [isVisible, setIsVisible] = useState(true);
@@ -32,9 +33,12 @@ export default function Header() {
                 className={`py-5 px-10 transition-all duration-500 ease-in-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
                     }`}
             >
-                <div className="mx-auto flex justify-center">
-                    {/* Main header content - centered */}
-                    <div className="max-w-4xl bg-gradient-to-b from-stone-700 to-zinc-700 rounded-3xl px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left">
+                <div className="mx-auto flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left gap-4 relative">
+                    {/* Invisible placeholder - same dimensions as location tile */}
+                    <div className="w-56 h-12 order-1 sm:order-1"></div>
+                    
+                    {/* Main header content*/}
+                    <div className="max-w-4xl bg-gradient-to-b from-stone-700/50 to-zinc-700/50 rounded-3xl px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left flex-1 order-2 sm:order-2 mx-4">
                         <h1 className="text-4xl sm:text-5xl text-[#F5ECD5] font-bold">
                             Nirvek Pandey
                         </h1>
@@ -45,6 +49,12 @@ export default function Header() {
                             Aspiring Network Engineer
                         </p>
                     </div>
+                    
+                    {/* Location Carousel - separate box on the right */}
+                    <div className="bg-gradient-to-b from-stone-500/50 to-zinc-500/50 rounded-2xl px-4 py-2 h-12 order-3 sm:order-3 w-56">
+                        <LocationTile />
+                    </div>
+
                 </div>
             </header>
 
