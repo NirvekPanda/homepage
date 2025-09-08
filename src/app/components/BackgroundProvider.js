@@ -33,10 +33,8 @@ export default function BackgroundProvider({ children }) {
         const img = new Image();
         img.onload = () => {
             setImagesLoaded(prev => ({ ...prev, [type]: true }));
-            console.log(`✅ ${type} image loaded:`, url);
         };
         img.onerror = () => {
-            console.warn(`⚠️ Failed to load ${type} image:`, url);
             setImagesLoaded(prev => ({ ...prev, [type]: false }));
         };
         img.src = url;
@@ -50,7 +48,6 @@ export default function BackgroundProvider({ children }) {
                 setNextImageUrl(nextImage.url);
                 setImagesLoaded(prev => ({ ...prev, next: false }));
                 checkImageLoad(nextImage.url, 'next');
-                console.log('🔄 Preloaded next image for transition:', nextImage.url);
             }
         }
     }, [nextImagesQueue]);
@@ -61,8 +58,6 @@ export default function BackgroundProvider({ children }) {
             setImagesLoaded(prev => ({ ...prev, current: false }));
             checkImageLoad(backgroundUrl, 'current');
             setFallbackBackgroundUrl(backgroundUrl); // Keep last known good URL
-        } else {
-            console.warn('⚠️ No background URL available, using fallback');
         }
     }, [backgroundUrl]);
 

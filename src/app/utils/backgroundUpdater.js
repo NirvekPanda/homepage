@@ -60,8 +60,6 @@ function shouldPreloadMoreImages() {
                            preloadUsageCount >= 2 || 
                            timeSinceLastBatch > 120000; // 2 minutes
     
-    console.log(`🔍 Preload check: ${totalPreloaded} preloaded, ${preloadUsageCount} used, ${Math.round(timeSinceLastBatch/1000)}s since last batch`);
-    
     return needsMoreImages && timeSinceLastBatch >= minTimeBetweenBatches;
 }
 
@@ -88,12 +86,10 @@ function preloadImage(imageData, index) {
                 loaded: true
             });
             
-            console.log(`✅ Preloaded image for index ${index}:`, backgroundUrl);
             resolve({ index, url: backgroundUrl, locationData });
         };
         
         img.onerror = () => {
-            console.error(`❌ Failed to preload image for index ${index}`);
             reject(new Error(`Failed to preload image for index ${index}`));
         };
         
@@ -106,20 +102,17 @@ async function batchPreloadImages() {
     
     // Check if we actually need to preload more images
     if (!shouldPreloadMoreImages()) {
-        console.log(`⏭️ Skipping batch preload - not needed yet`);
         return;
     }
     
     const currentIndex = calculateImageIndex(totalImages);
     const nextIndexes = calculateNextImageIndexes(currentIndex, totalImages, 4);
     
-    console.log(`🔄 Batch preloading images for indexes:`, nextIndexes);
     lastBatchPreloadTime = Date.now();
     
     const preloadPromises = nextIndexes.map(async (index) => {
         // Skip if already preloaded
         if (preloadedImages.has(index)) {
-            console.log(`⏭️ Image for index ${index} already preloaded`);
             return null;
         }
         
@@ -127,13 +120,11 @@ async function batchPreloadImages() {
             const response = await axios.get(`${IMAGE_BY_INDEX_ENDPOINT}/${index}`);
             
             if (!response.data || !response.data.drive_file_id) {
-                console.log(`❌ Invalid API response for index ${index}:`, response.data);
                 return null;
             }
             
             return await preloadImage(response.data, index);
         } catch (error) {
-            console.error(`❌ Error preloading image for index ${index}:`, error);
             return null;
         }
     });
@@ -144,7 +135,11 @@ async function batchPreloadImages() {
             .filter(result => result.status === 'fulfilled' && result.value)
             .map(result => result.value);
         
-        console.log(`✅ Successfully preloaded ${successfulPreloads.length} images`);
+        // Only log if we actually loaded new images
+        if (successfulPreloads.length > 0) {
+            const loadedIndexes = successfulPreloads.map(img => img.index).join(', ');
+            console.log(`📦 Batch loaded images: [${loadedIndexes}]`);
+        }
         
         // Update next images queue and reset usage count
         nextImagesQueue = successfulPreloads;
@@ -184,7 +179,6 @@ async function updateBackground() {
         
         if (preloadedImage && preloadedImage.loaded) {
             // Use preloaded image
-            console.log('🚀 Using preloaded image for index', imageIndex);
             newBackgroundUrl = preloadedImage.url;
             locationData = preloadedImage.locationData;
             
@@ -193,19 +187,14 @@ async function updateBackground() {
             preloadedImages.delete(imageIndex);
         } else {
             // Fallback to API call
-            console.log('📡 Making API call for index', imageIndex);
             const response = await axios.get(`${IMAGE_BY_INDEX_ENDPOINT}/${imageIndex}`);
             
             if (!response.data || !response.data.drive_file_id) {
-                console.log('❌ Invalid API response:', response.data);
                 return;
             }
 
             const imageData = response.data;
-            console.log('✅ API response for index', imageIndex, ':', imageData);
-
             newBackgroundUrl = `https://drive.google.com/thumbnail?id=${imageData.drive_file_id}&sz=w1920-h1080`;
-            console.log('🖼️ Generated background URL:', newBackgroundUrl);
 
             locationData = {
                 name: imageData.location?.name || 'Unknown Location',
@@ -219,29 +208,19 @@ async function updateBackground() {
         }
 
         if (newBackgroundUrl !== currentBackgroundUrl) {
-            console.log('🔄 Updating background from', currentBackgroundUrl, 'to', newBackgroundUrl);
             currentBackgroundUrl = newBackgroundUrl;
             currentImageIndex = imageIndex;
             currentLocationData = locationData;
             
-            console.log('📢 Notifying', backgroundUpdateCallbacks.length, 'callbacks');
-            if (backgroundUpdateCallbacks.length === 0) {
-                console.warn('⚠️ No callbacks registered! Background may appear gray.');
-            }
-            backgroundUpdateCallbacks.forEach((callback, index) => {
+            backgroundUpdateCallbacks.forEach((callback) => {
                 try {
                     if (typeof callback === 'function') {
-                        console.log(`📢 Calling callback ${index + 1}/${backgroundUpdateCallbacks.length}`);
                         callback(newBackgroundUrl, imageIndex, locationData);
-                    } else {
-                        console.warn(`⚠️ Callback ${index + 1} is not a function:`, typeof callback);
                     }
                 } catch (error) {
                     console.error('❌ Callback error:', error);
                 }
             });
-        } else {
-            console.log('⏭️ Background URL unchanged, skipping update');
         }
 
     } catch (error) {
@@ -310,9 +289,7 @@ export function initializeBackgroundUpdater() {
         clearInterval(batchUpdateTimer);
     }
     
-    console.log('🚀 Initializing background updater...');
     updateImageCount().then(() => {
-        console.log('📊 Image count updated:', totalImages);
         updateBackground();
         // Start batch preloading after initial background is set
         batchPreloadImages();
@@ -391,8 +368,6 @@ export function useBackgroundUpdater() {
             const currentIndex = getCurrentImageIndex();
             const currentLocation = getCurrentLocationData();
             
-            console.log('🖼️ Initial values:', { currentBg, currentCount, currentIndex, currentLocation });
-            
             setBackgroundUrl(currentBg);
             setImageCount(currentCount);
             setImageIndex(currentIndex);
@@ -409,9 +384,7 @@ export function useBackgroundUpdater() {
     useEffect(() => {
         if (!isInitialized) return;
 
-        console.log('🔗 Registering background update callback');
         const unsubscribe = onBackgroundUpdate((newBackgroundUrl, newImageIndex, newLocationData) => {
-            console.log('📢 Callback received:', { newBackgroundUrl, newImageIndex, newLocationData });
             setBackgroundUrl(newBackgroundUrl);
             setImageIndex(newImageIndex);
             setLocationData(newLocationData);
