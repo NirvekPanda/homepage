@@ -12,7 +12,7 @@ export default function UploadPage() {
   const [activeTab, setActiveTab] = useState("projects");
   const [user, setUser] = useState(null);
   const [authError, setAuthError] = useState("");
-  const [isClearingStorage, setIsClearingStorage] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -26,12 +26,14 @@ export default function UploadPage() {
   const handleSignIn = async () => {
     try {
       setAuthError("");
+      setLoginFailed(false);
       const result = await signInWithPopup(auth, googleProvider);
       console.log('Sign in successful:', result.user);
     } catch (error) {
       console.error('Sign in error:', error);
+      setLoginFailed(true);
       
-      // Handle specific error types
+      // Handle specific error types and auto-clear storage if needed
       if (error.code === 'auth/popup-closed-by-user') {
         setAuthError('Sign-in was cancelled. Please try again.');
       } else if (error.code === 'auth/popup-blocked') {
@@ -39,7 +41,15 @@ export default function UploadPage() {
       } else if (error.code === 'auth/network-request-failed') {
         setAuthError('Network error. Please check your connection and try again.');
       } else if (error.message?.includes('IndexedDB') || error.message?.includes('storage')) {
-        setAuthError('Storage error detected. Try the "Clear Storage" button below or use incognito mode.');
+        setAuthError('Storage error detected. Clearing storage automatically...');
+        // Auto-clear storage on storage-related errors
+        try {
+          await clearIndexedDB();
+          setAuthError('Storage cleared successfully. Please try signing in again.');
+        } catch (clearError) {
+          console.error('Auto clear storage error:', clearError);
+          setAuthError('Storage error detected. Please try using incognito mode.');
+        }
       } else {
         setAuthError(`Sign-in failed: ${error.message || 'Unknown error'}`);
       }
@@ -56,18 +66,6 @@ export default function UploadPage() {
     }
   };
 
-  const handleClearStorage = async () => {
-    setIsClearingStorage(true);
-    try {
-      await clearIndexedDB();
-      setAuthError("Storage cleared successfully. Please try signing in again.");
-    } catch (error) {
-      console.error('Clear storage error:', error);
-      setAuthError(`Failed to clear storage: ${error.message}`);
-    } finally {
-      setIsClearingStorage(false);
-    }
-  };
 
   if (!user) {
     return (
@@ -75,7 +73,6 @@ export default function UploadPage() {
         <div className="bg-gradient-to-b from-gray-800 to-zinc-950 rounded-3xl p-8 shadow-lg border border-gray-700 max-w-md w-full mx-4">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-[#F5ECD5] mb-6">Upload Content Here</h1>
-            <p className="text-white mb-6">Sign in to access the upload page.</p>
             
             {/* Error Message */}
             {authError && (
@@ -86,23 +83,12 @@ export default function UploadPage() {
             
             <button
               onClick={handleSignIn}
-              className="w-full bg-[#F5ECD5] text-gray-900 py-3 px-6 rounded-lg font-semibold hover:bg-[#E6D4B8] transition-colors mb-3"
+              className="w-full bg-[#F5ECD5] text-gray-900 py-3 px-6 rounded-lg font-semibold hover:bg-[#E6D4B8] transition-colors"
             >
               Sign in with Google
             </button>
             
-            {/* Clear Storage Button */}
-            <button
-              onClick={handleClearStorage}
-              disabled={isClearingStorage}
-              className="w-full bg-slate-600 text-white py-2 px-4 rounded-lg text-sm hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isClearingStorage ? 'Clearing Storage...' : 'Clear Storage & Retry'}
-            </button>
             
-            <div className="mt-4 text-xs text-slate-400">
-              If you're having trouble signing in, try the "Clear Storage" button above or use incognito mode.
-            </div>
           </div>
         </div>
       </div>

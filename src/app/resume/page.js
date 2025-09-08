@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Footer from "../components/footer";
 
 function Resume() {
   const [mounted, setMounted] = useState(false);
@@ -38,6 +39,7 @@ function Resume() {
           <p className="text-gray-400">Loading PDF viewer...</p>
         )}
       </div>
+      <Footer />
     </>
   );
 }

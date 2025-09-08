@@ -16,14 +16,15 @@ let currentLocationData = null;
 let backgroundUpdateCallbacks = [];
 let countUpdateTimer = null;
 
-function getMilitaryTime() {
+function getMilitaryTimeWithSeconds() {
     const now = new Date();
-    return now.getHours() * 100 + now.getMinutes();
+    return now.getHours() * 10000 + now.getMinutes() * 100 + now.getSeconds();
 }
 
-function calculateImageIndex(militaryTime, imageCount) {
+function calculateImageIndex(imageCount) {
     if (imageCount === 0) return 0;
-    return militaryTime % imageCount;
+    const militaryTimeWithSeconds = getMilitaryTimeWithSeconds();
+    return militaryTimeWithSeconds % imageCount;
 }
 
 async function updateImageCount() {
@@ -46,8 +47,7 @@ async function updateBackground() {
     }
 
     try {
-        const militaryTime = getMilitaryTime();
-        const imageIndex = calculateImageIndex(militaryTime, totalImages);
+        const imageIndex = calculateImageIndex(totalImages);
         
         const response = await axios.get(`${IMAGE_BY_INDEX_ENDPOINT}/${imageIndex}`);
         
@@ -143,7 +143,7 @@ export function initializeBackgroundUpdater() {
     
     const backgroundUpdateTimer = setInterval(() => {
         updateBackground();
-    }, 60000);
+    }, 20000);
     
     if (typeof window !== 'undefined') {
         window.backgroundUpdateTimer = backgroundUpdateTimer;

@@ -7,7 +7,7 @@ import LinkButton from "./button.js";
 import { PopoverProvider } from "../contexts/PopoverContext.js";
 import { getProjectImageSrc } from "../utils/imageUtils.js";
 
-export default function CardModal({ isOpen, onClose, name, description, image, link, date, code, demo, github, languages }) {
+export default function CardModal({ isOpen, onClose, name, description, image, link, date, code, demo, github, languages, isFlipped = false }) {
   const [animateModal, setAnimateModal] = useState(false);
 
   useEffect(() => {
@@ -26,19 +26,19 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
   return (
     <PopoverProvider>
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out bg-black bg-opacity-50"
-        onClick={onClose}
+        className={`${isFlipped ? "relative" : "fixed inset-0 z-50"} flex items-center justify-center transition-opacity duration-300 ease-in-out ${isFlipped ? "" : "bg-black bg-opacity-50"}`}
+        onClick={isFlipped ? undefined : onClose}
       >
       <div
         data-testid="card-modal"
         onClick={(e) => e.stopPropagation()}
-        className={`relative bg-gradient-to-b from-stone-700 to-zinc-900 rounded-lg overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        className={`relative bg-gradient-to-b from-stone-700 to-zinc-900 ${isFlipped ? "rounded-lg" : "rounded-lg"} overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
         style={{
-          width: "80vw",
-          height: "80vh",
-          maxWidth: "800px",
-          maxHeight: "90vh",
+          width: isFlipped ? "100%" : "80vw",
+          height: isFlipped ? "100%" : "80vh",
+          maxWidth: isFlipped ? "none" : "800px",
+          maxHeight: isFlipped ? "none" : "90vh",
           display: "flex",
           flexDirection: "column",
         }}

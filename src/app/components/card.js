@@ -1,23 +1,40 @@
 "use client";
 
-import { useState } from "react";
 import LinkButton from "./button.js";
-import CardModal from "./cardModal.js";
 import LanguageTile from "./langTile.js";
 import { PopoverProvider } from "../contexts/PopoverContext.js";
 import { getProjectImageSrc } from "../utils/imageUtils.js";
 
-export default function Card({ name, description, languages, image, link, date, code, github, demo }) {
-  // State to manage the modal visibility
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export default function Card({ name, description, languages, image, link, date, code, github, demo, onClick, excerpt, showDate = false }) {
   const languageList = languages.split(",").map((lang) => lang.trim());
+
+  // Format the date consistently for SSR
+  const formatDate = (dateInput) => {
+    if (!dateInput) return 'No date';
+    
+    let date;
+    
+    // Handle Firestore Timestamp objects
+    if (dateInput && typeof dateInput === 'object' && dateInput.toDate) {
+      date = dateInput.toDate();
+    } else {
+      date = new Date(dateInput);
+    }
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) return 'Invalid date';
+    
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                   'July', 'August', 'September', 'October', 'November', 'December'];
+    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+  };
 
   return (
     <PopoverProvider>
       {/* Card element */}
       <div
-        onClick={() => setIsModalOpen(true)}
-        className="cursor-pointer relative flex flex-col my-6 bg-slate-700 shadow-md border border-slate-800 hover:border-4 rounded-lg w-full max-w-sm transition-all duration-100"
+        onClick={onClick}
+        className="cursor-pointer relative flex flex-col my-2 bg-slate-700 shadow-md border border-slate-800 hover:border-4 rounded-lg w-full transition-all duration-100"
       >
 
         {/* Image Section */}
@@ -36,6 +53,21 @@ export default function Card({ name, description, languages, image, link, date, 
           <h6 className="mb-2 text-white text-xl font-semibold text-center">
             {name}
           </h6>
+          
+          {/* Excerpt for blog posts */}
+          {excerpt && (
+            <p className="text-gray-300 text-sm text-center mb-3 line-clamp-3">
+              {excerpt}
+            </p>
+          )}
+          
+          {/* Date for blog posts */}
+          {showDate && date && (
+            <p className="text-gray-400 text-xs text-center mb-3">
+              {formatDate(date)}
+            </p>
+          )}
+          
           {/* Button Row */}
           <div className="flex justify-center gap-4 mt-4">
             {demo && (
@@ -50,28 +82,15 @@ export default function Card({ name, description, languages, image, link, date, 
             )}
           </div>
         </div>
-        {/* Language List */}
-        <div className="px-4 pb-4 pt-0 mt-2 flex flex-wrap justify-center gap-2">
-          {languageList.map((lang, index) => (
-            <LanguageTile key={index} language={lang} />
-          ))}
-        </div>
+        {/* Language List - only show if there are languages */}
+        {languageList.length > 0 && languageList[0] !== "" && (
+          <div className="px-4 pb-4 pt-0 mt-2 flex flex-wrap justify-center gap-2">
+            {languageList.map((lang, index) => (
+              <LanguageTile key={index} language={lang} />
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* Modal Component */}
-      <CardModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        name={name}
-        description={description}
-        image={image}
-        date={date}
-        demo={demo}
-        link={link}
-        code={code}
-        github={github}
-        languages={languageList}
-      />
     </PopoverProvider>
   );
 }

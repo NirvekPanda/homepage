@@ -4,10 +4,9 @@ import { useState, useEffect } from "react";
 import { firestore } from "../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 
-import Card from "../components/card";
-import LinkButton from "../components/button";
+import ThreeDCarousel from "../components/ThreeDCarousel";
 
-function ProjectList() {
+function ProjectCarousel() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,6 +32,19 @@ function ProjectList() {
     fetchProjects();
   }, []);
 
+  // Transform projects data to match ThreeDCarousel format
+  const transformedProjects = projects.map((project, index) => ({
+    id: project.id || index,
+    title: project.name,
+    brand: project.date || "Project",
+    description: project.description,
+    tags: project.languages?.split(",").map((lang) => lang.trim()) || [],
+    imageUrl: project.image || "/project-images/default.jpg",
+    link: project.link || "#",
+    github: project.github,
+    demo: project.demo,
+  }));
+
   return (
     <>
       <div className="flex flex-col items-center">
@@ -40,7 +52,7 @@ function ProjectList() {
           href="https://github.com/NirvekPanda"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] mt-6"
+          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] mt-4"
         >
           GitHub
         </a>
@@ -50,33 +62,18 @@ function ProjectList() {
         <div className="text-center text-gray-500 mt-4 text-xl">
           Loading Projects...
         </div>
+      ) : projects.length > 0 ? (
+        <ThreeDCarousel 
+          items={transformedProjects}
+          autoRotate={true}
+          rotateInterval={6000}
+          cardHeight={400}
+        />
       ) : (
-        <div className="px-4 flex flex-wrap justify-center items-center w-[80%] max-w-[1200px] mx-auto">
-          {projects.length > 0 ? (
-            projects.map((project, index) => (
-              <div key={index} className="p-2 w-full flex justify-center sm:w-1/2 md:w-1/2 lg:w-1/3">
-                <div className="w-full max-w-sm">
-                  <Card
-                    name={project.name}
-                    description={project.description}
-                    languages={project.languages}
-                    image={project.image}
-                    link={project.link}
-                    date={project.date}
-                    code={project.code}
-                    github={project.github}
-                    demo={project.demo}
-                  />
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center text-gray-500 mt-4">No projects found.</div>
-          )}
-        </div>
+        <div className="text-center text-gray-500 mt-4">No projects found.</div>
       )}
     </>
   );
 }
 
-export default ProjectList;
+export default ProjectCarousel;

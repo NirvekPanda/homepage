@@ -57,7 +57,7 @@ export default function ContactForm() {
     var textArea = "w-full bg-gray-600 border border-gray-500 text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg";
 
     return (
-        <div className="max-w-2xl mx-auto bg-gradient-to-b from-gray-800 to-zinc-950 p-6 rounded-3xl shadow-lg text-white">
+        <div className="max-w-2xl mx-auto bg-gradient-to-b from-slate-800 to-zinc-950 p-6 rounded-3xl shadow-lg text-white">
             <h2 className="text-3xl font-bold text-center mb-4 mt-2 underline">Reach Out Below!</h2>
 
             {isSubmitted ? (

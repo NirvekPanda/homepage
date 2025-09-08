@@ -5,7 +5,7 @@ import LinkButton from "../components/button";
 import { useState, useEffect } from "react";
 import { firestore } from "../firebaseConfig";
 import { collection, getDocs, query, orderBy, where } from "firebase/firestore";
-import BlogCard from "../components/blogCard";
+import ThreeDCarousel from "../components/ThreeDCarousel";
 import Footer from "../components/footer";
 
 function BlogList() {
@@ -51,37 +51,38 @@ function BlogList() {
                             Upload
                         </a>
                     </div>
-
-                    <p className="text-xl text-[#FFFAEC] mt-2">
-                        updates on my life, projects, school work, and whatever else comes to mind:
-                    </p>
             </div>
 
             {loading ? (
-                <div className="text-center text-gray-500 mt-2 mb-6 text-xl">
+                <div className="text-center text-gray-500 mt-2 mb-4 text-xl">
                     Loading Posts...
                 </div>
+            ) : posts.length > 0 ? (
+                <ThreeDCarousel
+                    items={posts.map((post, index) => ({
+                        id: post.id || index,
+                        title: post.title,
+                        brand: "Blog Post",
+                        description: post.excerpt,
+                        tags: [], // Blog posts don't have language tags like projects
+                        imageUrl: `/blog-images/${post.slug}.jpg`,
+                        link: "#", // Blog posts don't have external links
+                        github: null,
+                        demo: null,
+                        // Store original blog data for modal
+                        content: post.content,
+                        slug: post.slug,
+                        publishedAt: post.publishedAt,
+                        excerpt: post.excerpt
+                    }))}
+                    autoRotate={true}
+                    rotateInterval={6000}
+                    cardHeight={400}
+                    contentType="blog"
+                />
             ) : (
-                <div className="px-4 flex flex-wrap justify-center items-center w-[80%] max-w-[1200px] mx-auto">
-                    {posts.length > 0 ? (
-                        posts.map((post, index) => (
-                            <div key={index} className="p-2 w-full flex justify-center sm:w-1/2 md:w-1/2 lg:w-1/3">
-                                <div className="w-full max-w-sm">
-                                    <BlogCard
-                                        title={post.title}
-                                        excerpt={post.excerpt}
-                                        publishedAt={post.publishedAt}
-                                        slug={post.slug}
-                                        content={post.content}
-                                    />
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="text-center text-gray-500 mt-4">
-                            No blog posts published yet.
-                        </div>
-                    )}
+                <div className="text-center text-gray-500 mt-4">
+                    No blog posts published yet.
                 </div>
             )}
             
