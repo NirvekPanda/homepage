@@ -11,10 +11,15 @@ This website serves as a glimpse into who I am professionally. It highlights the
 - **Tailwind CSS**
 
 ### Backend
-- **In Progress**
+- **Backgrounds powered by Go API**
 
 ### Database
 - **Firebase - Firestore**
+- **Supabase - PostgresSQL**
+
+### Hosting
+- **Vercel - Frontend**
+- **Google Cloud Run - Backend**
 
 ## Page Structure
 
@@ -25,15 +30,10 @@ The landing page provides an overview of the website and introduces visitors to 
 A dedicated section where you can learn more about my background, skills, academic and professional experiences. 
 
 ### [Projects](https://www.nirvekpandey.com/projects)
-A showcase of various projects that I have worked on. Below is a list of my projects:
-- [Development Journal](https://cse110-sp24-group11.github.io/cse110-sp24-group11/assets/src/front-page/index.html)
-- [2048 Calculator](https://nirvekpandey.com/projects/demos/2048)
-- [Blackjack Optimizer](https://nirvekpandey.com/projects/demos/Blackjack)
-- [Sudoku Solver](https://nirvekpandey.com/projects/demos/Sudoku)
-- [Poverty Predictor Model](https://docs.google.com/document/d/140T-F3hy8HARVfjZIojAdDXH6NzFwpvGdeRPAN3UmHk/edit?tab=t.0#heading=h.rx0aees35i1p)
-- [RedShift LLM Jailbreak](https://github.com/NirvekPanda/RedShift)
-- [Neurolens | Eye Ray Tracking Model](https://www.neurolens.com/)
-- [eLoN Early Warning System (EEWS)](https://www.darischen.com/projects/stock-analysis-and-prediction)
+A showcase of various projects that I have worked on, recently I've added support for 2048 gameplay.
+
+### [Blogs](https://www.nirvekpandey.com/blogs)
+Work in progress page to display updates on my life through blogs and vlogs.
 
 ### [Contact](https://www.nirvekpandey.com/contact)
 A page that provides contact information and a form for visitors to reach out for professional inquiries, collaborations, or networking opportunities.
