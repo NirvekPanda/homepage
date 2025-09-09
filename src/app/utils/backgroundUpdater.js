@@ -1,5 +1,5 @@
 // Background Image Update System
-// Updates background and location data based on military time
+// Updates background and location data based on 20-second intervals
 
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -16,25 +16,30 @@ let currentLocationData = null;
 let backgroundUpdateCallbacks = [];
 let countUpdateTimer = null;
 let batchUpdateTimer = null;
+let backgroundUpdateTimer = null;
+
+// Timing variables
+let startTime = Date.now();
+const UPDATE_INTERVAL = 20000; // 20 seconds
+let lastActualUpdate = 0;
 
 // Preloaded images cache
-let preloadedImages = new Map(); // Map of index -> { url, locationData, imageElement }
-let nextImagesQueue = []; // Queue of next 4 images to preload
-let preloadUsageCount = 0; // Track how many preloaded images have been used
-let lastBatchPreloadTime = 0; // Track when last batch preload happened
+let preloadedImages = new Map();
+let preloadUsageCount = 0;
+let lastBatchPreloadTime = 0;
 
-function getMilitaryTimeWithSeconds() {
-    const now = new Date();
-    return now.getHours() * 10000 + now.getMinutes() * 100 + now.getSeconds();
-}
-
+// Simple timing function - use 20-second intervals
 function calculateImageIndex(imageCount) {
     if (imageCount === 0) return 0;
-    const militaryTimeWithSeconds = getMilitaryTimeWithSeconds();
-    return militaryTimeWithSeconds % imageCount;
+    
+    const elapsedTime = Date.now() - startTime;
+    const intervalsPassed = Math.floor(elapsedTime / UPDATE_INTERVAL);
+    const index = intervalsPassed % imageCount;
+    
+    return index;
 }
 
-function calculateNextImageIndexes(currentIndex, imageCount, count = 4) {
+function calculateNextImageIndexes(currentIndex, imageCount, count = 3) {
     const indexes = [];
     for (let i = 1; i <= count; i++) {
         indexes.push((currentIndex + i) % imageCount);
@@ -45,20 +50,10 @@ function calculateNextImageIndexes(currentIndex, imageCount, count = 4) {
 function shouldPreloadMoreImages() {
     const now = Date.now();
     const timeSinceLastBatch = now - lastBatchPreloadTime;
-    const minTimeBetweenBatches = 30000; // 30 seconds minimum between batches
+    const minTimeBetweenBatches = 25000; // 25 seconds minimum
     
-    // Check if we have enough preloaded images
     const preloadedCount = preloadedImages.size;
-    const queueCount = nextImagesQueue.length;
-    const totalPreloaded = preloadedCount + queueCount;
-    
-    // Only preload if:
-    // 1. We have less than 2 images preloaded, OR
-    // 2. We've used more than 2 preloaded images since last batch, OR
-    // 3. It's been more than 2 minutes since last batch
-    const needsMoreImages = totalPreloaded < 2 || 
-                           preloadUsageCount >= 2 || 
-                           timeSinceLastBatch > 120000; // 2 minutes
+    const needsMoreImages = preloadedCount < 3 || preloadUsageCount >= 2;
     
     return needsMoreImages && timeSinceLastBatch >= minTimeBetweenBatches;
 }
@@ -100,18 +95,16 @@ function preloadImage(imageData, index) {
 async function batchPreloadImages() {
     if (totalImages === 0) return;
     
-    // Check if we actually need to preload more images
     if (!shouldPreloadMoreImages()) {
         return;
     }
     
     const currentIndex = calculateImageIndex(totalImages);
-    const nextIndexes = calculateNextImageIndexes(currentIndex, totalImages, 4);
+    const nextIndexes = calculateNextImageIndexes(currentIndex, totalImages, 3);
     
     lastBatchPreloadTime = Date.now();
     
     const preloadPromises = nextIndexes.map(async (index) => {
-        // Skip if already preloaded
         if (preloadedImages.has(index)) {
             return null;
         }
@@ -135,18 +128,11 @@ async function batchPreloadImages() {
             .filter(result => result.status === 'fulfilled' && result.value)
             .map(result => result.value);
         
-        // Only log if we actually loaded new images
-        if (successfulPreloads.length > 0) {
-            const loadedIndexes = successfulPreloads.map(img => img.index).join(', ');
-            console.log(`📦 Batch loaded images: [${loadedIndexes}]`);
-        }
         
-        // Update next images queue and reset usage count
-        nextImagesQueue = successfulPreloads;
-        preloadUsageCount = 0; // Reset usage count after successful preload
+        preloadUsageCount = 0;
         
     } catch (error) {
-        console.error('❌ Batch preload error:', error);
+        // Silent error handling
     }
 }
 
@@ -172,21 +158,27 @@ async function updateBackground() {
     try {
         const imageIndex = calculateImageIndex(totalImages);
         
-        // Check if we have a preloaded image for this index
-        const preloadedImage = preloadedImages.get(imageIndex);
+        // Only update if the index has actually changed
+        if (imageIndex === currentImageIndex) {
+            return;
+        }
         
+        // Throttle updates to prevent rapid switching
+        const now = Date.now();
+        if (lastActualUpdate > 0 && (now - lastActualUpdate) < 18000) {
+            return;
+        }
+        
+        const preloadedImage = preloadedImages.get(imageIndex);
         let newBackgroundUrl, locationData;
         
         if (preloadedImage && preloadedImage.loaded) {
-            // Use preloaded image
             newBackgroundUrl = preloadedImage.url;
             locationData = preloadedImage.locationData;
             
-            // Track usage and remove from preloaded cache
             preloadUsageCount++;
             preloadedImages.delete(imageIndex);
         } else {
-            // Fallback to API call
             const response = await axios.get(`${IMAGE_BY_INDEX_ENDPOINT}/${imageIndex}`);
             
             if (!response.data || !response.data.drive_file_id) {
@@ -207,24 +199,25 @@ async function updateBackground() {
             };
         }
 
-        if (newBackgroundUrl !== currentBackgroundUrl) {
-            currentBackgroundUrl = newBackgroundUrl;
-            currentImageIndex = imageIndex;
-            currentLocationData = locationData;
-            
-            backgroundUpdateCallbacks.forEach((callback) => {
-                try {
-                    if (typeof callback === 'function') {
-                        callback(newBackgroundUrl, imageIndex, locationData);
-                    }
-                } catch (error) {
-                    console.error('❌ Callback error:', error);
+        // Always update if we got here (index changed)
+        currentBackgroundUrl = newBackgroundUrl;
+        currentImageIndex = imageIndex;
+        currentLocationData = locationData;
+        lastActualUpdate = now;
+        
+        // Notify all callbacks
+        backgroundUpdateCallbacks.forEach((callback) => {
+            try {
+                if (typeof callback === 'function') {
+                    callback(newBackgroundUrl, imageIndex, locationData);
                 }
-            });
-        }
+            } catch (error) {
+                // Silent error handling
+            }
+        });
 
     } catch (error) {
-        console.error('❌ Background update error:', error);
+        // Silent error handling
     }
 }
 
@@ -263,18 +256,9 @@ export function getPreloadedImages() {
     return Array.from(preloadedImages.values());
 }
 
-export function getNextImagesQueue() {
-    return nextImagesQueue;
-}
-
-export function triggerBatchPreload() {
-    batchPreloadImages();
-}
-
 export function getPreloadStatus() {
     return {
         preloadedCount: preloadedImages.size,
-        queueCount: nextImagesQueue.length,
         usageCount: preloadUsageCount,
         lastBatchTime: lastBatchPreloadTime,
         shouldPreload: shouldPreloadMoreImages()
@@ -282,44 +266,43 @@ export function getPreloadStatus() {
 }
 
 export function initializeBackgroundUpdater() {
-    if (countUpdateTimer) {
-        clearInterval(countUpdateTimer);
-    }
-    if (batchUpdateTimer) {
-        clearInterval(batchUpdateTimer);
-    }
+    // Reset state
+    startTime = Date.now();
+    lastActualUpdate = 0;
+    currentBackgroundUrl = null;
+    currentImageIndex = null;
+    currentLocationData = null;
     
+    // Clear existing timers
+    if (countUpdateTimer) clearInterval(countUpdateTimer);
+    if (batchUpdateTimer) clearInterval(batchUpdateTimer);
+    if (backgroundUpdateTimer) clearInterval(backgroundUpdateTimer);
+    
+    // Initial setup
     updateImageCount().then(() => {
         updateBackground();
-        // Start batch preloading after initial background is set
-        batchPreloadImages();
+        
+        // Start preloading after first image
+        setTimeout(() => {
+            batchPreloadImages();
+        }, 2000);
     });
     
-    countUpdateTimer = setInterval(() => {
-        updateImageCount();
-    }, 600000);
+    // Set up intervals
+    countUpdateTimer = setInterval(updateImageCount, 600000); // Every 10 minutes
     
-    const backgroundUpdateTimer = setInterval(() => {
+    backgroundUpdateTimer = setInterval(() => {
         updateBackground();
-    }, 30000);
+    }, UPDATE_INTERVAL);
     
-    // Smart batch preload - check every 30 seconds if we need more images
     batchUpdateTimer = setInterval(() => {
         batchPreloadImages();
-    }, 30000);
+    }, 25000); // Every 25 seconds
     
     if (typeof window !== 'undefined') {
         window.backgroundUpdateTimer = backgroundUpdateTimer;
         window.batchUpdateTimer = batchUpdateTimer;
     }
-}
-
-export function triggerBackgroundUpdate() {
-    updateBackground();
-}
-
-export function triggerImageCountUpdate() {
-    updateImageCount();
 }
 
 export function stopBackgroundUpdater() {
@@ -333,6 +316,11 @@ export function stopBackgroundUpdater() {
         batchUpdateTimer = null;
     }
     
+    if (backgroundUpdateTimer) {
+        clearInterval(backgroundUpdateTimer);
+        backgroundUpdateTimer = null;
+    }
+    
     if (typeof window !== 'undefined') {
         if (window.backgroundUpdateTimer) {
             clearInterval(window.backgroundUpdateTimer);
@@ -344,9 +332,8 @@ export function stopBackgroundUpdater() {
         }
     }
     
-    // Clear preloaded images cache
     preloadedImages.clear();
-    nextImagesQueue = [];
+    backgroundUpdateCallbacks = [];
 }
 
 export function useBackgroundUpdater() {
@@ -355,14 +342,13 @@ export function useBackgroundUpdater() {
     const [imageIndex, setImageIndex] = useState(null);
     const [locationData, setLocationData] = useState(null);
     const [isInitialized, setIsInitialized] = useState(false);
-    const [preloadedImages, setPreloadedImages] = useState([]);
-    const [nextImagesQueue, setNextImagesQueue] = useState([]);
 
     useEffect(() => {
         try {
             initializeBackgroundUpdater();
             setIsInitialized(true);
             
+            // Set initial values
             const currentBg = getCurrentBackground();
             const currentCount = getImageCount();
             const currentIndex = getCurrentImageIndex();
@@ -372,8 +358,9 @@ export function useBackgroundUpdater() {
             setImageCount(currentCount);
             setImageIndex(currentIndex);
             setLocationData(currentLocation);
+            
         } catch (err) {
-            console.error('Failed to initialize background updater:', err);
+            // Silent error handling
         }
 
         return () => {
@@ -393,18 +380,7 @@ export function useBackgroundUpdater() {
         return unsubscribe;
     }, [isInitialized]);
 
-    // Handle preloaded images updates separately
-    useEffect(() => {
-        if (!isInitialized) return;
-
-        const interval = setInterval(() => {
-            setPreloadedImages(getPreloadedImages());
-            setNextImagesQueue(getNextImagesQueue());
-        }, 1000); // Update every second
-
-        return () => clearInterval(interval);
-    }, [isInitialized]);
-
+    // Update image count periodically
     useEffect(() => {
         if (!isInitialized) return;
 
@@ -413,7 +389,7 @@ export function useBackgroundUpdater() {
             if (currentCount !== imageCount) {
                 setImageCount(currentCount);
             }
-        }, 30000);
+        }, 60000); // Check every minute
 
         return () => clearInterval(interval);
     }, [isInitialized, imageCount]);
@@ -423,12 +399,18 @@ export function useBackgroundUpdater() {
         imageCount,
         imageIndex,
         locationData,
-        isInitialized,
-        preloadedImages,
-        nextImagesQueue
+        isInitialized
     };
 }
 
+// Manual triggers for testing
+export function triggerBackgroundUpdate() {
+    updateBackground();
+}
+
+export function triggerBatchPreload() {
+    batchPreloadImages();
+}
 
 export default {
     initializeBackgroundUpdater,
@@ -438,10 +420,8 @@ export default {
     getCurrentImageIndex,
     getCurrentLocationData,
     getPreloadedImages,
-    getNextImagesQueue,
     getPreloadStatus,
     triggerBackgroundUpdate,
-    triggerImageCountUpdate,
     triggerBatchPreload,
     stopBackgroundUpdater,
     useBackgroundUpdater
