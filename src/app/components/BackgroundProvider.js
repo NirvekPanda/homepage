@@ -81,7 +81,7 @@ export default function BackgroundProvider({ children }) {
                         setIsTransitioning(false);
                     }, 1000); // Match CSS transition duration
                     
-                }, 100); // Small delay for smooth transition start
+                }, 100); 
             })
             .catch((error) => {
                 setIsTransitioning(false);

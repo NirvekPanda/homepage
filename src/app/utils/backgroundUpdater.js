@@ -20,7 +20,7 @@ let backgroundUpdateTimer = null;
 
 // Timing variables
 let startTime = Date.now();
-const UPDATE_INTERVAL = 20000; // 20 seconds
+const UPDATE_INTERVAL = 10000;
 let lastActualUpdate = 0;
 
 // Preloaded images cache
@@ -28,7 +28,6 @@ let preloadedImages = new Map();
 let preloadUsageCount = 0;
 let lastBatchPreloadTime = 0;
 
-// Simple timing function - use 20-second intervals
 function calculateImageIndex(imageCount) {
     if (imageCount === 0) return 0;
     
@@ -50,7 +49,7 @@ function calculateNextImageIndexes(currentIndex, imageCount, count = 3) {
 function shouldPreloadMoreImages() {
     const now = Date.now();
     const timeSinceLastBatch = now - lastBatchPreloadTime;
-    const minTimeBetweenBatches = 25000; // 25 seconds minimum
+    const minTimeBetweenBatches = 25000;
     
     const preloadedCount = preloadedImages.size;
     const needsMoreImages = preloadedCount < 3 || preloadUsageCount >= 2;
