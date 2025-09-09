@@ -68,7 +68,7 @@ export default function Header() {
                     </div>
                     
                     {/* Location Carousel - separate box on the right */}
-                    <div className="bg-gradient-to-b from-stone-500/50 to-zinc-500/50 rounded-2xl py-4 px-4 h-12 order-1 sm:order-3 max-w-64">
+                    <div className="bg-gradient-to-b from-stone-500/50 to-zinc-500/50 hover:from-stone-700/60 hover:to-zinc-700/60 rounded-2xl py-4 px-4 h-12 order-1 sm:order-3 max-w-64 transition-all duration-200 cursor-pointer">
                         <LocationTile />
                     </div>
 
