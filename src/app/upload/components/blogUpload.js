@@ -123,7 +123,7 @@ export default function BlogUpload() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-800 to-zinc-950 rounded-3xl p-8 shadow-lg border border-gray-700">
+    <div className="bg-gradient-to-b from-gray-800 to-zinc-950 rounded-lg p-8 shadow-lg border border-gray-700">
       <h2 className="text-2xl font-bold text-white mb-6 text-center">Add New Blog Post</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">

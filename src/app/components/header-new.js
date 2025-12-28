@@ -47,7 +47,7 @@ export default function Header() {
                     <div className="w-64 h-12 order-1 sm:order-1 hidden sm:block"></div>
                     
                     {/* Main header content*/}
-                    <div className="max-w-4xl bg-white/25 backdrop-blur-sm rounded-3xl px-4 sm:px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left flex-1 order-2 sm:order-2 mx-4">
+                    <div className="max-w-4xl bg-white/25 backdrop-blur-sm rounded-lg px-4 sm:px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left flex-1 order-2 sm:order-2 mx-4">
                         <h1 className="text-2xl sm:text-5xl text-black font-bold">
                             Nirvek Pandey
                         </h1>
@@ -60,7 +60,7 @@ export default function Header() {
                     </div>
                     
                     {/* Location Carousel - separate box on the right (hidden on mobile) */}
-                    <div className="bg-white/25 backdrop-blur-sm hover:bg-white/40 rounded-2xl py-4 px-4 h-12 order-1 sm:order-3 max-w-64 transition-all duration-200 cursor-pointer hidden sm:block">
+                    <div className="bg-white/25 backdrop-blur-sm hover:bg-white/40 rounded-lg py-4 px-4 h-12 order-1 sm:order-3 max-w-64 transition-all duration-200 cursor-pointer hidden sm:block">
                         <LocationTile />
                     </div>
 

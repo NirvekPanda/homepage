@@ -67,10 +67,13 @@ export default function Home() {
       {/* Contact Section */}
       <section 
         id="contact" 
-        className="flex flex-col scroll-mt-32"
+        className="flex flex-col scroll-mt-16"
       >
         <ContactMe />
       </section>
+    
+        <Footer> </Footer>
+      
     </div>
   );
 }

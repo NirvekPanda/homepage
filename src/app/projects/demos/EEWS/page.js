@@ -11,7 +11,7 @@ const TwentyFourtyEight = () => {
                 </p>
             </header>
             <main className="w-full max-w-4xl">
-                <div className="overflow-hidden rounded-xl shadow-2xl">
+                <div className="overflow-hidden rounded-lg shadow-2xl">
                     <iframe
                         className="w-full h-96 md:h-[600px]"
                         src="https://www.darischen.com/projects/eews"

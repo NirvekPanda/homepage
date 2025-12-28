@@ -1,31 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import GameRunner from './gameplay.js';
-import AI from './ai.js';
-
-// Import constants from AI
-const MAX_PLAYER = 0;
-const CHANCE_PLAYER = 1;
-
-// Node class for AI
-class Node {
-    constructor(state, playerType) {
-        this.state = [state[0], state[1]]; // [board, score]
-        this.children = []; // Array of (direction, node) tuples
-        this.playerType = playerType;
-    }
-
-    // Returns whether this is a terminal state (no children)
-    isTerminal() {
-        return this.children.length === 0;
-    }
-}
+import AI, { Node, MAX_PLAYER, CHANCE_PLAYER } from './ai.js';
+import { matchTilesToBoard, getTileAnimationClass, getTilePositionStyle } from './tileAnimation.js';
 
 // Color mapping for tiles
 const getTileColor = (value) => {
   const colorMap = {
-    0: 'bg-slate-700',
+    0: 'bg-slate-700/20',
     2: 'bg-red-500',
     4: 'bg-orange-500',
     8: 'bg-yellow-500',
@@ -43,7 +26,7 @@ const getTileColor = (value) => {
     32768: 'bg-white text-gray-300',
     65536: 'bg-white text-gray-200',
   };
-  return colorMap[value] || 'bg-gray-800';
+  return colorMap[value] || 'bg-gray-800/80';
 };
 
 const getTextColor = (value) => {
@@ -62,6 +45,16 @@ const TwentyFortyEight = () => {
   const [aiEnabled, setAiEnabled] = useState(false);
   const [ai, setAi] = useState(null);
   const [aiThinking, setAiThinking] = useState(false);
+  
+  // Animation state
+  const [tiles, setTiles] = useState([]);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const tileIdCounter = useRef(0);
+
+  // Wrapper for tile matching using imported function
+  const boardToTiles = useCallback((boardMatrix, previousTiles = [], direction = null) => {
+    return matchTilesToBoard(boardMatrix, previousTiles, direction, tileIdCounter);
+  }, []);
 
   // Initialize game
   useEffect(() => {
@@ -69,62 +62,70 @@ const TwentyFortyEight = () => {
     const newAi = new AI(newGame.currentState(), 3);
     newAi.setSimulator(newGame);
     
-    console.log('Game initialized:', newGame);
-    console.log('AI initialized:', newAi);
-    console.log('Initial board:', newGame.getBoard());
-    console.log('Initial score:', newGame.score);
-    console.log('Redo function available:', typeof newGame.redo === 'function');
-    
     setGame(newGame);
     setAi(newAi);
-    setBoard(newGame.getBoard());
+    const initialBoard = newGame.getBoard();
+    setBoard(initialBoard);
     setScore(newGame.score);
-  }, []);
+    setTiles(boardToTiles(initialBoard));
+  }, [boardToTiles]);
 
   // Make a move
   const makeMove = useCallback((direction) => {
-    if (!game) {
-      console.log('No game instance available');
-      return;
-    }
+    if (!game) return;
 
-    // Prevent moves during AI thinking to avoid race conditions
-    if (aiThinking) {
-      console.log('Move blocked: AI is thinking');
-      return;
+    // Prevent moves during animation or AI thinking
+    if (isAnimating || aiThinking) return;
+    
+    // Set animating flag (skip for AI)
+    if (!aiEnabled) {
+      setIsAnimating(true);
     }
-
-    console.log('Making move in direction:', direction);
+    
     const moved = game.moveAndPlace(direction);
-    console.log('Move successful:', moved);
     
     if (moved) {
       const newBoard = game.getBoard();
       const newScore = game.score;
-      console.log('New board:', newBoard);
-      console.log('New score:', newScore);
       
       setBoard(newBoard);
       setScore(newScore);
       
+      // Phase 1: Show tiles moving to their final positions (before new tile spawns)
+      // We need to animate the board state BEFORE the random tile was placed
+      setTiles(prevTiles => {
+        // First, update positions for the move (this triggers CSS transitions)
+        const movedTiles = boardToTiles(newBoard, prevTiles, direction);
+        return movedTiles;
+      });
+      
+      // Wait for animation to complete before allowing new moves (skip for AI)
+      if (!aiEnabled) {
+        setTimeout(() => {
+          setIsAnimating(false);
+        }, 150); // Match CSS transition duration
+      } else {
+        setIsAnimating(false);
+      }
+      
       // Check if player has won (reached 2048 tile)
       const hasWonGame = newBoard.some(row => row.some(tile => tile === 2048));
       if (hasWonGame && !hasWon) {
-        console.log('You won! Reached 2048!');
         setHasWon(true);
       }
       
       if (game.gameOver()) {
-        console.log('Game over!');
         setGameOver(true);
         setAiEnabled(false); // Disable AI when game is over
       }
+    } else {
+      setIsAnimating(false);
     }
-  }, [game, aiThinking, hasWon]);
+  }, [game, isAnimating, aiThinking, aiEnabled, hasWon, boardToTiles]);
 
   // Handle keyboard input
   const handleKeyPress = useCallback((event) => {
-    if (!game || gameOver || aiThinking) return;
+    if (!game || gameOver || isAnimating || aiThinking) return;
 
     let direction = -1;
     switch(event.key) {
@@ -146,20 +147,23 @@ const TwentyFortyEight = () => {
 
     event.preventDefault();
     makeMove(direction);
-  }, [game, gameOver, aiThinking, makeMove]);
+  }, [game, gameOver, isAnimating, aiThinking, makeMove]);
 
   // Reset game
   const resetGame = useCallback(() => {
     if (!game) return;
     
     game.reset();
-    setBoard(game.getBoard());
+    const newBoard = game.getBoard();
+    setBoard(newBoard);
     setScore(game.score);
+    setTiles(boardToTiles(newBoard));
     setGameOver(false);
     setHasWon(false);
     setAiEnabled(false);
     setAiThinking(false);
-  }, [game]);
+    setIsAnimating(false);
+  }, [game, boardToTiles]);
 
   // AI move function
   const makeAIMove = useCallback(async () => {
@@ -184,7 +188,6 @@ const TwentyFortyEight = () => {
       
       // Compute AI decision
       const direction = ai.computeDecision();
-      console.log('AI decided on direction:', direction);
       
       if (direction !== null && direction !== undefined) {
         makeMove(direction);
@@ -208,14 +211,14 @@ const TwentyFortyEight = () => {
 
   // AI auto-play effect
   useEffect(() => {
-    if (aiEnabled && !gameOver && !aiThinking) {
+    if (aiEnabled && !gameOver && !aiThinking && !isAnimating) {
       const timer = setTimeout(() => {
         makeAIMove();
       }, 10);
 
       return () => clearTimeout(timer);
     }
-  }, [aiEnabled, gameOver, aiThinking, makeAIMove, board]); // Include board to trigger when game state changes
+  }, [aiEnabled, gameOver, aiThinking, isAnimating, makeAIMove, board]); // Include board to trigger when game state changes
 
   // Prevent AI from running when user is manually playing
   const [userInteracting, setUserInteracting] = useState(false);
@@ -307,6 +310,27 @@ const TwentyFortyEight = () => {
 
     return (
     <div className="flex flex-col items-center justify-start pt-4 pb-4 px-4">
+      <style jsx>{`
+        .tile-move {
+          transition: left 150ms ease-out, top 150ms ease-out;
+        }
+        
+        .tile-merge {
+          transition: left 150ms ease-out, top 150ms ease-out, background-color 200ms ease-in 150ms, transform 150ms ease-out;
+          z-index: 10;
+        }
+        
+        .tile-new {
+          opacity: 0;
+          animation: fadeIn 150ms ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
       {/* Header */}
       <div className="text-center mb-6">
         <h1 className="text-4xl font-bold text-[#FFFAEC] mb-2 mt-2">
@@ -324,9 +348,9 @@ const TwentyFortyEight = () => {
       <div className="flex flex-col lg:flex-row gap-6 w-full max-w-6xl mb-8 items-center justify-center">
         {/* Left Panel - AI/Score/Reset */}
         <div className="w-full lg:w-64">
-          <div className="bg-slate-800 rounded-lg p-4 border border-gray-600 flex flex-col gap-4">
+          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10 flex flex-col gap-4">
             {/* Score Display */}
-            <div className="bg-slate-700 rounded-md px-4 py-3 flex items-center justify-center">
+            <div className="bg-white/10 backdrop-blur-sm rounded-md px-4 py-3 flex items-center justify-center">
               <div className="text-[#FFFAEC] text-xl font-semibold">
                 Score: <span className="text-[#F5ECD5]">{score}</span>
               </div>
@@ -363,36 +387,73 @@ const TwentyFortyEight = () => {
         {/* Game Board */}
         <div className="w-full max-w-[500px] aspect-square flex-shrink-0">
           <div 
-            className="grid grid-cols-4 gap-3 bg-slate-800 p-4 rounded-xl border border-gray-600 shadow-lg h-full select-none"
+            className="relative bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-white/10 shadow-lg h-full select-none overflow-hidden"
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
             style={{ touchAction: 'none' }}
           >
-            {board.map((row, i) =>
-              row.map((tile, j) => (
+            {/* Background grid cells */}
+            <div className="absolute inset-4 grid grid-cols-4 gap-3">
+              {Array(16).fill(0).map((_, index) => (
                 <div
-                  key={`${i}-${j}`}
-                  className={`aspect-square rounded-lg flex items-center justify-center text-lg font-bold transition-all duration-200 ${getTileColor(tile)} ${getTextColor(tile)}`}
-                >
-                  {tile || ''}
-                </div>
-              ))
-            )}
+                  key={`bg-${index}`}
+                  className="bg-white/20 rounded-lg"
+                />
+              ))}
+            </div>
+            
+            {/* Animated tiles */}
+            <div className="absolute inset-4">
+              {tiles.map((tile) => {
+                const cellSize = 'calc((100% - 3 * 0.75rem) / 4)';
+                const gap = '0.75rem';
+                const left = `calc(${tile.col} * (${cellSize} + ${gap}))`;
+                const top = `calc(${tile.row} * (${cellSize} + ${gap}))`;
+                
+                // Determine which animation class to apply
+                let animationClass = '';
+                if (tile.isNew) {
+                  animationClass = 'tile-new';
+                } else if (tile.isMerging) {
+                  animationClass = 'tile-merge';
+                }
+                
+                // Only apply move transition if tile actually moved and not in AI mode
+                const moveClass = (!aiEnabled && tile.didMove) ? 'tile-move' : '';
+                
+                return (
+                  <div
+                    key={tile.id}
+                    className={`absolute rounded-lg flex items-center justify-center text-lg font-bold ${getTileColor(tile.value)} ${getTextColor(tile.value)} ${animationClass} ${moveClass}`}
+                    style={{
+                      width: cellSize,
+                      height: cellSize,
+                      left: left,
+                      top: top,
+                    }}
+                  >
+                    {tile.value}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {/* Right Panel - Arrow Controls */}
         <div className="w-full lg:w-64">
-          <div className="bg-slate-800 rounded-lg p-4 border border-gray-600 flex flex-col items-center justify-center gap-4">
+          <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10 flex flex-col items-center justify-center gap-4">
             {/* Top Row: Undo, Up, Redo */}
             <div className="flex gap-3 items-center">
               {/* Undo Button */}
               <button
                 onClick={() => {
                   if (game && game.undo()) {
-                    setBoard(game.getBoard());
+                    const newBoard = game.getBoard();
+                    setBoard(newBoard);
                     setScore(game.score);
+                    setTiles(boardToTiles(newBoard, [], null));
                     setGameOver(false);
                   }
                 }}
@@ -418,11 +479,11 @@ const TwentyFortyEight = () => {
               <button
                 onClick={() => {
                   if (game && typeof game.redo === 'function' && game.redo()) {
-                    setBoard(game.getBoard());
+                    const newBoard = game.getBoard();
+                    setBoard(newBoard);
                     setScore(game.score);
+                    setTiles(boardToTiles(newBoard, [], null));
                     setGameOver(false);
-                  } else {
-                    console.log('Redo not available - game instance may be outdated');
                   }
                 }}
                 disabled={gameOver}
@@ -476,7 +537,7 @@ const TwentyFortyEight = () => {
 
 
       {/* Instructions */}
-      <div className="mt-2 text-center text-sm text-[#FFFAEC]/60 max-w-[500px]">
+      <div className="mt-2 text-center text-sm text-white/80 max-w-[500px]">
         <p className="mb-2">Use arrow keys, swipe on the game board, or click buttons to move tiles</p>
         <p>Combine tiles with the same number to reach 2048!</p>
       </div>
