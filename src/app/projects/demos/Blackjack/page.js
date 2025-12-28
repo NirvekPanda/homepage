@@ -8,7 +8,7 @@ const Blackjack = () => {
                     This page is still under construction. Please check back later!
                 </h1>
                 <iframe
-                    className="w-full h-full border border-gray-800 rounded-xl shadow-lg"
+                    className="w-full h-full border border-gray-800 rounded-lg shadow-lg"
                     src="https://blackjack-nda.vercel.app/"
                     title="Demo BlackJack Game"
                     frameBorder="0"

@@ -166,7 +166,7 @@ const BackgroundUpload = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-3xl p-8 shadow-lg border border-slate-700">
+    <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-lg p-8 shadow-lg border border-slate-700">
       <div className="max-w-2xl mx-auto">
         <h2 className="text-3xl font-bold text-[#F5ECD5] mb-6 text-center">
           Upload Background Image

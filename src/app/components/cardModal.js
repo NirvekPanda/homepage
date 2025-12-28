@@ -32,7 +32,7 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
       <div
         data-testid="card-modal"
         onClick={(e) => e.stopPropagation()}
-        className={`relative bg-gradient-to-b from-stone-700 to-zinc-900 ${isFlipped ? "rounded-lg" : "rounded-lg"} overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        className={`relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm ${isFlipped ? "rounded-lg" : "rounded-lg"} overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
         style={{
           width: isFlipped ? "100%" : "80vw",
@@ -71,9 +71,9 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
         {/* Scrollable Content Section */}
         <div className="flex-1 p-6 pt-10">
           {/* Extra top padding to account for the overlapping buttons */}
-          <h2 className="text-3xl font-bold mb-1 text-center">{name}</h2>
-          <p className="text-center text-gray-400 mb-4">{date}</p>
-          <div className="bg-gradient-to-b from-slate-700 to-gray-700 p-5 rounded-lg shadow-lg text-white text-lg leading-relaxed">
+          <h2 className="text-3xl font-bold mb-1 text-center text-black dark:text-white transition-colors duration-200">{name}</h2>
+          <p className="text-center text-gray-700 dark:text-gray-300 mb-4 transition-colors duration-200">{date}</p>
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-5 rounded-lg shadow-lg text-black dark:text-white text-lg leading-relaxed border border-white/30 dark:border-gray-700/30 transition-all duration-200">
             <ul>{parseContent(description)}</ul>
           </div>
           {/* Languages Section */}
@@ -86,7 +86,7 @@ export default function CardModal({ isOpen, onClose, name, description, image, l
 
         {/* Close Button */}
         <button
-          className="absolute top-3 right-3 bg-gray-800 text-white px-3 py-1 rounded-full hover:bg-gray-700 transition"
+          className="absolute top-3 right-3 bg-white/95 dark:bg-slate-700 backdrop-blur-sm text-black dark:text-white px-3 py-1 rounded-full hover:bg-white dark:hover:bg-slate-600 transition border border-white/30 dark:border-gray-600"
           onClick={onClose}
         >
           ✕

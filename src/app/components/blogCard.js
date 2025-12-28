@@ -33,7 +33,7 @@ export default function BlogCard({ title, excerpt, publishedAt, slug, content })
       {/* Card element */}
       <div
         onClick={() => setIsModalOpen(true)}
-        className="cursor-pointer relative flex flex-col my-6 bg-slate-700 shadow-md border border-slate-800 hover:border-4 rounded-lg w-full max-w-sm transition-all duration-100"
+        className="cursor-pointer relative flex flex-col my-6 bg-white/25 dark:bg-black/25 backdrop-blur-sm shadow-md border border-white/30 dark:border-gray-700/30 hover:border-white/50 dark:hover:border-gray-600/50 rounded-lg w-full max-w-sm transition-all duration-100"
       >
                         {/* Image Section */}
                 <div className="relative h-56 m-2.5 overflow-hidden text-white rounded-md">
@@ -49,17 +49,17 @@ export default function BlogCard({ title, excerpt, publishedAt, slug, content })
 
         {/* Blog Content */}
         <div className="p-4">
-          <h6 className="mb-2 text-white text-xl font-semibold text-center">
+          <h6 className="mb-2 text-black dark:text-white text-xl font-semibold text-center transition-colors duration-200">
             {title}
           </h6>
           
           {/* Excerpt */}
-          <p className="text-gray-300 text-sm text-center mb-3 line-clamp-3">
+          <p className="text-gray-700 dark:text-gray-300 text-sm text-center mb-3 line-clamp-3 transition-colors duration-200">
             {excerpt}
           </p>
           
           {/* Date */}
-          <p className="text-white text-xs text-center">
+          <p className="text-gray-600 dark:text-gray-400 text-xs text-center transition-colors duration-200">
             {formatDate(publishedAt)}
           </p>
         </div>

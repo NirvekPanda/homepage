@@ -5,7 +5,7 @@ import LanguageTile from "./langTile.js";
 import { PopoverProvider } from "../contexts/PopoverContext.js";
 import { getProjectImageSrc } from "../utils/imageUtils.js";
 
-export default function Card({ name, description, languages, image, link, date, code, github, demo, onClick, excerpt, showDate = false }) {
+export default function Card({ name, description, languages, image, link, date, code, github, demo, onClick, excerpt, showDate = false, isActive = false }) {
   const languageList = languages.split(",").map((lang) => lang.trim());
 
   // Format the date consistently for SSR
@@ -34,7 +34,9 @@ export default function Card({ name, description, languages, image, link, date, 
       {/* Card element */}
       <div
         onClick={onClick}
-        className="cursor-pointer relative flex flex-col my-2 bg-slate-700 shadow-md border border-slate-800 hover:border-4 rounded-lg w-full transition-all duration-100"
+        className={`cursor-pointer relative flex flex-col my-2 ${
+          isActive ? "bg-white/75 dark:bg-black/75 border-white/60 dark:border-gray-600/60 shadow-lg" : "bg-white/25 dark:bg-black/25 border-white/30 dark:border-gray-700/30 shadow-md"
+        } backdrop-blur-sm hover:border-white/50 dark:hover:border-gray-600/50 rounded-lg w-full transition-colors duration-500 ease-in-out`}
       >
 
         {/* Image Section */}
@@ -50,20 +52,20 @@ export default function Card({ name, description, languages, image, link, date, 
         </div>
         {/* Project Name */}
         <div className="p-4">
-          <h6 className="mb-2 text-white text-xl font-semibold text-center">
+          <h6 className="mb-2 text-black dark:text-white text-xl font-semibold text-center transition-colors duration-200">
             {name}
           </h6>
           
           {/* Excerpt for blog posts */}
           {excerpt && (
-            <p className="text-gray-300 text-sm text-center mb-3 line-clamp-3">
+            <p className="text-gray-700 dark:text-gray-300 text-sm text-center mb-3 line-clamp-3 transition-colors duration-200">
               {excerpt}
             </p>
           )}
           
           {/* Date for blog posts */}
           {showDate && date && (
-            <p className="text-gray-400 text-xs text-center mb-3">
+            <p className="text-gray-600 dark:text-gray-400 text-xs text-center mb-3 transition-colors duration-200">
               {formatDate(date)}
             </p>
           )}
@@ -82,14 +84,15 @@ export default function Card({ name, description, languages, image, link, date, 
             )}
           </div>
         </div>
+        
         {/* Language List - only show if there are languages */}
-        {languageList.length > 0 && languageList[0] !== "" && (
+        {/* {languageList.length > 0 && languageList[0] !== "" && (
           <div className="px-4 pb-4 pt-0 mt-2 flex flex-wrap justify-center gap-2">
             {languageList.map((lang, index) => (
               <LanguageTile key={index} language={lang} />
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </PopoverProvider>
   );

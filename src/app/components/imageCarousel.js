@@ -140,7 +140,7 @@ const ImageCarousel = ({ title, images, className = "" }) => {
                 onClick={goToPrevious}
                 aria-label="Previous image"
             >
-                <span className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-800/80 backdrop-blur-sm group-hover:bg-slate-700/90 group-focus:ring-4 group-focus:ring-slate-500 group-focus:outline-none transition-all duration-200 shadow-lg">
+                <span className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-800/80 dark:bg-slate-700/80 backdrop-blur-sm group-hover:bg-slate-700/90 dark:group-hover:bg-slate-600/90 group-focus:ring-4 group-focus:ring-slate-500 group-focus:outline-none transition-all duration-200 shadow-lg">
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 1 1 5l4 4"/>
                     </svg>
@@ -154,7 +154,7 @@ const ImageCarousel = ({ title, images, className = "" }) => {
                 onClick={goToNext}
                 aria-label="Next image"
             >
-                <span className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-800/80 backdrop-blur-sm group-hover:bg-slate-700/90 group-focus:ring-4 group-focus:ring-slate-500 group-focus:outline-none transition-all duration-200 shadow-lg">
+                <span className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-800/80 dark:bg-slate-700/80 backdrop-blur-sm group-hover:bg-slate-700/90 dark:group-hover:bg-slate-600/90 group-focus:ring-4 group-focus:ring-slate-500 group-focus:outline-none transition-all duration-200 shadow-lg">
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                     </svg>
@@ -164,7 +164,7 @@ const ImageCarousel = ({ title, images, className = "" }) => {
             {/* Mobile touch indicators - only visible on mobile */}
             <div className="absolute top-2 right-2 z-20 sm:hidden">
                 <div className="flex items-center space-x-1 text-white/70 text-xs">
-                    <span className="bg-slate-800/60 px-2 py-1 rounded-full backdrop-blur-sm">
+                    <span className="bg-slate-800/60 dark:bg-slate-700/60 px-2 py-1 rounded-full backdrop-blur-sm">
                         {currentSlide + 1} / {images.length}
                     </span>
                 </div>

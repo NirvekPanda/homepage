@@ -54,7 +54,7 @@ export default function BlogModal({ isOpen, onClose, title, content, excerpt, pu
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative bg-gradient-to-b from-stone-700 to-zinc-900 rounded-lg overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        className={`relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg overflow-y-auto transform transition-all duration-300 ease-in-out ${animateModal ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
         style={{
           width: "80vw",
@@ -68,20 +68,20 @@ export default function BlogModal({ isOpen, onClose, title, content, excerpt, pu
         {/* Content Section - No top image banner */}
         <div className="flex-1 p-6 flex flex-col">
           {/* Blog Title */}
-          <h2 className="text-3xl font-bold mb-2 text-center text-white">{title}</h2>
+          <h2 className="text-3xl font-bold mb-2 text-center text-black dark:text-white transition-colors duration-200">{title}</h2>
           
           {/* Date */}
-          <p className="text-center text-white mb-6">{formatDate(publishedAt)}</p>
+          <p className="text-center text-gray-700 dark:text-gray-300 mb-6 transition-colors duration-200">{formatDate(publishedAt)}</p>
           
           {/* Blog Content - Expanded to fill available space */}
-          <div className="bg-gradient-to-b from-slate-700 to-gray-700 p-6 rounded-lg shadow-lg text-white text-lg leading-relaxed flex-1">
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-6 rounded-lg shadow-lg text-black dark:text-white text-lg leading-relaxed flex-1 border border-white/30 dark:border-gray-700/30 transition-all duration-200">
             <div>{parseContent(content)}</div>
           </div>
         </div>
 
         {/* Close Button */}
         <button
-          className="absolute top-3 right-3 bg-gray-800 text-white px-3 py-1 rounded-full hover:bg-gray-700 transition"
+          className="absolute top-3 right-3 bg-slate-700 dark:bg-slate-600 text-white px-3 py-1 rounded-full hover:bg-slate-600 dark:hover:bg-slate-500 transition"
           onClick={onClose}
         >
           ✕

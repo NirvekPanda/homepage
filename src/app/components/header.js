@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Nav from "./nav";
 import LocationTile from "./locationTile";
+import DarkModeToggle from "./DarkModeToggle";
 
 export default function Header() {
     const [isVisible, setIsVisible] = useState(true);
@@ -10,72 +11,74 @@ export default function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
-            // Only apply scroll behavior on non-mobile devices (screen width >= 640px)
-            if (window.innerWidth < 640) {
-                setIsVisible(true);
-                return;
-            }
-
             const currentScrollY = window.scrollY;
 
-            if (currentScrollY === 0) {
+            // If user scrolls up, show header/nav
+            if (currentScrollY < lastScrollY.current) {
                 setIsVisible(true);
-            } else if (currentScrollY > lastScrollY.current) {
+            }
+            // If user scrolls down more than 50px, hide header/nav
+            else if (currentScrollY - lastScrollY.current > 50) {
                 setIsVisible(false);
-            } else {
-                setIsVisible(true);
             }
 
             lastScrollY.current = currentScrollY;
         };
 
-        // Also handle resize to update behavior when switching between mobile/desktop
-        const handleResize = () => {
-            if (window.innerWidth < 640) {
-                setIsVisible(true);
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        window.addEventListener("resize", handleResize);
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("resize", handleResize);
-        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     return (
         <>
             <header
-                className={`py-5 px-10 transition-all duration-500 ease-in-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
-                    }`}
+                className={`py-2 mt-2 mb-0 lg:mb-8`}
             >
-                <div className="mx-auto flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left gap-4 relative">
-                    {/* Invisible placeholder - same dimensions as location tile */}
-                    <div className="w-64 h-12 order-1 sm:order-1"></div>
+                {/* Mobile Layout */}
+                <div className="sm:hidden flex flex-col items-center gap-1">
+                    {/* Top row: Dark mode toggle + Location tile */}
+                    <div className="flex items-center justify-center gap-3">
+                        <DarkModeToggle />
+                        <div className="bg-white/25 dark:bg-black/25 backdrop-blur-sm hover:bg-white/40 dark:hover:bg-black/40 rounded-lg py-2 px-4 h-12 transition-all duration-200 cursor-pointer border border-white/30 dark:border-gray-700/30">
+                            <LocationTile />
+                        </div>
+                    </div>
+                    {/* Name box - same width as hero, centered */}
+                    <div className="w-5/6 max-w-5xl bg-white/25 dark:bg-black/25 backdrop-blur-sm rounded-lg px-8 py-3 border border-white/30 dark:border-gray-700/30 transition-all duration-200">
+                        <h1 className="text-3xl text-black dark:text-white font-bold text-center transition-colors duration-200">
+                            Nirvek Pandey
+                        </h1>
+                    </div>
+                </div>
+
+                {/* Desktop Layout */}
+                <div className="hidden sm:flex px-10 items-center justify-center relative">
+                    {/* Dark mode toggle on left - absolute positioned */}
+                    <div className="absolute left-10">
+                        <DarkModeToggle />
+                    </div>
                     
-                    {/* Main header content*/}
-                    <div className="max-w-4xl bg-gradient-to-b from-stone-700/50 to-zinc-700/50 rounded-3xl px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left flex-1 order-2 sm:order-2 mx-4">
-                        <h1 className="text-4xl sm:text-5xl text-[#F5ECD5] font-bold">
+                    {/* Main header content - centered */}
+                    <div className="max-w-4xl bg-white/25 dark:bg-black/25 backdrop-blur-sm rounded-lg px-8 py-2 flex flex-row items-center justify-between text-left border border-white/30 dark:border-gray-700/30 transition-all duration-200">
+                        <h1 className="text-4xl md:text-5xl text-black dark:text-white font-bold transition-colors duration-200">
                             Nirvek Pandey
                         </h1>
                         <p
-                            className="text-xl sm:text-2xl text-[#FFFAEC] mt-2 sm:mt-1 cursor-pointer"
+                            className="text-xl sm:text-2xl text-black dark:text-white mt-1 cursor-pointer transition-colors duration-200 ml-8"
                             onClick={() => (window.location.href = "/secret")}
                         >
                             Aspiring Network Engineer
                         </p>
                     </div>
                     
-                    {/* Location Carousel - separate box on the right */}
-                    <div className="bg-gradient-to-b from-stone-500/50 to-zinc-500/50 hover:from-stone-700/60 hover:to-zinc-700/60 rounded-2xl py-4 px-4 h-12 order-1 sm:order-3 max-w-64 transition-all duration-200 cursor-pointer">
+                    {/* Location Carousel on right - absolute positioned */}
+                    <div className="absolute right-10 bg-white/25 dark:bg-black/25 backdrop-blur-sm hover:bg-white/40 dark:hover:bg-black/40 rounded-lg py-2 px-4 h-12 transition-all duration-200 cursor-pointer border border-white/30 dark:border-gray-700/30">
                         <LocationTile />
                     </div>
-
                 </div>
             </header>
 
-            <Nav />
+            <Nav isVisible={isVisible} />
         </>
     );
 }

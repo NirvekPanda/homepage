@@ -1,5 +1,7 @@
 // 2048 Game Runner Class
 // Based on Python reference implementation
+import * as Board from './board.js';
+
 class GameRunner {
     constructor(initTileMatrix = null, initScore = 0) {
         this.boardSize = 4;
@@ -30,12 +32,12 @@ class GameRunner {
 
     // Create a new empty tile matrix
     newTileMatrix() {
-        return Array(this.boardSize).fill().map(() => Array(this.boardSize).fill(0));
+        return Board.createEmptyBoard(this.boardSize);
     }
 
     // Deep copy utility function
     deepCopy(matrix) {
-        return matrix.map(row => [...row]);
+        return Board.deepCopy(matrix);
     }
 
     // Get current game state
@@ -53,102 +55,42 @@ class GameRunner {
         return false;
     }
 
-    // Rotate matrix clockwise
+    // Rotate matrix clockwise (for compatibility with AI)
     rotateMatrixClockwise() {
-        const tm = this.tileMatrix;
-        for (let i = 0; i < Math.floor(this.boardSize / 2); i++) {
-            for (let k = i; k < this.boardSize - i - 1; k++) {
-                const temp1 = tm[i][k];
-                const temp2 = tm[this.boardSize - 1 - k][i];
-                const temp3 = tm[this.boardSize - 1 - i][this.boardSize - 1 - k];
-                const temp4 = tm[k][this.boardSize - 1 - i];
-                
-                tm[this.boardSize - 1 - k][i] = temp1;
-                tm[this.boardSize - 1 - i][this.boardSize - 1 - k] = temp2;
-                tm[k][this.boardSize - 1 - i] = temp3;
-                tm[i][k] = temp4;
-            }
-        }
+        this.tileMatrix = Board.rotateBoard(this.tileMatrix);
     }
 
-    // Move in the specified direction (0=up, 1=right, 2=down, 3=left)
+    // Move in the specified direction (0=left, 1=up, 2=right, 3=down)
     move(direction) {
-        let moved = false;
         this.addToUndo();
         
         // Clear redo stack when making a new move
         this.redoMat = [];
         
-        // Rotate to make the move direction "left" (which is what moveTiles expects)
-        for (let i = 0; i < direction; i++) {
-            this.rotateMatrixClockwise();
+        const result = Board.executeMove(this.tileMatrix, this.score, direction);
+        
+        if (result.moved) {
+            this.tileMatrix = result.board;
+            this.score = result.score;
         }
         
-        if (this.canMove()) {
-            this.moveTiles();
-            this.mergeTiles();
-            moved = true;
-        }
-        
-        // Rotate back to original orientation
-        for (let j = 0; j < (4 - direction) % 4; j++) {
-            this.rotateMatrixClockwise();
-        }
-        
-        return moved;
+        return result.moved;
     }
 
-    // Move tiles to the left (after rotation, this becomes the desired direction)
+    // Legacy methods for AI compatibility - these mutate state directly
     moveTiles() {
-        const tm = this.tileMatrix;
-        for (let i = 0; i < this.boardSize; i++) {
-            for (let j = 0; j < this.boardSize - 1; j++) {
-                while (tm[i][j] === 0 && this.sumRow(tm[i], j) > 0) {
-                    for (let k = j; k < this.boardSize - 1; k++) {
-                        tm[i][k] = tm[i][k + 1];
-                    }
-                    tm[i][this.boardSize - 1] = 0;
-                }
-            }
-        }
+        this.tileMatrix = Board.moveTiles(this.tileMatrix);
     }
 
-    // Helper function to sum row from a starting index
-    sumRow(row, startIndex) {
-        let sum = 0;
-        for (let i = startIndex; i < row.length; i++) {
-            sum += row[i];
-        }
-        return sum;
-    }
-
-    // Merge adjacent tiles of the same value
     mergeTiles() {
-        const tm = this.tileMatrix;
-        for (let i = 0; i < this.boardSize; i++) {
-            for (let k = 0; k < this.boardSize - 1; k++) {
-                if (tm[i][k] === tm[i][k + 1] && tm[i][k] !== 0) {
-                    tm[i][k] = tm[i][k] * 2;
-                    tm[i][k + 1] = 0;
-                    this.score += tm[i][k];
-                    this.moveTiles(); // Move tiles after merging
-                }
-            }
-        }
+        const result = Board.mergeTiles(this.tileMatrix, this.score);
+        this.tileMatrix = result.board;
+        this.score = result.score;
     }
 
     // Check if a move is possible in the current orientation
     canMove() {
-        const tm = this.tileMatrix;
-        for (let i = 0; i < this.boardSize; i++) {
-            for (let j = 1; j < this.boardSize; j++) {
-                if ((tm[i][j - 1] === 0 && tm[i][j] > 0) ||
-                    (tm[i][j - 1] === tm[i][j] && tm[i][j - 1] !== 0)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return Board.canMove(this.tileMatrix);
     }
 
     // Place a random tile (value 2) in an empty position
@@ -164,15 +106,7 @@ class GameRunner {
 
     // Get all open (value 0) tiles
     getOpenTiles() {
-        const tiles = [];
-        for (let i = 0; i < this.boardSize; i++) {
-            for (let j = 0; j < this.boardSize; j++) {
-                if (this.tileMatrix[i][j] === 0) {
-                    tiles.push([i, j]);
-                }
-            }
-        }
-        return tiles;
+        return Board.getOpenTiles(this.tileMatrix);
     }
 
     // Undo functionality
@@ -221,24 +155,7 @@ class GameRunner {
 
     // Check if game is over
     gameOver() {
-        // Check if there are any open tiles
-        if (this.getOpenTiles().length > 0) {
-            return false;
-        }
-        
-        // Check if any moves are possible
-        for (let i = 0; i < 4; i++) {
-            this.rotateMatrixClockwise();
-            if (this.canMove()) {
-                // Restore original orientation before returning
-                for (let j = 0; j < (4 - i - 1) % 4; j++) {
-                    this.rotateMatrixClockwise();
-                }
-                return false;
-            }
-        }
-        // Matrix is already in original orientation after 4 rotations
-        return true;
+        return Board.isGameOver(this.tileMatrix);
     }
 
     // Reset game to initial state

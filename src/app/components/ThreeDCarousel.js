@@ -81,12 +81,16 @@ const ThreeDCarousel = ({
     }
   };
 
-  const getCardAnimationClass = (index) => {
+    const getCardAnimationClass = (index) => {
     if (index === active) return "scale-100 opacity-100 z-20";
     if (index === (active + 1) % items.length)
-      return "translate-x-[40%] scale-95 opacity-60 z-10";
+      return "translate-x-[45%] scale-100 opacity-100 z-15";
     if (index === (active - 1 + items.length) % items.length)
-      return "translate-x-[-40%] scale-95 opacity-60 z-10";
+      return "translate-x-[-45%] scale-100 opacity-100 z-15";
+    if (index === (active + 2) % items.length)
+      return "translate-x-[90%] scale-75 opacity-80 z-5";
+    if (index === (active - 2 + items.length) % items.length)
+      return "translate-x-[-90%] scale-75 opacity-80 z-5";
     return "scale-90 opacity-0";
   };
 
@@ -103,15 +107,15 @@ const ThreeDCarousel = ({
   return (
     <section
       id="ThreeDCarousel"
-      className="bg-transparent min-w-full mx-auto 
+      className="py-4 bg-transparent min-w-full mx-auto 
     flex items-center justify-center"
     >
       <div
         className="w-full px-4 sm:px-6 lg:px-8 
-      min-w-[350px] md:min-w-[1000px] max-w-7xl"
+      min-w-[350px] md:min-w-[1000px] lg:max-w-8xl"
       >
         <div
-          className="relative overflow-hidden h-[550px]"
+          className="relative overflow-hidden h-[420px]"
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
           onTouchStart={onTouchStart}
@@ -123,7 +127,7 @@ const ThreeDCarousel = ({
             {items.map((item, index) => (
               <div
                 key={item.id}
-                className={`absolute top-0 w-full max-w-md transform transition-all duration-500 ${getCardAnimationClass(
+                className={`absolute top-0 w-full max-w-sm md:max-w-md transform transition-all duration-700 ${getCardAnimationClass(
                   index
                 )}`}
               >
@@ -140,6 +144,7 @@ const ThreeDCarousel = ({
                   onClick={() => handleCardClick(item)}
                   excerpt={item.excerpt}
                   showDate={contentType === "blog"}
+                  isActive={index === active}
                 />
               </div>
             ))}

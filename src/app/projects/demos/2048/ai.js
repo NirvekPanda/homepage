@@ -1,12 +1,13 @@
 // AI agent for 2048 game
 // Based on Python reference implementation with JavaScript direction mapping
+import * as Board from './board.js';
 
 const MOVES = {0: 'left', 1: 'up', 2: 'right', 3: 'down'};
-const MAX_PLAYER = 0;
-const CHANCE_PLAYER = 1;
+export const MAX_PLAYER = 0;
+export const CHANCE_PLAYER = 1;
 
 // Tree node for game tree construction
-class Node {
+export class Node {
     constructor(state, playerType) {
         this.state = [state[0], state[1]]; // [board, score]
         this.children = []; // Array of (direction, node) tuples
@@ -77,7 +78,7 @@ class AI {
 
     // Deep copy utility
     deepCopy(matrix) {
-        return matrix.map(row => [...row]);
+        return Board.deepCopy(matrix);
     }
 
     // Build game tree from current node up to given depth
