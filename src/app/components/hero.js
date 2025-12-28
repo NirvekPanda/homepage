@@ -30,8 +30,8 @@ const Hero = ({ title, paragraph }) => {
             </div>
 
 
-            <div className="md:w-1/2 p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center text-center bg-white/25 dark:bg-black/25 backdrop-blur-sm rounded-b-lg md:rounded-r-lg md:rounded-bl-none text-black dark:text-white transition-all duration-200">
-                <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-black dark:text-white transition-colors duration-200">{title}</h1>
+            <div className="md:w-1/2 p-4 sm:p-2 md:p-2 flex flex-col items-center justify-center text-center bg-white/25 dark:bg-black/25 backdrop-blur-sm rounded-b-lg md:rounded-r-lg md:rounded-bl-none text-black dark:text-white transition-all duration-200">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 mt-4 sm:mt-2 text-black dark:text-white transition-colors duration-200">{title}</h1>
                 <div className="text-black dark:text-white space-y-3 sm:space-y-4 w-full max-w-md text-justify leading-relaxed text-xs sm:text-sm md:text-base px-2 mb-4 transition-colors duration-200">
                     {parseContent(paragraph)}
                 </div>

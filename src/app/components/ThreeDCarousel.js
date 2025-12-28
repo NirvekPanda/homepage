@@ -107,7 +107,7 @@ const ThreeDCarousel = ({
   return (
     <section
       id="ThreeDCarousel"
-      className="py-4 bg-transparent min-w-full mx-auto 
+      className="p-4 bg-transparent min-w-full mx-auto 
     flex items-center justify-center"
     >
       <div

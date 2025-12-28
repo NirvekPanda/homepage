@@ -52,8 +52,8 @@ export default function ContactForm() {
     const textArea = "w-full bg-white/25 dark:bg-black/25 backdrop-blur-sm border border-white/30 dark:border-gray-700/30 text-black dark:text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg placeholder-gray-600 dark:placeholder-gray-400 transition-all duration-200";
 
     return (
-        <div className="max-w-2xl mx-auto bg-white/25 dark:bg-black/25 backdrop-blur-sm p-6 rounded-lg shadow-lg text-black dark:text-white border border-white/30 dark:border-gray-700/30 transition-all duration-200">
-            <h2 className="text-3xl font-bold text-center mb-2 mt-2 underline">Reach Out Below!</h2>
+        <div className="max-w-2xl mx-auto bg-white/25 dark:bg-black/25 backdrop-blur-sm p-6 rounded-lg shadow-lg text-black dark:text-white border border-white/30 dark:border-gray-700/30 transition-all duration-200 mt-2 mb-4">
+            <h2 className="text-3xl font-bold text-center mb-2 underline">Reach Out Below!</h2>
 
             {isSubmitted ? (
                 <div className="flex justify-center items-center h-40">

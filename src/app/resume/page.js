@@ -17,14 +17,14 @@ function Resume() {
         <a
           href="/Nirvek_Pandey_Resume.pdf"
           download
-          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-white/90 dark:bg-slate-700 text-gray-900 dark:text-white shadow-lg hover:bg-white dark:hover:bg-slate-600 mt-4"
+          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-white/90 dark:bg-slate-700 text-gray-900 dark:text-white shadow-lg hover:bg-white dark:hover:bg-slate-600"
         >
           Download Resume
         </a>
       </div>
 
       {/* Main content container for the PDF viewer */}
-      <div className="flex flex-col items-center justify-center text-black dark:text-white p-4 mt-4 transition-colors duration-200">
+      <div className="flex flex-col items-center justify-center text-black dark:text-white p-4 transition-colors duration-200 mt-2">
         {mounted ? (
           <iframe
             src="/Nirvek_Pandey_Resume.pdf"
