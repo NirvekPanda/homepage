@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Footer() {
     return (
-        <footer className="text-black flex gap-6 flex-wrap items-center justify-center bg-white/5 backdrop-blur-sm rounded-lg px-4 py-2 mx-auto mb-4 w-fit border-b-2 border-white/30">
+        <footer className="text-black dark:text-white flex gap-6 flex-wrap items-center justify-center bg-white/5 dark:bg-black/5 backdrop-blur-sm rounded-lg px-4 py-2 mx-auto mb-4 w-fit border-b-2 border-white/30 dark:border-gray-700/30 transition-all duration-200">
 
             <a
                 className="flex items-center gap-2 hover:underline hover:underline-offset-4"

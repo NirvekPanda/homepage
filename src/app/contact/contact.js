@@ -54,10 +54,10 @@ export default function ContactForm() {
         }
     };
 
-    var textArea = "w-full bg-white/25 backdrop-blur-sm border border-white/30 text-black focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg placeholder-gray-600";
+    var textArea = "w-full bg-white/25 dark:bg-black/25 backdrop-blur-sm border border-white/30 dark:border-gray-700/30 text-black dark:text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg placeholder-gray-600 dark:placeholder-gray-400 transition-all duration-200";
 
     return (
-        <div className="max-w-2xl mx-auto bg-white/25 backdrop-blur-sm p-6 rounded-lg shadow-lg text-black border border-white/30">
+        <div className="max-w-2xl mx-auto bg-white/25 dark:bg-black/25 backdrop-blur-sm p-6 rounded-lg shadow-lg text-black dark:text-white border border-white/30 dark:border-gray-700/30 transition-all duration-200">
             <h2 className="text-3xl font-bold text-center mb-2 mt-2 underline">Reach Out Below!</h2>
 
             {isSubmitted ? (
@@ -144,8 +144,8 @@ export default function ContactForm() {
                     <button
                         type="submit"
                         className={`w-full font-bold py-2 px-4 rounded-lg mt-4 transition duration-300 ${isFormValid
-                            ? "bg-white/35 backdrop-blur-sm hover:bg-white/50 text-white border border-white/40"
-                            : "bg-white/35 text-gray-400 cursor-not-allowed border border-white/35"
+                            ? "bg-white/90 dark:bg-slate-700 hover:bg-white dark:hover:bg-slate-600 text-gray-900 dark:text-white border border-white/40 dark:border-gray-600 shadow-lg"
+                            : "bg-white/35 dark:bg-black/35 text-gray-400 dark:text-gray-500 cursor-not-allowed border border-white/35 dark:border-gray-700/35"
                             }`}
                         disabled={!isFormValid}
                     >

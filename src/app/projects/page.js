@@ -52,7 +52,7 @@ function ProjectCarousel() {
           href="https://github.com/NirvekPanda"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] pb-2"
+          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-white/90 dark:bg-slate-700 text-gray-900 dark:text-white shadow-lg hover:bg-white dark:hover:bg-slate-600 pb-2"
         >
           GitHub
         </a>

@@ -25,7 +25,7 @@ export default function Home() {
       {/* Home Section */}
       <section 
         id="home" 
-        className="flex flex-col items-center justify-start p-4 sm:p-6 lg:p-10 lg:scroll-mt-24"
+        className="flex flex-col items-center justify-start p-2 sm:p-6 lg:p-10 lg:scroll-mt-24"
       >
         <Hero
           title="Nirvek Pandey"
