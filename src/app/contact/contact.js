@@ -1,27 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
-import { db } from "@/app/firebaseConfig";
-import { ref, push, set } from "firebase/database";
+import { useState } from 'react';
 import MessageSent from './messageSent';
-
-async function addData(name, email, phone, message) {
-    try {
-        const newMessageRef = push(ref(db, "contact"));
-        await set(newMessageRef, {
-            name,
-            email,
-            phone,
-            message,
-            timestamp: Date.now()
-        });
-        console.log("Message sent successfully");
-        return true;
-    } catch (e) {
-        console.error("Error adding message: ", e);
-        return false;
-    }
-}
 
 export default function ContactForm() {
     const [name, setName] = useState("");
@@ -29,32 +9,47 @@ export default function ContactForm() {
     const [phone, setPhone] = useState("");
     const [message, setMessage] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const isFormValid = name.trim() && email.trim() && phone.trim() && message.trim();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!isFormValid) return;
+        if (!isFormValid || isSubmitting) return;
 
-        const success = await addData(name, email, phone, message);
-        if (success) {
-            // Reset form fields
-            setName("");
-            setEmail("");
-            setPhone("");
-            setMessage("");
+        setIsSubmitting(true);
+        const formData = new FormData();
+        formData.append("access_key", "5fbc3b8f-4eaa-46ff-a565-2dae4fc75cc5");
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("phone", phone);
+        formData.append("message", message);
 
-            // Show success message
-            setIsSubmitted(true);
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
 
-            // Auto-hide the message after 10 seconds
-            setTimeout(() => setIsSubmitted(false), 10000);
-        } else {
+            if (data.success) {
+                setName("");
+                setEmail("");
+                setPhone("");
+                setMessage("");
+                setIsSubmitted(true);
+                setTimeout(() => setIsSubmitted(false), 10000);
+            } else {
+                alert("Failed to send message. Please try again.");
+            }
+        } catch {
             alert("Failed to send message. Please try again.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    var textArea = "w-full bg-white/25 dark:bg-black/25 backdrop-blur-sm border border-white/30 dark:border-gray-700/30 text-black dark:text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg placeholder-gray-600 dark:placeholder-gray-400 transition-all duration-200";
+    const textArea = "w-full bg-white/25 dark:bg-black/25 backdrop-blur-sm border border-white/30 dark:border-gray-700/30 text-black dark:text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg placeholder-gray-600 dark:placeholder-gray-400 transition-all duration-200";
 
     return (
         <div className="max-w-2xl mx-auto bg-white/25 dark:bg-black/25 backdrop-blur-sm p-6 rounded-lg shadow-lg text-black dark:text-white border border-white/30 dark:border-gray-700/30 transition-all duration-200">
@@ -143,13 +138,13 @@ export default function ContactForm() {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className={`w-full font-bold py-2 px-4 rounded-lg mt-4 transition duration-300 ${isFormValid
+                        className={`w-full font-bold py-2 px-4 rounded-lg mt-4 transition duration-300 ${isFormValid && !isSubmitting
                             ? "bg-white/90 dark:bg-slate-700 hover:bg-white dark:hover:bg-slate-600 text-gray-900 dark:text-white border border-white/40 dark:border-gray-600 shadow-lg"
                             : "bg-white/35 dark:bg-black/35 text-gray-400 dark:text-gray-500 cursor-not-allowed border border-white/35 dark:border-gray-700/35"
                             }`}
-                        disabled={!isFormValid}
+                        disabled={!isFormValid || isSubmitting}
                     >
-                        Send Message
+                        {isSubmitting ? "Sending..." : "Send Message"}
                     </button>
                 </form>
             )}
