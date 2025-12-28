@@ -52,14 +52,14 @@ function ProjectCarousel() {
           href="https://github.com/NirvekPanda"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] mt-4"
+          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-[#F5ECD5] text-gray-900 shadow-lg hover:bg-[#E6D4B8] pb-2"
         >
           GitHub
         </a>
       </div>
 
       {loading ? (
-        <div className="text-center text-gray-500 mt-4 text-xl">
+        <div className="text-center text-gray-500 text-xl">
           Loading Projects...
         </div>
       ) : projects.length > 0 ? (

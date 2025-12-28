@@ -54,11 +54,11 @@ export default function ContactForm() {
         }
     };
 
-    var textArea = "w-full bg-gray-600 border border-gray-500 text-white focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg";
+    var textArea = "w-full bg-white/25 backdrop-blur-sm border border-white/30 text-black focus:ring-blue-500 focus:border-blue-500 p-2.5 rounded-lg placeholder-gray-600";
 
     return (
-        <div className="max-w-2xl mx-auto bg-gradient-to-b from-slate-800 to-zinc-950 p-6 rounded-3xl shadow-lg text-white">
-            <h2 className="text-3xl font-bold text-center mb-4 mt-2 underline">Reach Out Below!</h2>
+        <div className="max-w-2xl mx-auto bg-white/25 backdrop-blur-sm p-6 rounded-3xl shadow-lg text-black border border-white/30">
+            <h2 className="text-3xl font-bold text-center mb-2 mt-2 underline">Reach Out Below!</h2>
 
             {isSubmitted ? (
                 <div className="flex justify-center items-center h-40">
@@ -144,8 +144,8 @@ export default function ContactForm() {
                     <button
                         type="submit"
                         className={`w-full font-bold py-2 px-4 rounded-lg mt-4 transition duration-300 ${isFormValid
-                            ? "bg-gray-900 hover:bg-gray-700 text-white"
-                            : "bg-gray-500 text-gray-300 cursor-not-allowed"
+                            ? "bg-white/35 backdrop-blur-sm hover:bg-white/50 text-white border border-white/40"
+                            : "bg-white/35 text-gray-400 cursor-not-allowed border border-white/35"
                             }`}
                         disabled={!isFormValid}
                     >
