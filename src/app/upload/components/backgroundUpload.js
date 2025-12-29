@@ -1,4 +1,3 @@
-// Background Image Upload Component
 "use client";
 
 import { useState } from "react";
@@ -26,7 +25,6 @@ const BackgroundUpload = () => {
       reader.onload = (e) => setPreview(e.target.result);
       reader.readAsDataURL(file);
       
-      // Auto-generate title from filename
       const nameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
       const cleanTitle = nameWithoutExt
         .replace(/[_-]/g, ' ')
@@ -39,14 +37,12 @@ const BackgroundUpload = () => {
       setTitle(cleanTitle || 'Background Image');
       setDescription(`Background image - ${file.name}`);
 
-      // Extract EXIF metadata
       try {
         setIsExtractingMetadata(true);
         setUploadStatus("Extracting photo metadata...");
         
         const metadata = await pullPhotoMetadata(file);
         
-        // Populate location fields if available
         if (metadata.latitude) {
           setLatitude(metadata.latitude);
         }
@@ -57,7 +53,6 @@ const BackgroundUpload = () => {
           setLocationName(metadata.locationName);
         }
 
-        // Show success message with extracted data
         const extractedInfo = [];
         if (metadata.camera) extractedInfo.push(`Camera: ${metadata.camera}`);
         if (metadata.dateTaken) extractedInfo.push(`Date: ${metadata.dateTaken}`);
@@ -122,7 +117,6 @@ const BackgroundUpload = () => {
       formData.append('title', title.trim());
       formData.append('description', description.trim());
       
-      // Add location metadata if provided
       if (latitude.trim()) formData.append('latitude', latitude.trim());
       if (longitude.trim()) formData.append('longitude', longitude.trim());
       if (locationName.trim()) formData.append('location_name', locationName.trim());
@@ -166,23 +160,22 @@ const BackgroundUpload = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-lg p-8 shadow-lg border border-slate-700">
+    <div className="bg-white/25 dark:bg-black/25 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-white/30 dark:border-gray-700/30 transition-all duration-200">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-3xl font-bold text-[#F5ECD5] mb-6 text-center">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center transition-colors duration-200">
           Upload Background Image
         </h2>
 
         <form onSubmit={handleSubmit}>
-          {/* File Upload Section */}
           <div className="mb-6">
-            <label className="block text-[#FFFAEC] text-sm font-medium mb-2">
+            <label className="block text-gray-900 dark:text-white text-sm font-medium mb-2 transition-colors duration-200">
               Select Image
             </label>
             <div
-              className={`w-full border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+              className={`w-full border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
                 isDragOver
-                  ? "border-[#F5ECD5] bg-[#F5ECD5]/10"
-                  : "border-slate-600 hover:border-slate-500"
+                  ? "border-gray-400 dark:border-gray-500 bg-white/30 dark:bg-black/30"
+                  : "border-white/50 dark:border-gray-600/50 hover:border-gray-300 dark:hover:border-gray-500"
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -204,14 +197,14 @@ const BackgroundUpload = () => {
                     <img
                       src={preview}
                       alt="Preview"
-                      className="w-32 h-32 object-cover rounded-lg border border-slate-600 mx-auto"
+                      className="w-32 h-32 object-cover rounded-lg border border-white/30 dark:border-gray-600/50 mx-auto"
                     />
-                    <p className="text-[#F5ECD5] font-medium">
+                    <p className="text-gray-900 dark:text-white font-medium transition-colors duration-200">
                       {selectedFile?.name}
                     </p>
                     {isExtractingMetadata && (
-                      <div className="flex items-center justify-center space-x-2 text-[#F5ECD5] text-sm">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#F5ECD5]"></div>
+                      <div className="flex items-center justify-center space-x-2 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-200">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-700 dark:border-gray-300"></div>
                         <span>Extracting metadata...</span>
                       </div>
                     )}
@@ -227,7 +220,7 @@ const BackgroundUpload = () => {
                         setLocationName("");
                         setUploadStatus("");
                       }}
-                      className="text-red-400 hover:text-red-300 text-sm underline"
+                      className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm underline transition-colors duration-200"
                     >
                       Remove image
                     </button>
@@ -235,7 +228,7 @@ const BackgroundUpload = () => {
                 ) : (
                   <div className="space-y-2">
                     <svg
-                      className="mx-auto h-12 w-12 text-slate-400"
+                      className="mx-auto h-12 w-12 text-gray-500 dark:text-gray-400 transition-colors duration-200"
                       stroke="currentColor"
                       fill="none"
                       viewBox="0 0 48 48"
@@ -247,10 +240,10 @@ const BackgroundUpload = () => {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    <p className="text-[#FFFAEC]">
+                    <p className="text-gray-900 dark:text-white transition-colors duration-200">
                       {isDragOver ? "Drop image here" : "Drag & drop or click to select"}
                     </p>
-                    <p className="text-slate-400 text-sm">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm transition-colors duration-200">
                       PNG, JPG, GIF up to 10MB
                     </p>
                   </div>
@@ -259,10 +252,9 @@ const BackgroundUpload = () => {
             </div>
           </div>
 
-          {/* Image Details */}
           <div className="space-y-4 mb-6">
             <div>
-              <label className="block text-[#FFFAEC] text-sm font-medium mb-2">
+              <label className="block text-gray-900 dark:text-white text-sm font-medium mb-2 transition-colors duration-200">
                 Title *
               </label>
               <input
@@ -270,13 +262,13 @@ const BackgroundUpload = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter image title"
-                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-[#FFFAEC] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F5ECD5] focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/50 dark:bg-black/50 border border-white/30 dark:border-gray-600/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 focus:ring-2 focus:ring-white/20 dark:focus:ring-gray-500/20 transition-all duration-200"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-[#FFFAEC] text-sm font-medium mb-2">
+              <label className="block text-gray-900 dark:text-white text-sm font-medium mb-2 transition-colors duration-200">
                 Description (Optional)
               </label>
               <textarea
@@ -284,17 +276,16 @@ const BackgroundUpload = () => {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter image description"
                 rows={3}
-                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-[#FFFAEC] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F5ECD5] focus:border-transparent resize-none"
+                className="w-full px-4 py-3 bg-white/50 dark:bg-black/50 border border-white/30 dark:border-gray-600/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 focus:ring-2 focus:ring-white/20 dark:focus:ring-gray-500/20 transition-all duration-200 resize-none"
               />
             </div>
           </div>
 
-          {/* Location Metadata */}
           <div className="mb-6">
-            <h3 className="text-[#F5ECD5] font-semibold mb-4">Location Metadata (Optional)</h3>
+            <h3 className="text-gray-900 dark:text-white font-semibold mb-4 transition-colors duration-200">Location Metadata (Optional)</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[#FFFAEC] text-sm font-medium mb-2">
+                <label className="block text-gray-900 dark:text-white text-sm font-medium mb-2 transition-colors duration-200">
                   Latitude
                 </label>
                 <input
@@ -303,11 +294,11 @@ const BackgroundUpload = () => {
                   value={latitude}
                   onChange={(e) => setLatitude(e.target.value)}
                   placeholder="e.g., 37.7749"
-                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-[#FFFAEC] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F5ECD5] focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/50 dark:bg-black/50 border border-white/30 dark:border-gray-600/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 focus:ring-2 focus:ring-white/20 dark:focus:ring-gray-500/20 transition-all duration-200"
                 />
               </div>
               <div>
-                <label className="block text-[#FFFAEC] text-sm font-medium mb-2">
+                <label className="block text-gray-900 dark:text-white text-sm font-medium mb-2 transition-colors duration-200">
                   Longitude
                 </label>
                 <input
@@ -316,12 +307,12 @@ const BackgroundUpload = () => {
                   value={longitude}
                   onChange={(e) => setLongitude(e.target.value)}
                   placeholder="e.g., -122.4194"
-                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-[#FFFAEC] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F5ECD5] focus:border-transparent"
+                  className="w-full px-4 py-3 bg-white/50 dark:bg-black/50 border border-white/30 dark:border-gray-600/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 focus:ring-2 focus:ring-white/20 dark:focus:ring-gray-500/20 transition-all duration-200"
                 />
               </div>
             </div>
             <div className="mt-4">
-              <label className="block text-[#FFFAEC] text-sm font-medium mb-2">
+              <label className="block text-gray-900 dark:text-white text-sm font-medium mb-2 transition-colors duration-200">
                 Location Name
               </label>
               <input
@@ -329,20 +320,19 @@ const BackgroundUpload = () => {
                 value={locationName}
                 onChange={(e) => setLocationName(e.target.value)}
                 placeholder="e.g., San Francisco, CA"
-                className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-[#FFFAEC] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F5ECD5] focus:border-transparent"
+                className="w-full px-4 py-3 bg-white/50 dark:bg-black/50 border border-white/30 dark:border-gray-600/50 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 focus:ring-2 focus:ring-white/20 dark:focus:ring-gray-500/20 transition-all duration-200"
               />
             </div>
           </div>
 
-          {/* Upload Button */}
           <div className="text-center mb-6">
             <button
               type="submit"
               disabled={isUploading || isExtractingMetadata || !selectedFile || !title.trim()}
               className={`px-8 py-3 rounded-lg font-semibold transition-all duration-200 ${
                 isUploading || isExtractingMetadata || !selectedFile || !title.trim()
-                  ? "bg-slate-600 text-slate-400 cursor-not-allowed"
-                  : "bg-[#F5ECD5] text-gray-900 hover:bg-[#E6D4B8] shadow-lg hover:shadow-xl"
+                  ? "bg-gray-300 dark:bg-slate-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                  : "bg-white/90 dark:bg-slate-700 text-gray-900 dark:text-white hover:bg-white dark:hover:bg-slate-600 shadow-lg hover:shadow-xl"
               }`}
             >
               {isUploading ? "Uploading..." : isExtractingMetadata ? "Extracting..." : "Upload Background Image"}
@@ -350,14 +340,13 @@ const BackgroundUpload = () => {
           </div>
         </form>
 
-        {/* Status Message */}
         {uploadStatus && (
-          <div className={`p-4 rounded-lg text-center font-medium ${
+          <div className={`p-4 rounded-lg text-center font-medium transition-colors duration-200 ${
             uploadStatus.includes("Success") 
-              ? "bg-green-900/30 text-green-300 border border-green-700"
+              ? "bg-green-500/20 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-400/50 dark:border-green-700"
               : uploadStatus.includes("Error")
-              ? "bg-red-900/30 text-red-300 border border-red-700"
-              : "bg-blue-900/30 text-blue-300 border border-blue-700"
+              ? "bg-red-500/20 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-400/50 dark:border-red-700"
+              : "bg-blue-500/20 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-400/50 dark:border-blue-700"
           }`}>
             {uploadStatus}
           </div>

@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { usePopover } from "../contexts/PopoverContext";
 
-// Complete language data with colors and descriptions
 const languageMap = {
     "JavaScript": { "color": "bg-yellow-600", "title": "Web Development", "description": "a dynamic, weakly typed programming language primarily used to add interactivity to websites." },
     "Python": { "color": "bg-cyan-900", "title": "High Level Scripting", "description": "a high-level programming language known for its readability and ease of use." },
@@ -63,7 +62,6 @@ export default function LanguageTile({ language }) {
     const { showPopover, hidePopover, isPopoverActive } = usePopover();
     const popoverId = `popover-${language}`;
 
-    // Find the language in the map, or set to default gray if not found
     const langData = languageMap[language] ? {
         name: language,
         ...languageMap[language]
@@ -87,27 +85,22 @@ export default function LanguageTile({ language }) {
             }}
             onClick={(e) => e.stopPropagation()}
         >
-            {/* Language Tile */}
             <div className={`px-3 py-1 text-white text-sm rounded-md ${langData.color} cursor-pointer`}>
                 {langData.name}
             </div>
 
-            {/* Popover */}
             {isPopoverActive(popoverId) && (
                 <div
                     className="absolute z-10 bottom-14 left-1/2 transform -translate-x-1/2 w-48 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg shadow-lg dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800 opacity-100 transition-opacity duration-300"
                 >
-                    {/* Popover Title */}
                     <div className="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700 text-center">
                         <h3 className="font-semibold text-gray-900 dark:text-white">{langData.title}</h3>
                     </div>
 
-                    {/* Popover Content */}
                     <div className="px-3 py-2 text-center">
                         <p>{langData.description}</p>
                     </div>
 
-                    {/* Popover Arrow */}
                     <div className="absolute left-1/2 -bottom-2 w-3 h-3 rotate-45 bg-white border border-gray-200 dark:border-gray-600 dark:bg-gray-800 transform -translate-x-1/2"></div>
                 </div>
             )}

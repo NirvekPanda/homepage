@@ -8,12 +8,10 @@ export function ThemeProvider({ children }) {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [mounted, setMounted] = useState(false);
 
-  // Initialize theme from localStorage on mount
   useEffect(() => {
     setMounted(true);
     const savedTheme = localStorage.getItem('theme');
     
-    // Default to dark mode unless explicitly set to light
     if (savedTheme === 'light') {
       setIsDarkMode(false);
       document.documentElement.classList.remove('dark');
@@ -23,7 +21,6 @@ export function ThemeProvider({ children }) {
     }
   }, []);
 
-  // Update document class and localStorage when theme changes
   useEffect(() => {
     if (!mounted) return;
     
@@ -40,7 +37,6 @@ export function ThemeProvider({ children }) {
     setIsDarkMode(prev => !prev);
   };
 
-  // Prevent flash of wrong theme
   if (!mounted) {
     return null;
   }

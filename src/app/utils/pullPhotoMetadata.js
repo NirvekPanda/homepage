@@ -8,7 +8,7 @@ import { parse } from 'exifr';
  * @returns {Promise<Object>} - Object containing extracted metadata
  */
 export const pullPhotoMetadata = async (file) => {
-  // Check if it's a valid image file or HEIC file
+
   const isValidImage = file.type.startsWith('image/') || 
                       file.name.toLowerCase().endsWith('.heic') || 
                       file.name.toLowerCase().endsWith('.heif') ||
@@ -22,7 +22,7 @@ export const pullPhotoMetadata = async (file) => {
   console.log('Starting EXIF extraction for file:', file.name, 'Type:', file.type, 'Size:', file.size);
 
   try {
-    // Check if it's a HEIC file that might not be supported by exifr
+
     const isHeicFile = file.name.toLowerCase().endsWith('.heic') || 
                       file.name.toLowerCase().endsWith('.heif') ||
                       file.type === 'image/heic' || 
@@ -45,11 +45,9 @@ export const pullPhotoMetadata = async (file) => {
         console.log('Raw EXIF data from HEIC:', exifData);
       } catch (heicError) {
         console.warn('EXIF extraction failed for HEIC file:', heicError);
-        // Fall back to basic metadata for HEIC files
         exifData = null;
       }
     } else {
-      // Parse EXIF data using exifr for standard image files
       exifData = await parse(file, {
         gps: true,
         ifd0: true,
@@ -73,28 +71,25 @@ export const pullPhotoMetadata = async (file) => {
       originalData: exifData || {}
     };
 
-    // Generate title from filename
     if (file.name) {
-      const baseName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
-      metadata.title = baseName.replace(/[-_]/g, ' '); // Replace dashes/underscores with spaces
+      const baseName = file.name.replace(/\.[^/.]+$/, '');
+      metadata.title = baseName.replace(/[-_]/g, ' ');
     }
 
-    // Process EXIF data if available
+
     if (exifData) {
-      // Extract GPS coordinates
+
       if (exifData.latitude && exifData.longitude) {
         metadata.latitude = exifData.latitude.toString();
         metadata.longitude = exifData.longitude.toString();
       }
 
-      // Extract camera information
       const make = exifData.Make || exifData.make;
       const model = exifData.Model || exifData.model;
       if (make || model) {
         metadata.camera = `${make || ''} ${model || ''}`.trim();
       }
 
-      // Extract date taken
       const dateTime = exifData.DateTime || exifData.dateTime;
       const dateTimeOriginal = exifData.DateTimeOriginal || exifData.dateTimeOriginal;
       const dateTimeDigitized = exifData.DateTimeDigitized || exifData.dateTimeDigitized;
@@ -104,11 +99,9 @@ export const pullPhotoMetadata = async (file) => {
         metadata.dateTaken = formatExifDate(dateTaken);
       }
 
-      // Extract image dimensions
       const width = exifData.ExifImageWidth || exifData.PixelXDimension || exifData.width;
       const height = exifData.ExifImageHeight || exifData.PixelYDimension || exifData.height;
-      
-      // Generate description from available metadata
+
       const descriptionParts = [];
       if (metadata.camera) {
         descriptionParts.push(`Taken with ${metadata.camera}`);
@@ -126,7 +119,6 @@ export const pullPhotoMetadata = async (file) => {
         metadata.description = `Image file: ${file.name}`;
       }
     } else {
-      // No EXIF data available (e.g., unsupported HEIC file)
       if (isHeicFile) {
         metadata.description = `HEIC file: ${file.name} (EXIF data not available)`;
       } else {
@@ -139,8 +131,7 @@ export const pullPhotoMetadata = async (file) => {
 
   } catch (error) {
     console.warn('Error extracting EXIF data:', error);
-    
-    // Return basic metadata if EXIF extraction fails
+
     const basicMetadata = {
       title: file.name ? file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') : '',
       description: `Image file: ${file.name}`,
@@ -189,15 +180,12 @@ const formatExifDate = (exifDate) => {
     if (exifDate instanceof Date) {
       date = exifDate;
     } else if (typeof exifDate === 'string') {
-      // Handle different date formats
       if (exifDate.includes(':')) {
-        // EXIF date format: "YYYY:MM:DD HH:MM:SS"
         const [datePart, timePart] = exifDate.split(' ');
         const [year, month, day] = datePart.split(':');
         const [hour, minute, second] = timePart.split(':');
         date = new Date(year, month - 1, day, hour, minute, second);
       } else {
-        // Try parsing as ISO string
         date = new Date(exifDate);
       }
     } else {
@@ -217,7 +205,7 @@ const formatExifDate = (exifDate) => {
     });
   } catch (error) {
     console.warn('Error formatting EXIF date:', error);
-    return exifDate.toString(); // Return original if formatting fails
+    return exifDate.toString();
   }
 };
 
@@ -230,10 +218,8 @@ const formatExifDate = (exifDate) => {
  */
 export const getLocationName = async (latitude, longitude) => {
   try {
-    // This would typically call a geocoding API like Google Maps, OpenStreetMap, etc.
-    // For now, return a placeholder
     console.log(`Getting location name for coordinates: ${latitude}, ${longitude}`);
-    return ''; // Placeholder - implement actual geocoding service
+    return ''; 
   } catch (error) {
     console.warn('Error getting location name:', error);
     return '';

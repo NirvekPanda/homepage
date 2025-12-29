@@ -16,7 +16,6 @@ export default function Nav({ isVisible = true }) {
     ];
 
     useEffect(() => {
-        // Set up IntersectionObserver to detect active section
         const observerOptions = {
             root: null,
             rootMargin: "-50% 0px -50% 0px",
@@ -27,7 +26,6 @@ export default function Nav({ isVisible = true }) {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     setActiveSection(entry.target.id);
-                    // Update URL hash without scrolling
                     window.history.replaceState(null, "", `#${entry.target.id}`);
                 }
             });
@@ -35,7 +33,6 @@ export default function Nav({ isVisible = true }) {
 
         const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-        // Observe all sections
         const sections = document.querySelectorAll("section[id]");
         sections.forEach((section) => observer.observe(section));
 
@@ -46,15 +43,13 @@ export default function Nav({ isVisible = true }) {
 
     const handleClick = (e, link) => {
         e.preventDefault();
-        const targetId = link.substring(1); // Remove '#'
+        const targetId = link.substring(1);
         
-        // If not on home page, navigate to home page with hash
         if (pathname !== "/") {
             router.push(`/${link}`);
             return;
         }
         
-        // Otherwise scroll to section on home page
         const element = document.getElementById(targetId);
         if (element) {
             element.scrollIntoView({ behavior: "smooth" });
@@ -63,7 +58,6 @@ export default function Nav({ isVisible = true }) {
 
     return (
         <>
-            {/* Desktop Navigation - Sticky Top Bar (lg and up) */}
             <nav className={`hidden lg:flex sticky top-4 left-0 right-0 w-full justify-center z-50`}>
                 <div className="bg-white/25 dark:bg-black/25 backdrop-blur-sm rounded-lg p-1 flex space-x-1 overflow-x-auto scrollbar-hide max-w-[580px] border border-white/30 dark:border-gray-700/30 transition-all duration-200">
                     {navItems.map((item) => (
@@ -73,7 +67,7 @@ export default function Nav({ isVisible = true }) {
                             onClick={(e) => handleClick(e, item.link)}
                             className={`px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 cursor-pointer ${
                                 activeSection === item.link.substring(1)
-                                    ? "bg-white/90 dark:bg-slate-700 text-gray-900 dark:text-white shadow-lg"
+                                    ? "bg-white/90 dark:bg-black/50 text-gray-900 dark:text-white shadow-lg"
                                     : "text-black dark:text-white hover:bg-white/40 dark:hover:bg-black/40"
                             }`}
                         >
@@ -83,7 +77,6 @@ export default function Nav({ isVisible = true }) {
                 </div>
             </nav>
 
-            {/* Mobile/Tablet Navigation - Bottom Bar (hidden on lg+) */}
             <nav className="fixed bottom-0 left-0 right-0 w-full lg:hidden z-50 bg-white/50 dark:bg-black/50 backdrop-blur-sm border-t border-white/30 dark:border-gray-700/30 transition-all duration-200">
                 <div className="flex justify-around items-center h-20 px-2">
                     {navItems.map((item) => (
@@ -93,7 +86,7 @@ export default function Nav({ isVisible = true }) {
                             onClick={(e) => handleClick(e, item.link)}
                             className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 flex-1 ${
                                 activeSection === item.link.substring(1)
-                                    ? "bg-white/90 dark:bg-slate-700 text-gray-900 dark:text-white shadow-lg"
+                                    ? "bg-white/90 dark:bg-black/50 text-gray-900 dark:text-white shadow-lg"
                                     : "text-black dark:text-white hover:bg-white/40 dark:hover:bg-black/40"
                             }`}
                         >

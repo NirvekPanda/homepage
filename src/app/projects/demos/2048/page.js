@@ -331,7 +331,6 @@ const TwentyFortyEight = () => {
           }
         }
       `}</style>
-      {/* Header */}
       <div className="text-center mb-6">
         <h1 className="text-4xl font-bold text-[#FFFAEC] mb-2 mt-2">
           {hasWon ? "You Won!" : "2048 Game + AI Demo"}
@@ -344,21 +343,16 @@ const TwentyFortyEight = () => {
         )}
       </div>
 
-      {/* Game Container with Left and Right Panels */}
       <div className="flex flex-col lg:flex-row gap-6 w-full max-w-6xl mb-8 items-center justify-center">
-        {/* Left Panel - AI/Score/Reset */}
         <div className="w-full lg:w-64">
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10 flex flex-col gap-4">
-            {/* Score Display */}
             <div className="bg-white/10 backdrop-blur-sm rounded-md px-4 py-3 flex items-center justify-center">
               <div className="text-[#FFFAEC] text-xl font-semibold">
                 Score: <span className="text-[#F5ECD5]">{score}</span>
               </div>
             </div>
             
-            {/* AI and Reset Buttons */}
             <div className="flex gap-3">
-              {/* AI Button */}
               <button
                 onClick={toggleAI}
                 disabled={aiThinking}
@@ -373,7 +367,6 @@ const TwentyFortyEight = () => {
                 {aiThinking ? '🤔' : 'AI'}
               </button>
               
-              {/* Reset Button */}
               <button
                 onClick={resetGame}
                 className="w-1/2 h-12 rounded-md font-medium transition-all duration-200 bg-red-600 hover:bg-red-700 text-white flex items-center justify-center"
@@ -384,7 +377,6 @@ const TwentyFortyEight = () => {
           </div>
         </div>
 
-        {/* Game Board */}
         <div className="w-full max-w-[500px] aspect-square flex-shrink-0">
           <div 
             className="relative bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-white/10 shadow-lg h-full select-none overflow-hidden"
@@ -393,7 +385,6 @@ const TwentyFortyEight = () => {
             onTouchEnd={onTouchEnd}
             style={{ touchAction: 'none' }}
           >
-            {/* Background grid cells */}
             <div className="absolute inset-4 grid grid-cols-4 gap-3">
               {Array(16).fill(0).map((_, index) => (
                 <div
@@ -403,7 +394,6 @@ const TwentyFortyEight = () => {
               ))}
             </div>
             
-            {/* Animated tiles */}
             <div className="absolute inset-4">
               {tiles.map((tile) => {
                 const cellSize = 'calc((100% - 3 * 0.75rem) / 4)';
@@ -441,12 +431,9 @@ const TwentyFortyEight = () => {
           </div>
         </div>
 
-        {/* Right Panel - Arrow Controls */}
         <div className="w-full lg:w-64">
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10 flex flex-col items-center justify-center gap-4">
-            {/* Top Row: Undo, Up, Redo */}
             <div className="flex gap-3 items-center">
-              {/* Undo Button */}
               <button
                 onClick={() => {
                   if (game && game.undo()) {
@@ -463,7 +450,6 @@ const TwentyFortyEight = () => {
                 ↶
               </button>
               
-              {/* Up Arrow */}
               <button
                 onClick={() => {
                   setAiEnabled(false);
@@ -475,7 +461,6 @@ const TwentyFortyEight = () => {
                 ↑
               </button>
               
-              {/* Redo Button */}
               <button
                 onClick={() => {
                   if (game && typeof game.redo === 'function' && game.redo()) {
@@ -493,9 +478,7 @@ const TwentyFortyEight = () => {
               </button>
             </div>
             
-            {/* Bottom Row: Left, Down, Right */}
             <div className="flex gap-3 items-center">
-              {/* Left Arrow */}
               <button
                 onClick={() => {
                   setAiEnabled(false);
@@ -507,7 +490,6 @@ const TwentyFortyEight = () => {
                 ←
               </button>
               
-              {/* Down Arrow */}
               <button
                 onClick={() => {
                   setAiEnabled(false);
@@ -519,7 +501,6 @@ const TwentyFortyEight = () => {
                 ↓
               </button>
               
-              {/* Right Arrow */}
               <button
                 onClick={() => {
                   setAiEnabled(false);
@@ -536,7 +517,6 @@ const TwentyFortyEight = () => {
       </div>
 
 
-      {/* Instructions */}
       <div className="mt-2 text-center text-sm text-white/80 max-w-[500px]">
         <p className="mb-2">Use arrow keys, swipe on the game board, or click buttons to move tiles</p>
         <p>Combine tiles with the same number to reach 2048!</p>

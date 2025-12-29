@@ -1,6 +1,3 @@
-// Background Image Update System
-// Updates background and location data based on 20-second intervals
-
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
@@ -8,7 +5,6 @@ const API_BASE = 'https://travel-image-api-189526192204.us-central1.run.app/api/
 const COUNT_ENDPOINT = `${API_BASE}/images/count`;
 const IMAGE_BY_INDEX_ENDPOINT = `${API_BASE}/images/index`;
 
-// Global state
 let totalImages = 0;
 let currentBackgroundUrl = null;
 let currentImageIndex = null;
@@ -18,12 +14,10 @@ let countUpdateTimer = null;
 let batchUpdateTimer = null;
 let backgroundUpdateTimer = null;
 
-// Timing variables
 let startTime = Date.now();
 const UPDATE_INTERVAL = 10000;
 let lastActualUpdate = 0;
 
-// Preloaded images cache
 let preloadedImages = new Map();
 let preloadUsageCount = 0;
 let lastBatchPreloadTime = 0;
@@ -131,7 +125,7 @@ async function batchPreloadImages() {
         preloadUsageCount = 0;
         
     } catch (error) {
-        // Silent error handling
+
     }
 }
 
@@ -157,12 +151,10 @@ async function updateBackground() {
     try {
         const imageIndex = calculateImageIndex(totalImages);
         
-        // Only update if the index has actually changed
         if (imageIndex === currentImageIndex) {
             return;
         }
         
-        // Throttle updates to prevent rapid switching
         const now = Date.now();
         if (lastActualUpdate > 0 && (now - lastActualUpdate) < 18000) {
             return;
@@ -198,25 +190,21 @@ async function updateBackground() {
             };
         }
 
-        // Always update if we got here (index changed)
         currentBackgroundUrl = newBackgroundUrl;
         currentImageIndex = imageIndex;
         currentLocationData = locationData;
         lastActualUpdate = now;
         
-        // Notify all callbacks
         backgroundUpdateCallbacks.forEach((callback) => {
             try {
                 if (typeof callback === 'function') {
                     callback(newBackgroundUrl, imageIndex, locationData);
                 }
             } catch (error) {
-                // Silent error handling
             }
         });
 
     } catch (error) {
-        // Silent error handling
     }
 }
 
@@ -265,29 +253,24 @@ export function getPreloadStatus() {
 }
 
 export function initializeBackgroundUpdater() {
-    // Reset state
     startTime = Date.now();
     lastActualUpdate = 0;
     currentBackgroundUrl = null;
     currentImageIndex = null;
     currentLocationData = null;
     
-    // Clear existing timers
     if (countUpdateTimer) clearInterval(countUpdateTimer);
     if (batchUpdateTimer) clearInterval(batchUpdateTimer);
     if (backgroundUpdateTimer) clearInterval(backgroundUpdateTimer);
     
-    // Initial setup
     updateImageCount().then(() => {
         updateBackground();
         
-        // Start preloading after first image
         setTimeout(() => {
             batchPreloadImages();
         }, 2000);
     });
     
-    // Set up intervals
     countUpdateTimer = setInterval(updateImageCount, 600000); // Every 10 minutes
     
     backgroundUpdateTimer = setInterval(() => {
@@ -347,7 +330,6 @@ export function useBackgroundUpdater() {
             initializeBackgroundUpdater();
             setIsInitialized(true);
             
-            // Set initial values
             const currentBg = getCurrentBackground();
             const currentCount = getImageCount();
             const currentIndex = getCurrentImageIndex();
@@ -359,7 +341,6 @@ export function useBackgroundUpdater() {
             setLocationData(currentLocation);
             
         } catch (err) {
-            // Silent error handling
         }
 
         return () => {
@@ -379,7 +360,6 @@ export function useBackgroundUpdater() {
         return unsubscribe;
     }, [isInitialized]);
 
-    // Update image count periodically
     useEffect(() => {
         if (!isInitialized) return;
 
@@ -402,7 +382,6 @@ export function useBackgroundUpdater() {
     };
 }
 
-// Manual triggers for testing
 export function triggerBackgroundUpdate() {
     updateBackground();
 }

@@ -9,19 +9,15 @@ const ImageCarousel = ({ title, images, className = "" }) => {
     const touchStartX = useRef(null);
     const touchEndX = useRef(null);
 
-    // Auto-advance carousel every 8 seconds (reduced for better UX)
     useEffect(() => {
-        // Clear any existing interval
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
         }
 
-        // Set up new interval
         intervalRef.current = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % images.length);
         }, 8000);
 
-        // Cleanup function
         return () => {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
@@ -29,7 +25,6 @@ const ImageCarousel = ({ title, images, className = "" }) => {
         };
     }, [images.length]);
 
-    // Reset timer when slide changes manually
     const resetTimer = () => {
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
@@ -54,7 +49,6 @@ const ImageCarousel = ({ title, images, className = "" }) => {
         resetTimer();
     };
 
-    // Touch event handlers for mobile swipe
     const handleTouchStart = (e) => {
         touchStartX.current = e.targetTouches[0].clientX;
     };
@@ -93,7 +87,6 @@ const ImageCarousel = ({ title, images, className = "" }) => {
             role="region"
             aria-label={`${title} image carousel`}
         >
-            {/* Carousel wrapper */}
             <div className="relative h-full overflow-hidden rounded-inherit">
                 {images.map((image, index) => (
                     <div
@@ -113,7 +106,6 @@ const ImageCarousel = ({ title, images, className = "" }) => {
                 ))}
             </div>
 
-            {/* Slider indicators - improved mobile visibility */}
             <div className="absolute z-30 flex -translate-x-1/2 bottom-3 sm:bottom-5 left-1/2 space-x-2 sm:space-x-3">
                 {images.map((_, index) => (
                     <button
@@ -131,7 +123,6 @@ const ImageCarousel = ({ title, images, className = "" }) => {
                 ))}
             </div>
 
-            {/* Slider controls - improved mobile visibility and theme consistency */}
             <button
                 type="button"
                 className={`absolute top-0 start-0 z-30 flex items-center justify-center h-full px-2 sm:px-4 cursor-pointer group focus:outline-none transition-all duration-300 ${
@@ -161,7 +152,6 @@ const ImageCarousel = ({ title, images, className = "" }) => {
                 </span>
             </button>
 
-            {/* Mobile touch indicators - only visible on mobile */}
             <div className="absolute top-2 right-2 z-20 sm:hidden">
                 <div className="flex items-center space-x-1 text-white/70 text-xs">
                     <span className="bg-slate-800/60 dark:bg-slate-700/60 px-2 py-1 rounded-full backdrop-blur-sm">

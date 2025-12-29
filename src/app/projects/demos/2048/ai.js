@@ -1,5 +1,3 @@
-// AI agent for 2048 game
-// Based on Python reference implementation with JavaScript direction mapping
 import * as Board from './board.js';
 
 const MOVES = {0: 'left', 1: 'up', 2: 'right', 3: 'down'};

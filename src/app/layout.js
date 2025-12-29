@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "./components/header";
 import BackgroundProvider from "./components/BackgroundProvider";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { BackgroundContextProvider } from "./contexts/BackgroundContext";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -23,10 +24,12 @@ export default function RootLayout({ children }) {
         className={`${montserrat.variable} font-montserrat antialiased min-h-dvh`}
       >
         <ThemeProvider>
-          <BackgroundProvider>
-            <Header />
-            {children}
-          </BackgroundProvider>
+          <BackgroundContextProvider>
+            <BackgroundProvider>
+              <Header />
+              {children}
+            </BackgroundProvider>
+          </BackgroundContextProvider>
         </ThemeProvider>
       </body>
     </html>

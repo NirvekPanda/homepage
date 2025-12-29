@@ -3,25 +3,38 @@
 import LinkButton from "./button.js";
 import LanguageTile from "./langTile.js";
 import { PopoverProvider } from "../contexts/PopoverContext.js";
+import { useBackgroundContext, shouldUseDynamicBackground } from "../contexts/BackgroundContext.js";
 import { getProjectImageSrc } from "../utils/imageUtils.js";
 
-export default function Card({ name, description, languages, image, link, date, code, github, demo, onClick, excerpt, showDate = false, isActive = false }) {
+export default function Card({ projectId, name, description, languages, image, link, date, code, github, demo, onClick, excerpt, showDate = false, isActive = false, category }) {
   const languageList = languages.split(",").map((lang) => lang.trim());
+  
+  const getDemoButtonText = () => {
+    const cat = category?.toLowerCase();
+    if (cat === "research") return "Paper";
+    return "Demo";
+  };
+  
+  const { processedImageUrl, isInitialized } = useBackgroundContext();
+  
+  const getImageSource = () => {
+    if (shouldUseDynamicBackground(projectId) && isInitialized && processedImageUrl) {
+      return processedImageUrl;
+    }
+    return getProjectImageSrc(image, name);
+  };
 
-  // Format the date consistently for SSR
   const formatDate = (dateInput) => {
     if (!dateInput) return 'No date';
     
     let date;
     
-    // Handle Firestore Timestamp objects
     if (dateInput && typeof dateInput === 'object' && dateInput.toDate) {
       date = dateInput.toDate();
     } else {
       date = new Date(dateInput);
     }
     
-    // Check if date is valid
     if (isNaN(date.getTime())) return 'Invalid date';
     
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 
@@ -31,7 +44,6 @@ export default function Card({ name, description, languages, image, link, date, 
 
   return (
     <PopoverProvider>
-      {/* Card element */}
       <div
         onClick={onClick}
         className={`cursor-pointer relative flex flex-col my-2 ${
@@ -39,42 +51,37 @@ export default function Card({ name, description, languages, image, link, date, 
         } backdrop-blur-sm hover:border-white/50 dark:hover:border-gray-600/50 rounded-lg w-full transition-colors duration-500 ease-in-out`}
       >
 
-        {/* Image Section */}
         <div className="relative h-56 m-2.5 overflow-hidden text-white rounded-md">
           <img
-            src={getProjectImageSrc(image, name)}
+            src={getImageSource()}
             alt={name}
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-full transition-all duration-1000 ease-in-out"
             onError={(e) => {
               e.target.src = '/project-images/default.jpg';
             }}
           />
         </div>
-        {/* Project Name */}
         <div className="p-4">
           <h6 className="mb-2 text-black dark:text-white text-xl font-semibold text-center transition-colors duration-200">
             {name}
           </h6>
           
-          {/* Excerpt for blog posts */}
           {excerpt && (
             <p className="text-gray-700 dark:text-gray-300 text-sm text-center mb-3 line-clamp-3 transition-colors duration-200">
               {excerpt}
             </p>
           )}
           
-          {/* Date for blog posts */}
           {showDate && date && (
             <p className="text-gray-600 dark:text-gray-400 text-xs text-center mb-3 transition-colors duration-200">
               {formatDate(date)}
             </p>
           )}
           
-          {/* Button Row */}
           <div className="flex justify-center gap-4 mt-4">
             {demo && (
               <div onClick={(e) => e.stopPropagation()}>
-                <LinkButton text="Demo" link={link} className="p-2" />
+                <LinkButton text={getDemoButtonText()} link={link} className="p-2" />
               </div>
             )}
             {code && (
@@ -84,15 +91,6 @@ export default function Card({ name, description, languages, image, link, date, 
             )}
           </div>
         </div>
-        
-        {/* Language List - only show if there are languages */}
-        {/* {languageList.length > 0 && languageList[0] !== "" && (
-          <div className="px-4 pb-4 pt-0 mt-2 flex flex-wrap justify-center gap-2">
-            {languageList.map((lang, index) => (
-              <LanguageTile key={index} language={lang} />
-            ))}
-          </div>
-        )} */}
       </div>
     </PopoverProvider>
   );

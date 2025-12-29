@@ -16,12 +16,10 @@ export default function TestPage() {
     const [logs, setLogs] = useState([]);
 
     useEffect(() => {
-        // Initialize
         initializeBackgroundUpdater();
         setBackgroundUrl(getCurrentBackground());
         setImageCount(getImageCount());
         
-        // Listen for console logs
         const originalLog = console.log;
         console.log = (...args) => {
             originalLog(...args);
