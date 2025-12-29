@@ -13,7 +13,6 @@ export default function Nav({ isVisible = true, isMobileMenuOpen = false, onNavC
     ];
 
     useEffect(() => {
-        // Set up IntersectionObserver to detect active section
         const observerOptions = {
             root: null,
             rootMargin: "-50% 0px -50% 0px",
@@ -24,7 +23,6 @@ export default function Nav({ isVisible = true, isMobileMenuOpen = false, onNavC
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     setActiveSection(entry.target.id);
-                    // Update URL hash without scrolling
                     window.history.replaceState(null, "", `#${entry.target.id}`);
                 }
             });
@@ -32,7 +30,6 @@ export default function Nav({ isVisible = true, isMobileMenuOpen = false, onNavC
 
         const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-        // Observe all sections
         const sections = document.querySelectorAll("section[id]");
         sections.forEach((section) => observer.observe(section));
 
@@ -48,12 +45,11 @@ export default function Nav({ isVisible = true, isMobileMenuOpen = false, onNavC
         if (element) {
             element.scrollIntoView({ behavior: "smooth" });
         }
-        onNavClick(); // Close mobile menu
+        onNavClick();
     };
 
     return (
         <>
-            {/* Desktop Navigation */}
             <nav className={`hidden sm:flex fixed top-24 left-0 right-0 w-full justify-center z-50 transition-transform duration-200 ease-out ${
                 isVisible ? "translate-y-0" : "-translate-y-full"
             }`}>
@@ -75,7 +71,6 @@ export default function Nav({ isVisible = true, isMobileMenuOpen = false, onNavC
                 </div>
             </nav>
 
-            {/* Mobile Navigation - Slide-out Drawer */}
             <nav className={`fixed top-20 right-0 h-screen w-64 bg-white/95 backdrop-blur-sm z-40 transition-transform duration-200 ease-out transform sm:hidden border-l border-white/30 ${
                 isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
             }`}>
@@ -97,7 +92,6 @@ export default function Nav({ isVisible = true, isMobileMenuOpen = false, onNavC
                 </div>
             </nav>
 
-            {/* Mobile Menu Overlay - closes menu when clicked */}
             {isMobileMenuOpen && (
                 <div
                     className="fixed inset-0 bg-black/20 z-30 sm:hidden"

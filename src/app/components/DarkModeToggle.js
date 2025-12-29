@@ -16,13 +16,11 @@ export default function DarkModeToggle() {
         aria-label="Toggle dark mode"
       />
       <div className="relative w-16 h-8 bg-white/40 dark:bg-slate-700/60 backdrop-blur-sm peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-white/50 dark:peer-focus:ring-slate-500 rounded-full peer border border-white/30 dark:border-slate-600 transition-all duration-300 ease-in-out">
-        {/* Sliding circle with sun/moon */}
         <div 
           className={`absolute top-[4px] start-[4px] flex items-center justify-center bg-white dark:bg-slate-800 rounded-full h-6 w-6 transition-all duration-300 ease-in-out shadow-md ${
             isDarkMode ? 'translate-x-8' : 'translate-x-0'
           }`}
         >
-          {/* Sun icon - visible in light mode */}
           <svg 
             className={`w-4 h-4 text-yellow-500 transition-all duration-300 ${isDarkMode ? 'opacity-0 rotate-90 scale-0' : 'opacity-100 rotate-0 scale-100'}`}
             fill="currentColor" 
@@ -35,7 +33,6 @@ export default function DarkModeToggle() {
             />
           </svg>
           
-          {/* Moon icon - visible in dark mode */}
           <svg 
             className={`w-4 h-4 text-slate-200 absolute transition-all duration-300 ${isDarkMode ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-0'}`}
             fill="currentColor" 

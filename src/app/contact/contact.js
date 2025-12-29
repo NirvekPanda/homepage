@@ -53,7 +53,7 @@ export default function ContactForm() {
 
     return (
         <div className="max-w-2xl mx-auto bg-white/25 dark:bg-black/25 backdrop-blur-sm p-6 rounded-lg shadow-lg text-black dark:text-white border border-white/30 dark:border-gray-700/30 transition-all duration-200 mt-2 mb-4">
-            <h2 className="text-3xl font-bold text-center mb-2 underline">Reach Out Below!</h2>
+            <h2 className="text-3xl text-center mb-2 underline">Reach Out Below!</h2>
 
             {isSubmitted ? (
                 <div className="flex justify-center items-center h-40">
@@ -61,7 +61,6 @@ export default function ContactForm() {
                 </div>
             ) : (
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                    {/* Name Field */}
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium mb-2">
                             Name
@@ -76,7 +75,6 @@ export default function ContactForm() {
                         />
                     </div>
 
-                    {/* Email Field */}
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium mb-2">
                             Email
@@ -91,7 +89,6 @@ export default function ContactForm() {
                         />
                     </div>
 
-                    {/* Phone Number Field */}
                     <div>
                         <label htmlFor="phone" className="block text-sm font-medium mb-2">
                             Phone Number
@@ -103,8 +100,8 @@ export default function ContactForm() {
                             placeholder="(123) 456-7890"
                             value={phone}
                             onChange={(e) => {
-                                let input = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
-                                if (input.length > 10) input = input.slice(0, 10); // Limit to 10 digits
+                                let input = e.target.value.replace(/\D/g, "");
+                                if (input.length > 10) input = input.slice(0, 10);
 
                                 let formatted = input;
                                 if (input.length > 6) {
@@ -120,7 +117,6 @@ export default function ContactForm() {
                         />
                     </div>
 
-                    {/* Message Field */}
                     <div>
                         <label htmlFor="message" className="block text-sm font-medium mb-2">
                             Message
@@ -135,7 +131,6 @@ export default function ContactForm() {
                         />
                     </div>
 
-                    {/* Submit Button */}
                     <button
                         type="submit"
                         className={`w-full font-bold py-2 px-4 rounded-lg mt-4 transition duration-300 ${isFormValid && !isSubmitting

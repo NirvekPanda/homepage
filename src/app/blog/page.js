@@ -24,7 +24,6 @@ function BlogList() {
                     ...doc.data(),
                 }));
 
-                // Filter and sort on the client side to avoid Firestore index requirements
                 const filteredAndSortedPosts = postsArray
                     .filter(post => post.published === true)
                     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
@@ -69,7 +68,6 @@ function BlogList() {
                         link: "#", // Blog posts don't have external links
                         github: null,
                         demo: null,
-                        // Store original blog data for modal
                         content: post.content,
                         slug: post.slug,
                         publishedAt: post.publishedAt,

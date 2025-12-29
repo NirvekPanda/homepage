@@ -14,11 +14,9 @@ export default function Header() {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
 
-            // If user scrolls up, show header/nav
             if (currentScrollY < lastScrollY.current) {
                 setIsVisible(true);
             }
-            // If user scrolls down more than 50px, hide header/nav
             else if (currentScrollY - lastScrollY.current > 50) {
                 setIsVisible(false);
             }
@@ -30,7 +28,6 @@ export default function Header() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Close menu when clicking on nav items
     const handleNavClick = () => {
         setIsMobileMenuOpen(false);
     };
@@ -43,10 +40,8 @@ export default function Header() {
                 }`}
             >
                 <div className="mx-auto flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left gap-4 relative">
-                    {/* Invisible placeholder - same dimensions as location tile */}
                     <div className="w-64 h-12 order-1 sm:order-1 hidden sm:block"></div>
                     
-                    {/* Main header content*/}
                     <div className="max-w-4xl bg-white/25 backdrop-blur-sm rounded-lg px-4 sm:px-8 py-3 flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left flex-1 order-2 sm:order-2 mx-4">
                         <h1 className="text-2xl sm:text-5xl text-black font-bold">
                             Nirvek Pandey
@@ -59,12 +54,10 @@ export default function Header() {
                         </p>
                     </div>
                     
-                    {/* Location Carousel - separate box on the right (hidden on mobile) */}
                     <div className="bg-white/25 backdrop-blur-sm hover:bg-white/40 rounded-lg py-4 px-4 h-12 order-1 sm:order-3 max-w-64 transition-all duration-200 cursor-pointer hidden sm:block">
                         <LocationTile />
                     </div>
 
-                    {/* Hamburger Menu - visible only on mobile */}
                     <button
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className="sm:hidden order-3 p-2 rounded-lg bg-white/25 backdrop-blur-sm hover:bg-white/40 transition-all border border-white/30"

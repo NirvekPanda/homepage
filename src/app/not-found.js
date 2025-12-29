@@ -1,4 +1,3 @@
-// pages/404.js
 import LinkButton from './components/button';
 
 export default function Custom404() {

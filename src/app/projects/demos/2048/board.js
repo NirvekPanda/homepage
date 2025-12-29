@@ -1,6 +1,3 @@
-// Pure board manipulation functions for 2048 game
-// All functions are stateless and return new board states
-
 /**
  * Create a new empty board
  * @param {number} size - Board dimensions (default 4)

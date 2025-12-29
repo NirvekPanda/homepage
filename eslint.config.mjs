@@ -21,7 +21,6 @@ const eslintConfig = [
       },
     },
     rules: {
-      // Basic rules - can be expanded as needed
       'no-unused-vars': 'warn',
       'no-console': 'warn',
     },

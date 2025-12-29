@@ -1,10 +1,8 @@
-// Import the necessary functions from the Firebase SDK
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get } from "firebase/database";
 import { getFirestore, getDocs, addDoc, collection } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
-// Your Firebase configuration
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -16,13 +14,11 @@ const firebaseConfig = {
     measurementId: "G-94ZWGSBCF4"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const firestore = getFirestore(app);
 const auth = getAuth(app);
 
-// Configure Google Provider with explicit scopes and better error handling
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
     prompt: 'select_account',
@@ -31,7 +27,6 @@ googleProvider.setCustomParameters({
 googleProvider.addScope('https://www.googleapis.com/auth/userinfo.profile');
 googleProvider.addScope('https://www.googleapis.com/auth/userinfo.email');
 
-// Simple IndexedDB clearing function
 const clearIndexedDB = async () => {
   try {
     if (typeof window !== 'undefined' && 'indexedDB' in window) {

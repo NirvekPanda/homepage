@@ -1,5 +1,3 @@
-// 2048 Game Runner Class
-// Based on Python reference implementation
 import * as Board from './board.js';
 
 class GameRunner {
@@ -14,7 +12,6 @@ class GameRunner {
         }
     }
 
-    // Set the game state using the given initialization state and total points
     setupState(initTileMatrix = null, initScore = 0) {
         this.undoMat = [];
         this.redoMat = [];
@@ -30,22 +27,18 @@ class GameRunner {
         this.boardSize = this.tileMatrix.length;
     }
 
-    // Create a new empty tile matrix
     newTileMatrix() {
         return Board.createEmptyBoard(this.boardSize);
     }
 
-    // Deep copy utility function
     deepCopy(matrix) {
         return Board.deepCopy(matrix);
     }
 
-    // Get current game state
     currentState() {
         return [this.deepCopy(this.tileMatrix), this.score];
     }
 
-    // Perform a move in the specified direction and place a random tile
     moveAndPlace(direction) {
         if (this.move(direction)) {
             this.placeRandomTile();
@@ -55,16 +48,13 @@ class GameRunner {
         return false;
     }
 
-    // Rotate matrix clockwise (for compatibility with AI)
     rotateMatrixClockwise() {
         this.tileMatrix = Board.rotateBoard(this.tileMatrix);
     }
 
-    // Move in the specified direction (0=left, 1=up, 2=right, 3=down)
     move(direction) {
         this.addToUndo();
         
-        // Clear redo stack when making a new move
         this.redoMat = [];
         
         const result = Board.executeMove(this.tileMatrix, this.score, direction);
@@ -77,7 +67,6 @@ class GameRunner {
         return result.moved;
     }
 
-    // Legacy methods for AI compatibility - these mutate state directly
     moveTiles() {
         this.tileMatrix = Board.moveTiles(this.tileMatrix);
     }
@@ -88,12 +77,10 @@ class GameRunner {
         this.score = result.score;
     }
 
-    // Check if a move is possible in the current orientation
     canMove() {
         return Board.canMove(this.tileMatrix);
     }
 
-    // Place a random tile (value 2) in an empty position
     placeRandomTile() {
         const openTiles = this.getOpenTiles();
         if (openTiles.length === 0) return false;
@@ -104,15 +91,12 @@ class GameRunner {
         return true;
     }
 
-    // Get all open (value 0) tiles
     getOpenTiles() {
         return Board.getOpenTiles(this.tileMatrix);
     }
 
-    // Undo functionality
     undo() {
         if (this.undoMat.length > 0) {
-            // Save current state to redo stack before undoing
             this.redoMat.push({
                 tileMatrix: this.deepCopy(this.tileMatrix),
                 score: this.score
@@ -127,10 +111,8 @@ class GameRunner {
         return false;
     }
 
-    // Redo functionality
     redo() {
         if (this.redoMat.length > 0) {
-            // Save current state to undo stack before redoing
             this.undoMat.push({
                 tileMatrix: this.deepCopy(this.tileMatrix),
                 score: this.score
@@ -145,7 +127,6 @@ class GameRunner {
         return false;
     }
 
-    // Add current state to undo stack
     addToUndo() {
         this.undoMat.push({
             tileMatrix: this.deepCopy(this.tileMatrix),
@@ -153,12 +134,10 @@ class GameRunner {
         });
     }
 
-    // Check if game is over
     gameOver() {
         return Board.isGameOver(this.tileMatrix);
     }
 
-    // Reset game to initial state
     reset() {
         this.setupState();
         this.undoMat = [];
@@ -166,7 +145,6 @@ class GameRunner {
         this.saveToLocalStorage();
     }
 
-    // Save game state to localStorage
     saveToLocalStorage() {
         try {
             const gameState = {
@@ -180,7 +158,6 @@ class GameRunner {
         }
     }
 
-    // Load game state from localStorage
     loadFromLocalStorage() {
         try {
             const savedState = localStorage.getItem('2048_game_state');

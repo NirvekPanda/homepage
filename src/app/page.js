@@ -8,7 +8,6 @@ import Resume from "./resume/page";
 import ContactMe from "./contact/page";
 
 export default function Home() {
-  // Handle initial hash navigation on page load
   useEffect(() => {
     if (window.location.hash) {
       const element = document.querySelector(window.location.hash);
@@ -22,7 +21,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col pb-20 lg:pb-0">
-      {/* Home Section */}
       <section 
         id="home" 
         className="flex flex-col items-center justify-start p-2 sm:p-6 lg:p-10 lg:scroll-mt-24"
@@ -48,7 +46,6 @@ export default function Home() {
         />
       </section>
 
-      {/* Projects Section */}
       <section 
         id="projects" 
         className="flex flex-col scroll-mt-32"
@@ -56,7 +53,6 @@ export default function Home() {
         <ProjectCarousel />
       </section>
 
-      {/* Resume Section */}
       <section 
         id="resume" 
         className="flex flex-col scroll-mt-32"
@@ -64,7 +60,6 @@ export default function Home() {
         <Resume />
       </section>
 
-      {/* Contact Section */}
       <section 
         id="contact" 
         className="flex flex-col scroll-mt-32"

@@ -13,8 +13,8 @@ function ProjectCarousel() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const projectsCollection = collection(firestore, "projects"); // Get collection reference
-        const querySnapshot = await getDocs(projectsCollection); // Fetch data
+        const projectsCollection = collection(firestore, "projects");
+        const querySnapshot = await getDocs(projectsCollection);
 
         const projectsArray = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -32,7 +32,6 @@ function ProjectCarousel() {
     fetchProjects();
   }, []);
 
-  // Transform projects data to match ThreeDCarousel format
   const transformedProjects = projects.map((project, index) => ({
     id: project.id || index,
     title: project.name,
@@ -43,21 +42,11 @@ function ProjectCarousel() {
     link: project.link || "#",
     github: project.github,
     demo: project.demo,
+    category: project.category || "miscellaneous",
   }));
 
   return (
     <>
-      <div className="flex flex-col items-center">
-        <a
-          href="https://github.com/NirvekPanda"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-6 py-3 rounded-md font-medium transition-all duration-200 bg-white/90 dark:bg-slate-700 text-gray-900 dark:text-white shadow-lg hover:bg-white dark:hover:bg-slate-600 pb-2"
-        >
-          GitHub
-        </a>
-      </div>
-
       {loading ? (
         <div className="text-center text-gray-500 text-xl">
           Loading Projects...
