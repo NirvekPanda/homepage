@@ -1,5 +1,3 @@
-import customRules from './eslint-rules/index.js';
-
 /** @type {import('eslint').Linter.Config[]} */
 const eslintConfig = [
   {
@@ -9,7 +7,6 @@ const eslintConfig = [
       'out/**',
       'build/**',
       'dist/**',
-      'eslint-rules/**',
     ],
   },
   {
@@ -22,9 +19,6 @@ const eslintConfig = [
           jsx: true,
         },
       },
-    },
-    plugins: {
-      'custom': customRules,
     },
     rules: {
       'no-unused-vars': 'warn',
