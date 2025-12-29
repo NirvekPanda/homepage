@@ -57,14 +57,18 @@ function preloadImage(imageData, index) {
         const backgroundUrl = `https://drive.google.com/thumbnail?id=${imageData.drive_file_id}&sz=w1920-h1080`;
         
         img.onload = () => {
+            // Build location name from city and country (simplified API response)
+            const locationName = imageData.location?.city && imageData.location?.country 
+                ? `${imageData.location.city}, ${imageData.location.country}`
+                : imageData.location?.city || imageData.location?.country || 'Unknown Location';
+            
             const locationData = {
-                name: imageData.location?.name || 'Unknown Location',
+                name: locationName,
                 drive_file_id: imageData.drive_file_id,
                 latitude: imageData.location?.latitude,
                 longitude: imageData.location?.longitude,
                 city: imageData.location?.city,
-                country: imageData.location?.country,
-                address: imageData.location?.address
+                country: imageData.location?.country
             };
             
             preloadedImages.set(index, {
@@ -179,14 +183,18 @@ async function updateBackground() {
             const imageData = response.data;
             newBackgroundUrl = `https://drive.google.com/thumbnail?id=${imageData.drive_file_id}&sz=w1920-h1080`;
 
+            // Build location name from city and country (simplified API response)
+            const locationName = imageData.location?.city && imageData.location?.country 
+                ? `${imageData.location.city}, ${imageData.location.country}`
+                : imageData.location?.city || imageData.location?.country || 'Unknown Location';
+
             locationData = {
-                name: imageData.location?.name || 'Unknown Location',
+                name: locationName,
                 drive_file_id: imageData.drive_file_id,
                 latitude: imageData.location?.latitude,
                 longitude: imageData.location?.longitude,
                 city: imageData.location?.city,
-                country: imageData.location?.country,
-                address: imageData.location?.address
+                country: imageData.location?.country
             };
         }
 
