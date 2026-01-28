@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Nav from "./nav";
 import LocationTile from "./locationTile";
 import DarkModeToggle from "./DarkModeToggle";
+import CalendarIcon from "./CalendarIcon";
 
 export default function Header() {
     const [isVisible, setIsVisible] = useState(true);
@@ -30,10 +31,11 @@ export default function Header() {
     return (
         <>
             <header
-                className={`py-2 mt-2 mb-0 lg:mb-8`}
+                className={`py-2 mt-2 mb-0 lg:mb-4`}
             >
                 <div className="sm:hidden flex flex-col items-center gap-1">
                     <div className="flex items-center justify-center gap-3">
+                        <CalendarIcon />
                         <DarkModeToggle />
                         <div className="bg-white/25 dark:bg-black/25 backdrop-blur-sm hover:bg-white/40 dark:hover:bg-black/40 rounded-lg py-2 px-4 h-12 transition-all duration-200 cursor-pointer border border-white/30 dark:border-gray-700/30">
                             <LocationTile />
@@ -47,7 +49,8 @@ export default function Header() {
                 </div>
 
                 <div className="hidden sm:flex px-10 items-center justify-center relative">
-                    <div className="absolute left-10">
+                    <div className="absolute left-10 flex items-center gap-3">
+                        <CalendarIcon />
                         <DarkModeToggle />
                     </div>
                     

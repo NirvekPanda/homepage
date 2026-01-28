@@ -37,6 +37,7 @@ function Resume() {
           <p className="text-gray-600 dark:text-gray-400 transition-colors duration-200">Loading PDF viewer...</p>
         )}
       </div>
+      <Footer />
     </>
   );
 }
