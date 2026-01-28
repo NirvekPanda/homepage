@@ -30,14 +30,14 @@ export default function Home() {
           paragraph="I am a Nepalese - American student pursuing a Bachelor of Science in Computer Science and Engineering at the University of California, San Diego.
           
           \n
-            ★━━━━━━━━━━━★━━━━━━━━━━━★━━━━━━━━━━━★
+            ★━━━━━━━━━━━★━━━━━━━━━━━★
           \n
           
 
-          I have a background in software development and machine learning, and am interested in pursuing a career at the intersection of distributed systems and machine learning. \n To practice my skills I am working on several projects in my free time. Notably, I am working on the backend of my video blog platform and a multiplayer blackjack game.
+          I have a background in software development and machine learning, and am interested in pursuing a career at the intersection of distributed systems and machine learning. \n To practice my skills I am working on several projects in my free time. Currently, I am focused on improving my operating system overhead report to better understand low level Linux based systems and improve my C skills.
           
           \n
-            ★━━━━━━━━━━━★━━━━━━━━━━━★━━━━━━━━━━━★
+            ★━━━━━━━━━━━★━━━━━━━━━━━★
           \n
           
           
