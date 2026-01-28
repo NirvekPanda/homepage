@@ -20,16 +20,14 @@ export const ThreeDCarouselItem = {
   link: String,
 };
 
-const CATEGORIES = ["game", "research", "github", "industry", "miscellaneous"];
+// const CATEGORIES = ["game", "research", "github", "industry", "miscellaneous"];
+const CATEGORIES = ["game", "research", "industry", "miscellaneous"];
 
 const ThreeDCarousel = ({
   items,
   autoRotate = true,
   rotateInterval = 4000,
   cardHeight = 500,
-  title = "From Textile to Intelligence",
-  subtitle = "Customer Cases",
-  tagline = "Explore how our textile sensor technology is revolutionizing multiple industries with intelligent fabric solutions tailored to specific needs.",
   isMobileSwipe = true,
   contentType = "project",
   showCategoryNav = true,
@@ -172,12 +170,11 @@ const ThreeDCarousel = ({
   return (
     <section
       id="ThreeDCarousel"
-      className="p-4 bg-transparent min-w-full mx-auto 
-    flex flex-col items-center justify-center"
+      className="p-4 bg-transparent mx-auto max-w-full flex flex-col items-center justify-center"
     >
       {showCategoryNav && contentType === "project" && (
         <div className="flex items-center justify-center mb-6">
-          <div className="relative bg-white/25 dark:bg-black/25 backdrop-blur-sm rounded-lg p-1 flex gap-1 border border-white/30 dark:border-gray-700/30 transition-all duration-200">
+          <div className="relative bg-white/25 dark:bg-black/25 backdrop-blur-sm rounded-lg p-1 flex gap-1 border border-white/30 dark:border-gray-700/30 transition-all duration-200 max-w-full  overflow-x-auto">
             <div
               className="absolute top-1 bottom-1 bg-white/90 dark:bg-black/50 dark:border dark:border-gray-600/50 rounded-md shadow-lg transition-all duration-300 ease-in-out"
               style={{
@@ -199,7 +196,7 @@ const ThreeDCarousel = ({
                   href="https://github.com/NirvekPanda"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative z-10 px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 cursor-pointer text-black dark:text-white hover:bg-white/40 dark:hover:bg-black/40"
+                  className="relative z-10 rounded-md font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 cursor-pointer text-black dark:text-white hover:bg-white/40 dark:hover:bg-black/40"
                 >
                   GitHub
                 </a>
@@ -207,7 +204,7 @@ const ThreeDCarousel = ({
                 <button
                   key={category}
                   ref={(el) => (categoryRefs.current[index] = el)}
-                  className={`relative z-10 px-6 py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 cursor-pointer capitalize
+                  className={`relative z-10 px-3 py-2 sm:px-6 sm:py-3 rounded-md font-medium transition-all duration-200 whitespace-nowrap flex-shrink-0 cursor-pointer capitalize
                     ${isHighlighted 
                       ? "text-gray-900 dark:text-white" 
                       : "text-black dark:text-white hover:bg-white/40 dark:hover:bg-black/40"
@@ -223,8 +220,7 @@ const ThreeDCarousel = ({
       )}
 
       <div
-        className="w-full px-4 sm:px-6 lg:px-8 
-      min-w-[350px] md:min-w-[1000px] lg:max-w-8xl"
+        className="w-[95vw] sm:w-[90vw] md:w-[80vw] lg:w-[70vw] mx-auto lg:max-w-8xl"
       >
         <div
           className="relative overflow-hidden h-[420px]"
