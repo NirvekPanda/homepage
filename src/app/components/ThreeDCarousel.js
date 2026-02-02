@@ -269,7 +269,7 @@ const ThreeDCarousel = ({
           {!isMobile && filteredItems.length > 1 && (
             <>
               <button
-                className="absolute right-3/4 -translate-x-32 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-500 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
+                className="absolute left-1/4 -translate-x-32 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-500 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
                 onClick={() =>
                   setActive((prev) => (prev - 1 + filteredItems.length) % filteredItems.length)
                 }
@@ -278,7 +278,7 @@ const ThreeDCarousel = ({
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
-                className="absolute left-3/4 translate-x-32 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-500 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
+                className="absolute right-1/4 translate-x-32 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 rounded-full flex items-center justify-center text-gray-500 hover:bg-white z-30 shadow-md transition-all hover:scale-110"
                 onClick={() => setActive((prev) => (prev + 1) % filteredItems.length)}
                 aria-label="Next"
               >
