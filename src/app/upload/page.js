@@ -7,6 +7,7 @@ import ProjectUpload from "./components/projectUpload";
 import BlogUpload from "./components/blogUpload";
 import VlogUpload from "./components/vlogUpload";
 import BackgroundUpload from "./components/backgroundUpload";
+import BellMessageWidget from "../components/BellMessageWidget";
 
 export default function UploadPage() {
   const [activeTab, setActiveTab] = useState("projects");
@@ -147,6 +148,7 @@ export default function UploadPage() {
 
   return (
     <div>
+      <BellMessageWidget />
       <div className="container mx-auto px-4 py-4">
         <div className="text-center mb-6 mt-4">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 transition-colors duration-200">Upload Content</h1>

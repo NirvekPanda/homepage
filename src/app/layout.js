@@ -4,7 +4,6 @@ import Header from "./components/header";
 import BackgroundProvider from "./components/BackgroundProvider";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { BackgroundContextProvider } from "./contexts/BackgroundContext";
-import BellMessageWidget from "./components/BellMessageWidget";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -29,7 +28,6 @@ export default function RootLayout({ children }) {
             <BackgroundProvider>
               <Header />
               {children}
-              <BellMessageWidget />
             </BackgroundProvider>
           </BackgroundContextProvider>
         </ThemeProvider>
