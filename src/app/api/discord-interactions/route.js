@@ -61,14 +61,19 @@ export async function POST(req) {
         });
       }
 
+      const userMessage = interaction.data.options?.[0]?.value?.trim();
+      const payload = {
+        name: `discord:${userName}`,
+      };
+      if (userMessage) {
+        payload.message = userMessage;
+      }
+
       // Fire-and-forget — Discord requires a response within 3 seconds.
       fetch(`${host}/api/doorbell`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          source: `discord:${userName}`,
-          message: `${userName} rang the doorbell`,
-        }),
+        body: JSON.stringify(payload),
       }).catch((err) => console.error('Doorbell forward failed:', err));
 
       return NextResponse.json({

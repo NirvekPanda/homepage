@@ -52,8 +52,8 @@ export async function POST(req) {
 
   const timestamp = formatTimestamp(new Date());
   const content = text
-    ? `${timestamp}\n${name}: ${text}`
-    : `${timestamp}\n${name} is at the door!`;
+    ? `${name}: ${text}`
+    : `${name} is at the door!`;
 
   const discordPayload = { content };
 
