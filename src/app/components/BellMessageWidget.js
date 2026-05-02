@@ -126,52 +126,54 @@ export default function BellMessageWidget() {
               <span>Message sent!</span>
             </div>
           ) : (
-            <div className="flex items-start gap-2">
-              <textarea
-                ref={textareaRef}
-                rows={3}
-                className="flex-1 bg-transparent text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm resize-none outline-none"
-                placeholder="Send a quick message… (Ctrl+Enter to send)"
-                value={message}
-                onChange={(e) => { setMessage(e.target.value); setError(""); }}
-                onKeyDown={handleKeyDown}
-              />
-              <button
-                onClick={handleSend}
-                disabled={!canSend}
-                title="Send message"
-                className={`mt-1 p-1.5 rounded-lg transition-all duration-200 ${
-                  canSend
-                    ? "text-green-500 hover:bg-white/40 dark:hover:bg-black/40 cursor-pointer"
-                    : "text-gray-400 dark:text-gray-600 cursor-not-allowed"
-                }`}
-              >
-                {isSending ? (
-                  <svg
-                    className="animate-spin"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeDasharray="31.4"
-                      strokeDashoffset="10"
-                    />
-                  </svg>
-                ) : (
-                  <CheckIcon />
-                )}
-              </button>
-            </div>
-            {error && (
-              <p className="mt-1 text-xs text-red-500 dark:text-red-400">{error}</p>
-            )}
+            <>
+              <div className="flex items-start gap-2">
+                <textarea
+                  ref={textareaRef}
+                  rows={3}
+                  className="flex-1 bg-transparent text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm resize-none outline-none"
+                  placeholder="Send a quick message… (Ctrl+Enter to send)"
+                  value={message}
+                  onChange={(e) => { setMessage(e.target.value); setError(""); }}
+                  onKeyDown={handleKeyDown}
+                />
+                <button
+                  onClick={handleSend}
+                  disabled={!canSend}
+                  title="Send message"
+                  className={`mt-1 p-1.5 rounded-lg transition-all duration-200 ${
+                    canSend
+                      ? "text-green-500 hover:bg-white/40 dark:hover:bg-black/40 cursor-pointer"
+                      : "text-gray-400 dark:text-gray-600 cursor-not-allowed"
+                  }`}
+                >
+                  {isSending ? (
+                    <svg
+                      className="animate-spin"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeDasharray="31.4"
+                        strokeDashoffset="10"
+                      />
+                    </svg>
+                  ) : (
+                    <CheckIcon />
+                  )}
+                </button>
+              </div>
+              {error && (
+                <p className="mt-1 text-xs text-red-500 dark:text-red-400">{error}</p>
+              )}
+            </>
           )}
         </div>
       </div>
