@@ -49,6 +49,7 @@ export default function BellMessageWidget() {
   const [message, setMessage] = useState("");
   const [isSent, setIsSent] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState("");
   const containerRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -74,6 +75,7 @@ export default function BellMessageWidget() {
     if (!message.trim() || isSending) return;
 
     setIsSending(true);
+    setError("");
     const formData = new FormData();
     formData.append("access_key", "5fbc3b8f-4eaa-46ff-a565-2dae4fc75cc5");
     formData.append("message", message);
@@ -93,10 +95,10 @@ export default function BellMessageWidget() {
           setIsOpen(false);
         }, 2000);
       } else {
-        alert("Failed to send. Please try again.");
+        setError("Failed to send. Please try again.");
       }
     } catch {
-      alert("Failed to send. Please try again.");
+      setError("Failed to send. Please try again.");
     } finally {
       setIsSending(false);
     }
@@ -135,7 +137,7 @@ export default function BellMessageWidget() {
                 className="flex-1 bg-transparent text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm resize-none outline-none"
                 placeholder="Send a quick message… (Ctrl+Enter to send)"
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => { setMessage(e.target.value); setError(""); }}
                 onKeyDown={handleKeyDown}
               />
               <button
@@ -171,6 +173,9 @@ export default function BellMessageWidget() {
                 )}
               </button>
             </div>
+            {error && (
+              <p className="mt-1 text-xs text-red-500 dark:text-red-400">{error}</p>
+            )}
           )}
         </div>
       </div>
