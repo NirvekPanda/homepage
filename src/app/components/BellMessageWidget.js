@@ -76,18 +76,14 @@ export default function BellMessageWidget() {
 
     setIsSending(true);
     setError("");
-    const formData = new FormData();
-    formData.append("access_key", "5fbc3b8f-4eaa-46ff-a565-2dae4fc75cc5");
-    formData.append("message", message);
-    formData.append("subject", "Quick message from Bell Widget");
 
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/doorbell", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: message.trim(), source: "bell-widget" }),
       });
-      const data = await res.json();
-      if (data.success) {
+      if (res.ok) {
         setMessage("");
         setIsSent(true);
         setTimeout(() => {
