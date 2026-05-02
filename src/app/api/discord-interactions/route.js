@@ -23,7 +23,12 @@ export async function POST(req) {
     return new NextResponse('Missing signature headers', { status: 401 });
   }
 
-  const isValid = await verifyKey(rawBody, signature, timestamp, PUBLIC_KEY);
+  let isValid;
+  try {
+    isValid = await verifyKey(rawBody, signature, timestamp, PUBLIC_KEY);
+  } catch {
+    return new NextResponse('Invalid request signature', { status: 401 });
+  }
   if (!isValid) {
     return new NextResponse('Invalid request signature', { status: 401 });
   }
@@ -43,8 +48,18 @@ export async function POST(req) {
 
       const host =
         process.env.NEXT_PUBLIC_SITE_URL ??
-        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ??
-        `https://${req.headers.get('host')}`;
+        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
+
+      if (!host) {
+        console.error('Neither NEXT_PUBLIC_SITE_URL nor VERCEL_URL is set; cannot forward doorbell');
+        return NextResponse.json({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: '🔔 Doorbell rung!',
+            flags: 64,
+          },
+        });
+      }
 
       // Fire-and-forget — Discord requires a response within 3 seconds.
       fetch(`${host}/api/doorbell`, {
