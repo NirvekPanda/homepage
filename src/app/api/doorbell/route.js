@@ -2,13 +2,31 @@ import { NextResponse } from 'next/server';
 
 /**
  * Doorbell proxy endpoint.
- * Accepts POSTs from the Discord interactions handler and the admin page button.
+ * Accepts POSTs from the bell widget.
  * Forwards a formatted message to the Discord webhook.
  *
- * Body (all optional): { message?: string; source?: string }
+ * Body: { name: string; message?: string; source?: string }
  */
 
 const WEBHOOK_URL = process.env.DOORBELL_WEBHOOK_URL;
+
+function formatTimestamp(date) {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
+
+  const dayName = days[date.getUTCDay()];
+  const month = months[date.getUTCMonth()];
+  const day = date.getUTCDate();
+
+  let hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12 || 12;
+  const minuteStr = minutes === 0 ? '' : `:${String(minutes).padStart(2, '0')}`;
+
+  return `${dayName}, ${month} ${day}, ${hours}${minuteStr}${ampm}`;
+}
 
 export async function POST(req) {
   if (!WEBHOOK_URL) {
@@ -25,28 +43,19 @@ export async function POST(req) {
     // empty/invalid body is fine — defaults below
   }
 
-  const source = body.source ?? 'unknown';
-  const customMessage = body.message;
-  const ip =
-    req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
-  const timestamp = new Date().toISOString();
+  const name = body.name?.trim();
+  const text = body.message?.trim();
 
-  const content = customMessage
-    ? `🔔 ${customMessage}`
-    : '🔔 Someone rang the doorbell';
+  if (!name) {
+    return NextResponse.json({ error: 'name is required' }, { status: 400 });
+  }
 
-  const discordPayload = {
-    content,
-    embeds: [
-      {
-        fields: [
-          { name: 'Source', value: source, inline: true },
-          { name: 'Time', value: timestamp, inline: true },
-          { name: 'IP', value: ip, inline: true },
-        ],
-      },
-    ],
-  };
+  const timestamp = formatTimestamp(new Date());
+  const content = text
+    ? `${timestamp}\n${name}: ${text}`
+    : `${timestamp}\n${name} is at the door!`;
+
+  const discordPayload = { content };
 
   const res = await fetch(WEBHOOK_URL, {
     method: 'POST',
@@ -55,8 +64,8 @@ export async function POST(req) {
   });
 
   if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    console.error('Discord webhook failed:', res.status, text);
+    const errText = await res.text().catch(() => '');
+    console.error('Discord webhook failed:', res.status, errText);
     return NextResponse.json(
       { error: 'Failed to forward to Discord' },
       { status: 502 },
