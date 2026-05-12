@@ -1,0 +1,7 @@
+{
+  "apple.nvim": { "branch": "main", "commit": "bb6a8dcc904da47601836207aa99278c2bdb6025" },
+  "fzf-lua": { "branch": "main", "commit": "97376e364f51f1b5ae3efaa3eb2e929430ca8419" },
+  "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
+  "nvim-tree.lua": { "branch": "master", "commit": "f9bfc0059eca24546b69a7006110463da4808f8f" },
+  "nvim-web-devicons": { "branch": "master", "commit": "2795c26c916bb3c57dde308b82be51971fa92747" }
+}
