@@ -1,0 +1,21 @@
+# Keep the build context small and secrets out of image layers
+node_modules
+.next
+coverage
+out
+build
+.git
+.github
+.cursor
+.vercel
+.DS_Store
+**/.DS_Store
+npm-debug.log*
+
+# Never bake secrets into an image; inject them at runtime instead
+.env*
+*.pem
+
+Dockerfile
+.dockerignore
+README.md

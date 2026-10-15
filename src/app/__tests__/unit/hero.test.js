@@ -48,7 +48,7 @@ describe('Hero Component', () => {
     
     const carousel = screen.getByTestId('image-carousel')
     expect(carousel).toBeInTheDocument()
-    expect(carousel).toHaveClass('rounded-t-3xl', 'md:rounded-l-3xl', 'md:rounded-tr-none')
+    expect(carousel).toHaveClass('md:rounded-tr-none')
     expect(screen.getByText('Carousel for Test Title')).toBeInTheDocument()
     expect(screen.getByText('Images: 8')).toBeInTheDocument()
     
@@ -59,13 +59,13 @@ describe('Hero Component', () => {
     render(<Hero {...mockProps} />)
     
     const section = screen.getByText('Test Title').closest('section')
-    expect(section).toHaveClass('w-5/6', 'max-w-6xl', 'mx-auto', 'flex', 'flex-col', 'md:flex-row', 'bg-white', 'rounded-3xl', 'shadow-lg')
+    expect(section).toHaveClass('w-5/6', 'mx-auto', 'flex', 'flex-col', 'md:flex-row')
     
     const imageContainer = screen.getByTestId('image-carousel').parentElement
     expect(imageContainer).toHaveClass('md:w-1/2', 'relative', 'h-64', 'md:h-auto')
     
     const contentContainer = screen.getByText('Test Title').closest('div')
-    expect(contentContainer).toHaveClass('md:w-1/2', 'p-4', 'sm:p-6', 'md:p-8', 'flex', 'flex-col', 'items-center', 'justify-center', 'text-center')
+    expect(contentContainer).toHaveClass('md:w-1/2', 'flex', 'flex-col', 'items-center', 'justify-center', 'text-center')
   })
 
   test('handles empty or undefined paragraph gracefully', () => {

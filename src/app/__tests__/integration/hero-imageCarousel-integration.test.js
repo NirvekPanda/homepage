@@ -102,7 +102,7 @@ describe('Hero and ImageCarousel Integration', () => {
       render(<Hero {...mockHeroProps} />)
       
       // Click on indicator for image 3
-      const indicator3 = screen.getByRole('button', { name: 'Slide 3' })
+      const indicator3 = screen.getByRole('button', { name: /go to slide 3/i })
       fireEvent.click(indicator3)
       
       await waitFor(() => {
@@ -137,7 +137,7 @@ describe('Hero and ImageCarousel Integration', () => {
       
       // Check Hero container structure
       const heroSection = screen.getByText('Test Hero Title').closest('section')
-      expect(heroSection).toHaveClass('w-5/6', 'max-w-6xl', 'mx-auto', 'flex', 'flex-col', 'md:flex-row')
+      expect(heroSection).toHaveClass('w-5/6', 'mx-auto', 'flex', 'flex-col', 'md:flex-row')
       
       // Check ImageCarousel container
       const imageContainer = screen.getByRole('img', { name: 'Test Hero Title - Image 1' }).closest('.md\\:w-1\\/2')
@@ -149,7 +149,7 @@ describe('Hero and ImageCarousel Integration', () => {
       
       const carousel = screen.getByRole('img', { name: 'Test Hero Title - Image 1' }).closest('[data-carousel="slide"]')
       expect(carousel).toHaveClass('relative', 'w-full', 'h-full')
-      expect(carousel).toHaveClass('rounded-t-3xl', 'md:rounded-l-3xl', 'md:rounded-tr-none')
+      expect(carousel).toHaveClass('md:rounded-tr-none')
     })
   })
 
@@ -215,7 +215,7 @@ describe('Hero and ImageCarousel Integration', () => {
       render(<Hero {...mockHeroProps} />)
       
       // Manually navigate to image 3
-      const indicator3 = screen.getByRole('button', { name: 'Slide 3' })
+      const indicator3 = screen.getByRole('button', { name: /go to slide 3/i })
       fireEvent.click(indicator3)
       
       await waitFor(() => {

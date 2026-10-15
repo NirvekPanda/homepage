@@ -23,6 +23,18 @@ require('@testing-library/jest-dom')
 //   originalError.call(console, ...args)
 // }
 
+// jsdom doesn't implement IntersectionObserver (used by Nav's scroll-spy)
+global.IntersectionObserver = class IntersectionObserver {
+  constructor(callback, options) {
+    this.callback = callback
+    this.options = options
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() { return [] }
+}
+
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
   useRouter: () => ({

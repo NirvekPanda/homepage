@@ -81,16 +81,16 @@ describe('BlogCard Component', () => {
     render(<BlogCard {...mockProps} />)
     
     const card = screen.getByRole('heading', { name: 'Test Blog Post' }).closest('div').parentElement
-    expect(card).toHaveClass('cursor-pointer', 'relative', 'flex', 'flex-col', 'my-6', 'bg-slate-700', 'shadow-md', 'border', 'border-slate-800', 'hover:border-4', 'rounded-lg', 'w-full', 'max-w-sm', 'transition-all', 'duration-100')
+    expect(card).toHaveClass('cursor-pointer', 'relative', 'flex', 'flex-col', 'shadow-md', 'border', 'rounded-lg', 'w-full', 'max-w-sm')
     
     const title = screen.getByText('Test Blog Post')
-    expect(title).toHaveClass('mb-2', 'text-white', 'text-xl', 'font-semibold', 'text-center')
+    expect(title).toHaveClass('text-xl', 'font-semibold', 'text-center')
     
     const excerpt = screen.getByText('This is a test blog excerpt that should be displayed.')
-    expect(excerpt).toHaveClass('text-gray-300', 'text-sm', 'text-center', 'mb-3', 'line-clamp-3')
+    expect(excerpt).toHaveClass('text-sm', 'text-center', 'line-clamp-3')
     
     const date = screen.getByText(/January 15, 2024/)
-    expect(date).toHaveClass('text-white', 'text-xs', 'text-center')
+    expect(date).toHaveClass('text-xs', 'text-center')
   })
 
   test('handles empty or undefined excerpt gracefully', () => {

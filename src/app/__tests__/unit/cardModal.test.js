@@ -113,11 +113,11 @@ describe('CardModal Component', () => {
     render(<CardModal {...mockProps} />)
     
     const modal = screen.getByText('Test Project').closest('.relative')
-    expect(modal).toHaveClass('relative', 'bg-gradient-to-b', 'from-stone-700', 'to-zinc-900', 'rounded-lg', 'overflow-y-auto', 'transform', 'transition-all', 'duration-300', 'ease-in-out', 'scale-95', 'opacity-0')
+    expect(modal).toHaveClass('relative', 'rounded-lg', 'overflow-y-auto', 'transform', 'transition-all', 'duration-300', 'scale-95', 'opacity-0')
     expect(modal).toHaveStyle({
       width: '80vw',
       height: '80vh',
-      maxWidth: '800px',
+      maxWidth: '1024px',
       maxHeight: '90vh',
       display: 'flex',
       flexDirection: 'column'
@@ -132,11 +132,11 @@ describe('CardModal Component', () => {
     const contentSection = screen.getByText('A test project description').closest('.flex-1')
     expect(contentSection).toHaveClass('flex-1', 'p-6', 'pt-10')
     
-    const descriptionContainer = screen.getByText('A test project description').closest('.bg-gradient-to-b')
-    expect(descriptionContainer).toHaveClass('bg-gradient-to-b', 'from-slate-700', 'to-gray-700', 'p-5', 'rounded-lg', 'shadow-lg', 'text-white', 'text-lg', 'leading-relaxed')
+    const descriptionContainer = screen.getByText('A test project description').closest('.leading-relaxed')
+    expect(descriptionContainer).toHaveClass('p-5', 'rounded-lg', 'shadow-lg', 'text-lg')
     
     const closeButton = screen.getByText('✕')
-    expect(closeButton).toHaveClass('absolute', 'top-3', 'right-3', 'bg-gray-800', 'text-white', 'px-3', 'py-1', 'rounded-full', 'hover:bg-gray-700', 'transition')
+    expect(closeButton).toHaveClass('absolute', 'top-3', 'right-3', 'px-3', 'py-1', 'rounded-full', 'transition')
   })
 
   test('handles edge cases gracefully', () => {

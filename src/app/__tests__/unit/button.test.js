@@ -14,7 +14,7 @@ describe('LinkButton Component', () => {
     render(<LinkButton text="Active Button" link="/active" isActive={true} />)
     
     const button = screen.getByRole('link', { name: 'Active Button' })
-    expect(button).toHaveClass('bg-[#F5ECD5]', 'text-gray-900', 'shadow-lg')
+    expect(button).toHaveClass('bg-white/90', 'text-gray-900', 'shadow-lg')
   })
 
   test('applies inactive styling when isActive is false', () => {

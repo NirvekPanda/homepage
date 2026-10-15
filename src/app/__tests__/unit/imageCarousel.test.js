@@ -57,7 +57,7 @@ describe('ImageCarousel Component', () => {
     const nextButton = screen.getByRole('button', { name: /next/i })
     const prevButton = screen.getByRole('button', { name: /previous/i })
     const indicators = screen.getAllByRole('button').filter(button => 
-      button.getAttribute('aria-label')?.startsWith('Slide')
+      button.getAttribute('aria-label')?.startsWith('Go to slide')
     )
     
     expect(nextButton).toBeInTheDocument()
@@ -93,7 +93,7 @@ describe('ImageCarousel Component', () => {
   test('handles indicator navigation', () => {
     render(<ImageCarousel {...mockProps} />)
     
-    const thirdIndicator = screen.getByRole('button', { name: 'Slide 3' })
+    const thirdIndicator = screen.getByRole('button', { name: /go to slide 3/i })
     const images = screen.getAllByRole('img')
     
     fireEvent.click(thirdIndicator)
@@ -129,7 +129,7 @@ describe('ImageCarousel Component', () => {
     
     const nextButton = screen.getByRole('button', { name: /next/i })
     const indicators = screen.getAllByRole('button').filter(button => 
-      button.getAttribute('aria-label')?.startsWith('Slide')
+      button.getAttribute('aria-label')?.startsWith('Go to slide')
     )
     
     // Rapid button clicks
@@ -160,14 +160,14 @@ describe('ImageCarousel Component', () => {
     rerender(<ImageCarousel title="Single" images={['/single.jpg']} />)
     expect(screen.getByAltText('Single - Image 1')).toBeInTheDocument()
     expect(screen.getAllByRole('button').filter(button => 
-      button.getAttribute('aria-label')?.startsWith('Slide')
+      button.getAttribute('aria-label')?.startsWith('Go to slide')
     )).toHaveLength(1)
     
     // Empty images array
     rerender(<ImageCarousel title="Empty" images={[]} />)
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
     expect(screen.getAllByRole('button').filter(button => 
-      button.getAttribute('aria-label')?.startsWith('Slide')
+      button.getAttribute('aria-label')?.startsWith('Go to slide')
     )).toHaveLength(0)
     
     // Test with valid empty array instead of undefined/null to avoid component errors

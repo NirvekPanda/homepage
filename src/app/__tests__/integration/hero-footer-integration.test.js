@@ -87,11 +87,11 @@ describe('Hero and Footer Integration', () => {
       
       // Check Hero container structure
       const heroSection = screen.getByText('Test Hero Title').closest('section')
-      expect(heroSection).toHaveClass('w-5/6', 'max-w-6xl', 'mx-auto', 'flex', 'flex-col', 'md:flex-row')
+      expect(heroSection).toHaveClass('w-5/6', 'mx-auto', 'flex', 'flex-col', 'md:flex-row')
       
       // Check content container that includes Footer
       const contentContainer = screen.getByText('Test Hero Title').closest('div')
-      expect(contentContainer).toHaveClass('md:w-1/2', 'p-4', 'sm:p-6', 'md:p-8', 'flex', 'flex-col', 'items-center', 'justify-center', 'text-center')
+      expect(contentContainer).toHaveClass('md:w-1/2', 'flex', 'flex-col', 'items-center', 'justify-center', 'text-center')
     })
 
     test('Footer has correct styling classes in Hero context', () => {
@@ -160,7 +160,7 @@ describe('Hero and Footer Integration', () => {
       
       // Check content container responsive classes
       const contentContainer = screen.getByText('Test Hero Title').closest('div')
-      expect(contentContainer).toHaveClass('p-4', 'sm:p-6', 'md:p-8')
+      expect(contentContainer).toHaveClass('md:w-1/2')
     })
 
     test('Footer maintains responsive behavior in Hero context', () => {

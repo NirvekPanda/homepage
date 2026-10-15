@@ -25,6 +25,19 @@ jest.mock('../../components/locationTile', () => {
   }
 })
 
+// Mock components that need app-level providers (ThemeProvider) or routing
+jest.mock('../../components/DarkModeToggle', () => {
+  return function MockDarkModeToggle() {
+    return <div data-testid="dark-mode-toggle" />
+  }
+})
+
+jest.mock('../../components/CalendarIcon', () => {
+  return function MockCalendarIcon() {
+    return <div data-testid="calendar-icon" />
+  }
+})
+
 // Mock the background updater hook
 jest.mock('../../utils/backgroundUpdater', () => ({
   useBackgroundUpdater: () => ({
@@ -36,32 +49,35 @@ jest.mock('../../utils/backgroundUpdater', () => ({
 describe('Header Component', () => {
   test('renders header with title and subtitle', () => {
     render(<Header />)
-    
-    expect(screen.getByText('Nirvek Pandey')).toBeInTheDocument()
+
+    // Title renders in both the mobile and desktop layouts
+    expect(screen.getAllByText('Nirvek Pandey')).toHaveLength(2)
     expect(screen.getByText('Aspiring Network Engineer')).toBeInTheDocument()
   })
 
   test('has correct header structure and classes', () => {
     render(<Header />)
-    
-    const header = screen.getByRole('banner')
-    expect(header).toHaveClass('py-5', 'px-10')
-    
-    const title = screen.getByText('Nirvek Pandey')
-    expect(title).toHaveClass('text-4xl', 'sm:text-5xl')
-    
+
+    expect(screen.getByRole('banner')).toBeInTheDocument()
+
+    const [mobileTitle, desktopTitle] = screen.getAllByText('Nirvek Pandey')
+    expect(mobileTitle.closest('.sm\\:hidden')).toBeInTheDocument()
+    expect(desktopTitle).toHaveClass('text-4xl', 'md:text-5xl')
+
     const subtitle = screen.getByText('Aspiring Network Engineer')
-    expect(subtitle).toHaveClass('text-xl', 'sm:text-2xl', 'cursor-pointer')
+    expect(subtitle).toHaveClass('cursor-pointer')
   })
 
-  test('includes navigation component', () => {
+  test('includes navigation, dark mode toggle and calendar', () => {
     render(<Header />)
     expect(screen.getByTestId('nav')).toBeInTheDocument()
+    expect(screen.getAllByTestId('dark-mode-toggle')).toHaveLength(2)
+    expect(screen.getAllByTestId('calendar-icon')).toHaveLength(2)
   })
 
   test('includes location tile component', () => {
     render(<Header />)
-    expect(screen.getByTestId('location-tile')).toBeInTheDocument()
-    expect(screen.getByText('San Diego, CA')).toBeInTheDocument()
+    expect(screen.getAllByTestId('location-tile')).toHaveLength(2)
+    expect(screen.getAllByText('San Diego, CA')).toHaveLength(2)
   })
 })

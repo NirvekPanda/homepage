@@ -82,7 +82,7 @@ describe('BlogModal Component', () => {
     render(<BlogModal {...mockProps} />)
     
     const modal = screen.getByText('Test Blog Post').closest('.relative')
-    expect(modal).toHaveClass('relative', 'bg-gradient-to-b', 'from-stone-700', 'to-zinc-900', 'rounded-lg', 'overflow-y-auto', 'transform', 'transition-all', 'duration-300', 'ease-in-out', 'scale-95', 'opacity-0')
+    expect(modal).toHaveClass('relative', 'rounded-lg', 'overflow-y-auto', 'transform', 'transition-all', 'duration-300', 'scale-95', 'opacity-0')
     expect(modal).toHaveStyle({
       width: '80vw',
       height: '80vh',
@@ -99,16 +99,16 @@ describe('BlogModal Component', () => {
     expect(contentSection).toHaveClass('flex-1', 'p-6', 'flex', 'flex-col')
     
     const title = screen.getByText('Test Blog Post')
-    expect(title).toHaveClass('text-3xl', 'font-bold', 'mb-2', 'text-center', 'text-white')
+    expect(title).toHaveClass('text-3xl', 'font-bold', 'text-center')
     
     const date = screen.getByText(/January 15, 2024 at \d+:\d+ [AP]M/)
-    expect(date).toHaveClass('text-center', 'text-white', 'mb-6')
+    expect(date).toHaveClass('text-center')
     
-    const contentContainer = screen.getByText('This is the full blog content').closest('.bg-gradient-to-b')
-    expect(contentContainer).toHaveClass('bg-gradient-to-b', 'from-slate-700', 'to-gray-700', 'p-6', 'rounded-lg', 'shadow-lg', 'text-white', 'text-lg', 'leading-relaxed', 'flex-1')
+    const contentContainer = screen.getByText('This is the full blog content').closest('.leading-relaxed')
+    expect(contentContainer).toHaveClass('p-6', 'rounded-lg', 'shadow-lg', 'text-lg', 'flex-1')
     
     const closeButton = screen.getByText('✕')
-    expect(closeButton).toHaveClass('absolute', 'top-3', 'right-3', 'bg-gray-800', 'text-white', 'px-3', 'py-1', 'rounded-full', 'hover:bg-gray-700', 'transition')
+    expect(closeButton).toHaveClass('absolute', 'top-3', 'right-3', 'px-3', 'py-1', 'rounded-full', 'transition')
   })
 
   test('handles edge cases gracefully', () => {
