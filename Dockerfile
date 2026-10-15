@@ -56,6 +56,4 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 EXPOSE 3000
 
-# Runtime secrets (DOORBELL_WEBHOOK_URL, DISCORD_PUBLIC_KEY, ...) are passed
-# with -e / --env-file locally, and as Kubernetes Secrets in the cluster.
 CMD ["node", "server.js"]
