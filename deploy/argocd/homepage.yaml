@@ -1,0 +1,21 @@
+# Site + cloudflared, synced from deploy/k8s on main.
+# The cloudflared-token Secret is created by hand and isn't in git, so Argo
+# never touches it.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: homepage
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/NirvekPanda/homepage.git
+    targetRevision: main
+    path: deploy/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homepage
+  syncPolicy:
+    automated:
+      prune: true     # delete resources removed from git
+      selfHeal: true  # undo manual kubectl edits

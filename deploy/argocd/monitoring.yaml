@@ -1,0 +1,36 @@
+# kube-prometheus-stack chart + our values.yaml from the repo, plus the Traefik
+# PodMonitor. releaseName matches the earlier `helm install monitoring` so Argo
+# adopts the existing resources instead of creating duplicates.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 92.10.1
+      helm:
+        releaseName: monitoring
+        valueFiles:
+          - $values/deploy/monitoring/values.yaml
+    - repoURL: https://github.com/NirvekPanda/homepage.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/NirvekPanda/homepage.git
+      targetRevision: main
+      path: deploy/monitoring
+      directory:
+        include: traefik-podmonitor.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      # the Prometheus CRDs are too large for client-side apply's annotation
+      - ServerSideApply=true

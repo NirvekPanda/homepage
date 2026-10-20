@@ -1,0 +1,66 @@
+# kube-prometheus-stack values for the 3-node k3s homelab
+#   helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+#     -n monitoring --create-namespace -f values.yaml
+
+# k3s runs the scheduler, controller-manager, proxy and etcd inside the k3s
+# binary bound to localhost, so these scrape targets are always down. Turn them
+# off instead of living with permanently firing alerts.
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
+kubeEtcd:
+  enabled: false
+
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    retentionSize: 8GB
+    # pick up ServiceMonitors/PodMonitors from any namespace, not just ones
+    # labelled with this Helm release (needed for traefik-podmonitor.yaml)
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        memory: 1536Mi
+    # survive pod restarts; local-path is k3s's built-in StorageClass
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+
+grafana:
+  # admin password comes from a Secret created by hand, never committed
+  admin:
+    existingSecret: grafana-admin
+    userKey: admin-user
+    passwordKey: admin-password
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    size: 2Gi
+  defaultDashboardsTimezone: browser
+  # served publicly at grafana.nirvek.xyz via the Cloudflare Tunnel, behind
+  # Cloudflare Access (only allowed emails reach the Grafana login at all)
+  grafana.ini:
+    server:
+      root_url: https://grafana.nirvek.xyz
+    auth.anonymous:
+      enabled: false

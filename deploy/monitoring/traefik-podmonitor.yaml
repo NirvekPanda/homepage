@@ -1,0 +1,16 @@
+# Scrape k3s's built-in Traefik. Its request count / latency / status-code metrics
+# per Service are the SLIs for the site (stage 6). Apply after the Helm install,
+# since the PodMonitor CRD comes from kube-prometheus-stack.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: traefik
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s

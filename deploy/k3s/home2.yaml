@@ -1,0 +1,5 @@
+# /etc/rancher/k3s/config.yaml on home2 (agent / worker)
+# the join token is passed as K3S_TOKEN at install time so it never lands in git
+server: https://192.168.86.121:6443
+node-name: home2
+node-ip: 192.168.86.122

@@ -1,0 +1,8 @@
+# /etc/rancher/k3s/config.yaml on home1 (server / control plane)
+# kubectl runs on home1 itself, so only LAN names are needed on the API cert
+node-name: home1
+node-ip: 192.168.86.121
+tls-san:
+  - home1
+  - 192.168.86.121
+write-kubeconfig-mode: "0600"

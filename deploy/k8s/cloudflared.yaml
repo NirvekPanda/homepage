@@ -1,0 +1,41 @@
+# Cloudflare Tunnel connector running in the cluster. The tunnel's public hostname
+# (configured in the Zero Trust dashboard) points at Traefik:
+#   http://traefik.kube-system.svc.cluster.local:80
+# Token secret is created by hand, never committed:
+#   kubectl -n homepage create secret generic cloudflared-token --from-literal=token=<TUNNEL_TOKEN>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cloudflared
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:latest
+          args:
+            - tunnel
+            - --no-autoupdate
+            - --metrics
+            - 0.0.0.0:2000
+            - run
+          env:
+            - name: TUNNEL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflared-token
+                  key: token
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 2000
+            initialDelaySeconds: 10
+            failureThreshold: 1
+            periodSeconds: 10
