@@ -1,5 +1,5 @@
 # kube-prometheus-stack chart + our values.yaml from the repo, plus the Traefik
-# PodMonitor. releaseName matches the earlier `helm install monitoring` so Argo
+# PodMonitor and the API traffic dashboard ConfigMap. releaseName matches the earlier `helm install monitoring` so Argo
 # adopts the existing resources instead of creating duplicates.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -23,7 +23,7 @@ spec:
       targetRevision: main
       path: deploy/monitoring
       directory:
-        include: traefik-podmonitor.yaml
+        include: "{traefik-podmonitor.yaml,api-dashboard.yaml}"
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
