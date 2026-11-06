@@ -92,7 +92,7 @@ const BackgroundUpload = () => {
       const formData = new FormData();
       formData.append('image', selectedFile);
 
-      const response = await fetch('https://travel-image-api-189526192204.us-central1.run.app/api/v1/images/upload', {
+      const response = await fetch('https://image-api.nirvek.xyz/api/v1/images/upload', {
         method: 'POST',
         mode: 'cors',
         credentials: 'omit',

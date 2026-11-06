@@ -1,0 +1,23 @@
+# Travel image API + its Postgres, synced from Go-BackgroundAPI deploy/travel-api on main.
+# Secrets (postgres-credentials, travel-image-api-secrets, ghcr-pull) are created
+# by hand and aren't in git, so Argo never touches them.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: travel-image-api
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/NirvekPanda/Go-BackgroundAPI.git
+    targetRevision: main
+    path: deploy/travel-api
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: travel-image-api
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true   # Argo owns the namespace; it isn't in the manifests

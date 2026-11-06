@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-const API_BASE = 'https://travel-image-api-189526192204.us-central1.run.app/api/v1';
+const API_BASE = 'https://image-api.nirvek.xyz/api/v1';
 const COUNT_ENDPOINT = `${API_BASE}/images/count`;
 const IMAGE_BY_INDEX_ENDPOINT = `${API_BASE}/images/index`;
 

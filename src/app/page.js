@@ -27,21 +27,21 @@ export default function Home() {
       >
         <Hero
           title="Nirvek Pandey"
-          paragraph="I am a Nepalese - American student pursuing a Bachelor of Science in Computer Science and Engineering at the University of California, San Diego.
+          paragraph="I am a Computer Science BS graduate from the University of California, San Diego.
           
           \n
             ★━━━━━━━━━━━★━━━━━━━━━━━★
           \n
           
 
-          I have a background in software development and machine learning, and am interested in pursuing a career at the intersection of distributed systems and machine learning. \n To practice my skills I am working on several projects in my free time. Currently, I am focused on improving my operating system overhead report to better understand low level Linux based systems and improve my C skills.
+          I have a background in software development and machine learning, and am interested in pursuing a career at the intersection of distributed systems and machine learning. \n To practice my skills I am working on several projects in my free time. Currently, I am focused on improving my homelab setup with GitOps pipelines to better understand Linux based systems.
           
           \n
             ★━━━━━━━━━━━★━━━━━━━━━━━★
           \n
           
           
-          In my free time, I like to hone my cooking skills and travel to new destinations. Most recently I traveled to Europe, with the highlight of my trip being the wonderful city of Barcelona.
+          In my free time, I like to hone my cooking skills and travel to new destinations. Most recently I traveled to New York, with the highlight of my trip being the amazing Nepali food in Jackson Heights.
           "
         />
       </section>
