@@ -22,8 +22,9 @@ spec:
               app: frontend
       containers:
         - name: frontend
-          image: ghcr.io/nirvekpanda/frontend:latest
-          imagePullPolicy: Always
+          # tag is pinned in kustomization.yaml (images:), bumped by CI on each merge
+          image: ghcr.io/nirvekpanda/frontend
+          imagePullPolicy: IfNotPresent  # sha tags are immutable
           ports:
             - containerPort: 3000
           readinessProbe:

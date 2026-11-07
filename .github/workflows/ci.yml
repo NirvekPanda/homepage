@@ -86,3 +86,45 @@ jobs:
             NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
             NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
             NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
+
+  # Point deploy/k8s at the image just pushed, so Argo CD deploys it. main only
+  # accepts changes through PRs (safe-main ruleset), so this opens a PR and merges
+  # it straight away. Merges made with GITHUB_TOKEN don't trigger workflows, so
+  # this can't loop.
+  bump-manifest:
+    needs: build-and-push
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    # one at a time, so two quick merges can't race on the same line
+    concurrency:
+      group: bump-manifest
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      # main's current head, not the commit that triggered this run
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Open and merge the tag bump PR
+        run: |
+          tag="sha-${GITHUB_SHA::7}"
+          sed -i "s/^\( *newTag:\).*/\1 ${tag}/" deploy/k8s/kustomization.yaml
+          if git diff --quiet; then
+            echo "deploy/k8s already on ${tag}"
+            exit 0
+          fi
+          branch="deploy/frontend-${tag}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git commit -am "deploy: frontend ${tag}"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "deploy: frontend ${tag}" \
+            --body "Automated: points deploy/k8s at the image built from ${GITHUB_SHA}."
+          gh pr merge "$branch" --squash --delete-branch
