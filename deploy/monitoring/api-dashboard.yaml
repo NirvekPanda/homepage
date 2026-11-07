@@ -1,8 +1,9 @@
-# Grafana dashboard for the homepage and the travel image API, in three sections:
+# Grafana dashboard for the homepage and the travel image API, in two sections:
 #   - Overview: Traefik's metrics for both Services (scraped by traefik-podmonitor.yaml).
 #     The Traefik `service` label (<namespace>-<svc>-<port>@kubernetes) tells them
 #     apart, so it doesn't matter that they live in different namespaces.
-#   - travel-image-api by route, and its calls to Google Maps: the API's own
+#   - travel-image-api: a summary strip, then responses by route and calls to
+#     Google Maps, side by side. These come from the API's own
 #     travel_api_* metrics, scraped by the PodMonitor in Go-BackgroundAPI's
 #     deploy/travel-api/podmonitor.yaml.
 # The Grafana sidecar loads any ConfigMap labelled grafana_dashboard=1 in this namespace.
@@ -340,7 +341,7 @@ data:
         {
           "id": 7,
           "type": "row",
-          "title": "travel-image-api: responses by route",
+          "title": "travel-image-api: API + Google Maps",
           "collapsed": false,
           "gridPos": {
             "x": 0,
@@ -352,8 +353,8 @@ data:
         },
         {
           "id": 8,
-          "title": "Responses by route and status code",
-          "type": "timeseries",
+          "title": "API requests (24h)",
+          "type": "stat",
           "datasource": {
             "type": "prometheus",
             "uid": "${datasource}"
@@ -361,6 +362,269 @@ data:
           "gridPos": {
             "x": 0,
             "y": 22,
+            "w": 4,
+            "h": 4
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(increase(travel_api_http_requests_total{route!=\"GET /health\"}[24h]))",
+              "legendFormat": "",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "description": "Excludes kubelet /health probes."
+        },
+        {
+          "id": 9,
+          "title": "API 5xx ratio (24h)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 4,
+            "y": 22,
+            "w": 4,
+            "h": 4
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "(sum(increase(travel_api_http_requests_total{route!=\"GET /health\", code=~\"5..\"}[24h])) or vector(0)) / sum(increase(travel_api_http_requests_total{route!=\"GET /health\"}[24h]))",
+              "legendFormat": "",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "value": 0.01
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.05
+                  }
+                ]
+              }
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "value",
+            "graphMode": "none"
+          }
+        },
+        {
+          "id": 10,
+          "title": "API p95 latency (24h)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 8,
+            "y": 22,
+            "w": 4,
+            "h": 4
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "histogram_quantile(0.95, sum by (le) (increase(travel_api_http_request_duration_seconds_bucket{route!=\"GET /health\"}[24h])))",
+              "legendFormat": "",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s"
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          }
+        },
+        {
+          "id": 11,
+          "title": "Static Maps calls (24h)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 22,
+            "w": 4,
+            "h": 4
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(increase(travel_api_upstream_requests_total{api=\"staticmap\"}[24h]))",
+              "legendFormat": "",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "description": "Each one is a billed Google request; browser caching keeps repeats off this count."
+        },
+        {
+          "id": 12,
+          "title": "Geocoding calls (24h)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 16,
+            "y": 22,
+            "w": 4,
+            "h": 4
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(increase(travel_api_upstream_requests_total{api=\"geocoding\"}[24h]))",
+              "legendFormat": "",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "description": "Made while processing uploads."
+        },
+        {
+          "id": 13,
+          "title": "Google non-200 ratio (24h)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 20,
+            "y": 22,
+            "w": 4,
+            "h": 4
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "(sum(increase(travel_api_upstream_requests_total{code!=\"200\"}[24h])) or vector(0)) / sum(increase(travel_api_upstream_requests_total[24h]))",
+              "legendFormat": "",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "value": 0.01
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.05
+                  }
+                ]
+              }
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "value",
+            "graphMode": "none"
+          },
+          "description": "Share of Google calls that didn't return HTTP 200 ('error' = no response). Geocoding reports some failures (REQUEST_DENIED, OVER_QUERY_LIMIT) as 200, so they don't show here."
+        },
+        {
+          "id": 14,
+          "title": "API: responses by route and status code",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 26,
             "w": 12,
             "h": 8
           },
@@ -457,8 +721,8 @@ data:
           "description": "Every response the API wrote, by ServeMux route pattern. Kubelet /health probes are excluded; 'unmatched' is unknown paths and CORS preflights."
         },
         {
-          "id": 9,
-          "title": "Status codes by route (time range)",
+          "id": 15,
+          "title": "API: status codes by route (time range)",
           "type": "table",
           "datasource": {
             "type": "prometheus",
@@ -466,7 +730,7 @@ data:
           },
           "gridPos": {
             "x": 12,
-            "y": 22,
+            "y": 26,
             "w": 12,
             "h": 8
           },
@@ -571,8 +835,8 @@ data:
           "description": "Total responses per route and status code over the selected time range."
         },
         {
-          "id": 10,
-          "title": "Map endpoint responses",
+          "id": 16,
+          "title": "API: map endpoint responses",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -580,7 +844,7 @@ data:
           },
           "gridPos": {
             "x": 0,
-            "y": 30,
+            "y": 34,
             "w": 8,
             "h": 8
           },
@@ -677,8 +941,8 @@ data:
           "description": "200 = map served; 404 = image has no GPS; 503 = no Maps key configured; 502 = Google failed."
         },
         {
-          "id": 11,
-          "title": "p95 latency by route",
+          "id": 17,
+          "title": "API: p95 latency by route",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -686,7 +950,7 @@ data:
           },
           "gridPos": {
             "x": 8,
-            "y": 30,
+            "y": 34,
             "w": 16,
             "h": 8
           },
@@ -715,154 +979,8 @@ data:
           }
         },
         {
-          "id": 12,
-          "type": "row",
-          "title": "Google Maps API: calls from travel-image-api",
-          "collapsed": false,
-          "gridPos": {
-            "x": 0,
-            "y": 38,
-            "w": 24,
-            "h": 1
-          },
-          "panels": []
-        },
-        {
-          "id": 13,
-          "title": "Static Maps calls (last 24h)",
-          "type": "stat",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "gridPos": {
-            "x": 0,
-            "y": 39,
-            "w": 6,
-            "h": 4
-          },
-          "targets": [
-            {
-              "refId": "A",
-              "expr": "sum(increase(travel_api_upstream_requests_total{api=\"staticmap\"}[24h]))",
-              "legendFormat": "",
-              "instant": true
-            }
-          ],
-          "fieldConfig": {
-            "defaults": {
-              "unit": "short",
-              "decimals": 0
-            }
-          },
-          "options": {
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ]
-            },
-            "colorMode": "none",
-            "graphMode": "none"
-          },
-          "description": "Each one is a billed Google request; browser caching keeps repeats off this count."
-        },
-        {
-          "id": 14,
-          "title": "Geocoding calls (last 24h)",
-          "type": "stat",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "gridPos": {
-            "x": 6,
-            "y": 39,
-            "w": 6,
-            "h": 4
-          },
-          "targets": [
-            {
-              "refId": "A",
-              "expr": "sum(increase(travel_api_upstream_requests_total{api=\"geocoding\"}[24h]))",
-              "legendFormat": "",
-              "instant": true
-            }
-          ],
-          "fieldConfig": {
-            "defaults": {
-              "unit": "short",
-              "decimals": 0
-            }
-          },
-          "options": {
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ]
-            },
-            "colorMode": "none",
-            "graphMode": "none"
-          },
-          "description": "Made while processing uploads."
-        },
-        {
-          "id": 15,
-          "title": "Google non-200 ratio (last 24h)",
-          "type": "stat",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "gridPos": {
-            "x": 12,
-            "y": 39,
-            "w": 12,
-            "h": 4
-          },
-          "targets": [
-            {
-              "refId": "A",
-              "expr": "(sum by (api) (increase(travel_api_upstream_requests_total{code!=\"200\"}[24h])) or sum by (api) (increase(travel_api_upstream_requests_total[24h])) * 0) / sum by (api) (increase(travel_api_upstream_requests_total[24h]))",
-              "legendFormat": "{{api}}",
-              "instant": true
-            }
-          ],
-          "fieldConfig": {
-            "defaults": {
-              "unit": "percentunit",
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "orange",
-                    "value": 0.01
-                  },
-                  {
-                    "color": "red",
-                    "value": 0.05
-                  }
-                ]
-              }
-            }
-          },
-          "options": {
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ]
-            },
-            "colorMode": "value",
-            "graphMode": "none"
-          },
-          "description": "Share of Google calls that didn't return HTTP 200 ('error' = no response). Geocoding reports some failures (REQUEST_DENIED, OVER_QUERY_LIMIT) as 200, so they don't show here."
-        },
-        {
-          "id": 16,
-          "title": "Google API calls by status code",
+          "id": 18,
+          "title": "Google Maps: calls by status code",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -870,7 +988,7 @@ data:
           },
           "gridPos": {
             "x": 0,
-            "y": 43,
+            "y": 42,
             "w": 12,
             "h": 8
           },
@@ -966,8 +1084,8 @@ data:
           }
         },
         {
-          "id": 17,
-          "title": "Google API status codes (time range)",
+          "id": 19,
+          "title": "Google Maps: status codes (time range)",
           "type": "table",
           "datasource": {
             "type": "prometheus",
@@ -975,7 +1093,7 @@ data:
           },
           "gridPos": {
             "x": 12,
-            "y": 43,
+            "y": 42,
             "w": 12,
             "h": 8
           },
@@ -1079,8 +1197,8 @@ data:
           }
         },
         {
-          "id": 18,
-          "title": "Google API p95 latency",
+          "id": 20,
+          "title": "Google Maps: p95 latency",
           "type": "timeseries",
           "datasource": {
             "type": "prometheus",
@@ -1088,7 +1206,7 @@ data:
           },
           "gridPos": {
             "x": 0,
-            "y": 51,
+            "y": 50,
             "w": 24,
             "h": 8
           },
