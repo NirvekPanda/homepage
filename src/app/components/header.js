@@ -37,7 +37,7 @@ export default function Header() {
                     <div className="flex items-center justify-center gap-3">
                         <CalendarIcon />
                         <DarkModeToggle />
-                        <div className="bg-white/25 dark:bg-black/25 backdrop-blur-sm hover:bg-white/40 dark:hover:bg-black/40 rounded-lg py-2 px-4 h-12 transition-all duration-200 cursor-pointer border border-white/30 dark:border-gray-700/30">
+                        <div className="relative z-[60] bg-white/25 dark:bg-black/25 backdrop-blur-sm hover:bg-white/40 dark:hover:bg-black/40 rounded-lg py-2 px-4 h-12 transition-all duration-200 cursor-pointer border border-white/30 dark:border-gray-700/30">
                             <LocationTile />
                         </div>
                     </div>
@@ -66,7 +66,7 @@ export default function Header() {
                         </p>
                     </div>
                     
-                    <div className="absolute right-10 bg-white/25 dark:bg-black/25 backdrop-blur-sm hover:bg-white/40 dark:hover:bg-black/40 rounded-lg py-2 px-4 h-12 transition-all duration-200 cursor-pointer border border-white/30 dark:border-gray-700/30">
+                    <div className="absolute right-10 z-[60] bg-white/25 dark:bg-black/25 backdrop-blur-sm hover:bg-white/40 dark:hover:bg-black/40 rounded-lg py-2 px-4 h-12 transition-all duration-200 cursor-pointer border border-white/30 dark:border-gray-700/30">
                         <LocationTile />
                     </div>
                 </div>

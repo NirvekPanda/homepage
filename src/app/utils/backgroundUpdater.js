@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-const API_BASE = 'https://image-api.nirvek.xyz/api/v1';
+export const API_BASE = 'https://image-api.nirvek.xyz/api/v1';
 const COUNT_ENDPOINT = `${API_BASE}/images/count`;
 const IMAGE_BY_INDEX_ENDPOINT = `${API_BASE}/images/index`;
 
@@ -64,6 +64,7 @@ function preloadImage(imageData, index) {
             
             const locationData = {
                 name: locationName,
+                id: imageData.id,
                 drive_file_id: imageData.drive_file_id,
                 latitude: imageData.location?.latitude,
                 longitude: imageData.location?.longitude,
@@ -190,6 +191,7 @@ async function updateBackground() {
 
             locationData = {
                 name: locationName,
+                id: imageData.id,
                 drive_file_id: imageData.drive_file_id,
                 latitude: imageData.location?.latitude,
                 longitude: imageData.location?.longitude,
