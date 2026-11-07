@@ -1,7 +1,10 @@
-# Grafana dashboard comparing request traffic for the homepage and the travel
-# image API. Both sit behind k3s's Traefik, so the Traefik PodMonitor already
-# collects their metrics; the Traefik `service` label (<namespace>-<svc>-<port>@kubernetes)
-# tells them apart, so it doesn't matter that they live in different namespaces.
+# Grafana dashboard for the homepage and the travel image API, in three sections:
+#   - Overview: Traefik's metrics for both Services (scraped by traefik-podmonitor.yaml).
+#     The Traefik `service` label (<namespace>-<svc>-<port>@kubernetes) tells them
+#     apart, so it doesn't matter that they live in different namespaces.
+#   - travel-image-api by route, and its calls to Google Maps: the API's own
+#     travel_api_* metrics, scraped by the PodMonitor in Go-BackgroundAPI's
+#     deploy/travel-api/podmonitor.yaml.
 # The Grafana sidecar loads any ConfigMap labelled grafana_dashboard=1 in this namespace.
 apiVersion: v1
 kind: ConfigMap
@@ -15,40 +18,81 @@ data:
     {
       "uid": "api-traffic",
       "title": "API Traffic: homepage + travel-image-api",
-      "tags": ["traefik", "homelab"],
+      "description": "Traefik traffic for both services, travel-image-api responses by route, and its Google Maps API calls.",
+      "tags": [
+        "traefik",
+        "homelab",
+        "travel-image-api"
+      ],
       "timezone": "browser",
       "schemaVersion": 39,
       "refresh": "30s",
-      "time": { "from": "now-6h", "to": "now" },
+      "time": {
+        "from": "now-6h",
+        "to": "now"
+      },
       "templating": {
         "list": [
           {
             "name": "datasource",
             "type": "datasource",
             "query": "prometheus",
-            "current": { "text": "Prometheus", "value": "prometheus" }
+            "current": {
+              "text": "Prometheus",
+              "value": "prometheus"
+            }
           },
           {
             "name": "service",
-            "label": "Service",
+            "label": "Service (overview)",
             "type": "query",
-            "datasource": { "type": "prometheus", "uid": "${datasource}" },
-            "query": { "query": "label_values(traefik_service_requests_total, service)", "refId": "service" },
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${datasource}"
+            },
+            "query": {
+              "query": "label_values(traefik_service_requests_total, service)",
+              "refId": "service"
+            },
             "regex": "/^(homepage|travel-image-api)-.*/",
             "refresh": 2,
             "multi": true,
             "includeAll": true,
-            "current": { "text": "All", "value": "$__all" }
+            "current": {
+              "text": "All",
+              "value": "$__all"
+            }
           }
         ]
       },
       "panels": [
         {
           "id": 1,
+          "type": "row",
+          "title": "Overview: all traffic through Traefik",
+          "collapsed": false,
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 24,
+            "h": 1
+          },
+          "panels": []
+        },
+        {
+          "id": 2,
           "title": "Requests (last 24h)",
           "type": "stat",
-          "gridPos": { "x": 0, "y": 0, "w": 24, "h": 4 },
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 1,
+            "w": 24,
+            "h": 4
+          },
           "targets": [
             {
               "refId": "A",
@@ -57,15 +101,36 @@ data:
               "instant": true
             }
           ],
-          "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 } },
-          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "none" }
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          }
         },
         {
-          "id": 2,
+          "id": 3,
           "title": "Request rate by service",
           "type": "timeseries",
-          "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 5,
+            "w": 12,
+            "h": 8
+          },
           "targets": [
             {
               "refId": "A",
@@ -73,14 +138,37 @@ data:
               "legendFormat": "{{service}}"
             }
           ],
-          "fieldConfig": { "defaults": { "unit": "reqps" } }
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps"
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            }
+          }
         },
         {
-          "id": 3,
+          "id": 4,
           "title": "5xx error ratio by service",
           "type": "timeseries",
-          "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 5,
+            "w": 12,
+            "h": 8
+          },
           "targets": [
             {
               "refId": "A",
@@ -88,14 +176,38 @@ data:
               "legendFormat": "{{service}}"
             }
           ],
-          "fieldConfig": { "defaults": { "unit": "percentunit", "min": 0 } }
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "min": 0
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            }
+          }
         },
         {
-          "id": 4,
+          "id": 5,
           "title": "p95 latency by service",
           "type": "timeseries",
-          "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 13,
+            "w": 12,
+            "h": 8
+          },
           "targets": [
             {
               "refId": "A",
@@ -103,14 +215,37 @@ data:
               "legendFormat": "{{service}}"
             }
           ],
-          "fieldConfig": { "defaults": { "unit": "s" } }
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            }
+          }
         },
         {
-          "id": 5,
+          "id": 6,
           "title": "Requests by status code",
           "type": "timeseries",
-          "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 13,
+            "w": 12,
+            "h": 8
+          },
           "targets": [
             {
               "refId": "A",
@@ -118,7 +253,868 @@ data:
               "legendFormat": "{{service}} {{code}}"
             }
           ],
-          "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "stacking": { "mode": "normal" }, "fillOpacity": 20 } } }
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps",
+              "custom": {
+                "stacking": {
+                  "mode": "normal"
+                },
+                "fillOpacity": 20
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b2\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "green"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b3\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "blue"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b4\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "orange"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b(5\\d\\d|error)$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "red"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            }
+          }
+        },
+        {
+          "id": 7,
+          "type": "row",
+          "title": "travel-image-api: responses by route",
+          "collapsed": false,
+          "gridPos": {
+            "x": 0,
+            "y": 21,
+            "w": 24,
+            "h": 1
+          },
+          "panels": []
+        },
+        {
+          "id": 8,
+          "title": "Responses by route and status code",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 22,
+            "w": 12,
+            "h": 8
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (route, code) (rate(travel_api_http_requests_total{route!=\"GET /health\"}[$__rate_interval]))",
+              "legendFormat": "{{route}} {{code}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps",
+              "custom": {
+                "stacking": {
+                  "mode": "normal"
+                },
+                "fillOpacity": 20
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b2\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "green"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b3\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "blue"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b4\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "orange"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b(5\\d\\d|error)$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "red"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            }
+          },
+          "description": "Every response the API wrote, by ServeMux route pattern. Kubelet /health probes are excluded; 'unmatched' is unknown paths and CORS preflights."
+        },
+        {
+          "id": 9,
+          "title": "Status codes by route (time range)",
+          "type": "table",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 22,
+            "w": 12,
+            "h": 8
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (route, code) (round(increase(travel_api_http_requests_total{route!=\"GET /health\"}[$__range])))",
+              "instant": true,
+              "format": "table"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "renameByName": {
+                  "Value": "Requests"
+                },
+                "indexByName": {
+                  "route": 0,
+                  "code": 1,
+                  "Value": 2
+                }
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "code"
+                },
+                "properties": [
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "color-text"
+                    }
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "type": "regex",
+                        "options": {
+                          "pattern": "^2",
+                          "result": {
+                            "color": "green"
+                          }
+                        }
+                      },
+                      {
+                        "type": "regex",
+                        "options": {
+                          "pattern": "^3",
+                          "result": {
+                            "color": "blue"
+                          }
+                        }
+                      },
+                      {
+                        "type": "regex",
+                        "options": {
+                          "pattern": "^4",
+                          "result": {
+                            "color": "orange"
+                          }
+                        }
+                      },
+                      {
+                        "type": "regex",
+                        "options": {
+                          "pattern": "^(5|error)",
+                          "result": {
+                            "color": "red"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "sortBy": [
+              {
+                "displayName": "Requests",
+                "desc": true
+              }
+            ],
+            "showHeader": true
+          },
+          "description": "Total responses per route and status code over the selected time range."
+        },
+        {
+          "id": 10,
+          "title": "Map endpoint responses",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 30,
+            "w": 8,
+            "h": 8
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (code) (rate(travel_api_http_requests_total{route=\"GET /api/v1/images/map/{id}\"}[$__rate_interval]))",
+              "legendFormat": "{{code}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps",
+              "custom": {
+                "stacking": {
+                  "mode": "normal"
+                },
+                "fillOpacity": 20
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b2\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "green"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b3\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "blue"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b4\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "orange"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b(5\\d\\d|error)$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "red"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            }
+          },
+          "description": "200 = map served; 404 = image has no GPS; 503 = no Maps key configured; 502 = Google failed."
+        },
+        {
+          "id": 11,
+          "title": "p95 latency by route",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 8,
+            "y": 30,
+            "w": 16,
+            "h": 8
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "histogram_quantile(0.95, sum by (le, route) (rate(travel_api_http_request_duration_seconds_bucket{route!=\"GET /health\"}[$__rate_interval])))",
+              "legendFormat": "{{route}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            }
+          }
+        },
+        {
+          "id": 12,
+          "type": "row",
+          "title": "Google Maps API: calls from travel-image-api",
+          "collapsed": false,
+          "gridPos": {
+            "x": 0,
+            "y": 38,
+            "w": 24,
+            "h": 1
+          },
+          "panels": []
+        },
+        {
+          "id": 13,
+          "title": "Static Maps calls (last 24h)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 39,
+            "w": 6,
+            "h": 4
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(increase(travel_api_upstream_requests_total{api=\"staticmap\"}[24h]))",
+              "legendFormat": "",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "description": "Each one is a billed Google request; browser caching keeps repeats off this count."
+        },
+        {
+          "id": 14,
+          "title": "Geocoding calls (last 24h)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 6,
+            "y": 39,
+            "w": 6,
+            "h": 4
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum(increase(travel_api_upstream_requests_total{api=\"geocoding\"}[24h]))",
+              "legendFormat": "",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "none",
+            "graphMode": "none"
+          },
+          "description": "Made while processing uploads."
+        },
+        {
+          "id": 15,
+          "title": "Google non-200 ratio (last 24h)",
+          "type": "stat",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 39,
+            "w": 12,
+            "h": 4
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "(sum by (api) (increase(travel_api_upstream_requests_total{code!=\"200\"}[24h])) or sum by (api) (increase(travel_api_upstream_requests_total[24h])) * 0) / sum by (api) (increase(travel_api_upstream_requests_total[24h]))",
+              "legendFormat": "{{api}}",
+              "instant": true
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "orange",
+                    "value": 0.01
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.05
+                  }
+                ]
+              }
+            }
+          },
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "colorMode": "value",
+            "graphMode": "none"
+          },
+          "description": "Share of Google calls that didn't return HTTP 200 ('error' = no response). Geocoding reports some failures (REQUEST_DENIED, OVER_QUERY_LIMIT) as 200, so they don't show here."
+        },
+        {
+          "id": 16,
+          "title": "Google API calls by status code",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 43,
+            "w": 12,
+            "h": 8
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (api, code) (rate(travel_api_upstream_requests_total[$__rate_interval]))",
+              "legendFormat": "{{api}} {{code}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps",
+              "custom": {
+                "stacking": {
+                  "mode": "normal"
+                },
+                "fillOpacity": 20
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b2\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "green"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b3\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "blue"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b4\\d\\d$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "orange"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*\\b(5\\d\\d|error)$/"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "red"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            }
+          }
+        },
+        {
+          "id": 17,
+          "title": "Google API status codes (time range)",
+          "type": "table",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 12,
+            "y": 43,
+            "w": 12,
+            "h": 8
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "sum by (api, code) (round(increase(travel_api_upstream_requests_total[$__range])))",
+              "instant": true,
+              "format": "table"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true
+                },
+                "renameByName": {
+                  "Value": "Requests"
+                },
+                "indexByName": {
+                  "api": 0,
+                  "code": 1,
+                  "Value": 2
+                }
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "decimals": 0
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "code"
+                },
+                "properties": [
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "color-text"
+                    }
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "type": "regex",
+                        "options": {
+                          "pattern": "^2",
+                          "result": {
+                            "color": "green"
+                          }
+                        }
+                      },
+                      {
+                        "type": "regex",
+                        "options": {
+                          "pattern": "^3",
+                          "result": {
+                            "color": "blue"
+                          }
+                        }
+                      },
+                      {
+                        "type": "regex",
+                        "options": {
+                          "pattern": "^4",
+                          "result": {
+                            "color": "orange"
+                          }
+                        }
+                      },
+                      {
+                        "type": "regex",
+                        "options": {
+                          "pattern": "^(5|error)",
+                          "result": {
+                            "color": "red"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "sortBy": [
+              {
+                "displayName": "Requests",
+                "desc": true
+              }
+            ],
+            "showHeader": true
+          }
+        },
+        {
+          "id": 18,
+          "title": "Google API p95 latency",
+          "type": "timeseries",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 51,
+            "w": 24,
+            "h": 8
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "histogram_quantile(0.95, sum by (le, api) (rate(travel_api_upstream_request_duration_seconds_bucket[$__rate_interval])))",
+              "legendFormat": "{{api}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ]
+            }
+          }
         }
       ]
     }
