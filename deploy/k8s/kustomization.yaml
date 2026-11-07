@@ -10,4 +10,4 @@ resources:
 # sets newTag to the image it just pushed, and Argo CD rolls that out.
 images:
   - name: ghcr.io/nirvekpanda/frontend
-    newTag: sha-bbb57c7
+    newTag: sha-70bbf9a
