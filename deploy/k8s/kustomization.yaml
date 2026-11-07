@@ -5,3 +5,9 @@ resources:
   - namespace.yaml
   - frontend.yaml
   - cloudflared.yaml
+# The frontend tag is pinned here, not in frontend.yaml. After each merge to main,
+# CI (.github/workflows/ci.yml, bump-manifest job) opens and merges a PR that
+# sets newTag to the image it just pushed, and Argo CD rolls that out.
+images:
+  - name: ghcr.io/nirvekpanda/frontend
+    newTag: sha-53d5779
